@@ -1,0 +1,64 @@
+const express = require("express");
+const router = express.Router();
+
+// Modülleri içe aktarıyoruz
+const adminRoutes = require("./adminRoutes");
+const bankAccountRoutes = require("./bankAccountRoutes");
+const contactInfoRoutes = require("./contactInfoRoutes");
+const councilRoutes = require("./councilRoutes");
+const councilDecisionRoutes = require("./councilDecisionRoutes");
+const councilMemberRoutes = require("./councilMemberRoutes");
+const departmentRoutes = require("./departmentRoutes");
+const directiveRoutes = require("./directiveRoutes");
+const employeeRoutes = require("./employeeRoutes");
+const encumenRoutes = require("./encumenRoutes");
+const encumenMemberRoutes = require("./encumenMemberRoutes");
+const eventRoutes = require("./eventRoutes");
+const eventGalleryRoutes = require("./eventGalleryRoutes");
+const facilityRoutes = require("./facilityRoutes");
+const facilityGalleryRoutes = require("./facilityGalleryRoutes");
+const newsRoutes = require("./newsRoutes");
+const newsGalleryRoutes = require("./newsGalleryRoutes");
+const presidentRoutes = require("./presidentRoutes");
+const presidentGalleryRoutes = require("./presidentGalleryRoutes");
+const pressMaterialRoutes = require("./pressMaterialRoutes");
+const publicNoticeRoutes = require("./publicNoticeRoutes");
+const reportRoutes = require("./reportRoutes");
+const serviceRoutes = require("./serviceRoutes");
+const serviceFormRoutes = require("./serviceFormRoutes");
+const socialMediaRoutes = require("./socialMediaRoutes");
+const suggestionRoutes = require("./suggestionRoutes");
+const tenderRoutes = require("./tenderRoutes");
+const vicePresidentRoutes = require("./vicePresidentRoutes");
+
+// Rotaları ana router'a bağlıyoruz
+router.use("/admin", adminRoutes);
+router.use("/bank-accounts", bankAccountRoutes);
+router.use("/contact-info", contactInfoRoutes);
+router.use("/councils", councilRoutes);
+router.use("/council-decisions", councilDecisionRoutes);
+router.use("/council-members", councilMemberRoutes);
+router.use("/departments", departmentRoutes);
+router.use("/directives", directiveRoutes);
+router.use("/employees", employeeRoutes);
+router.use("/encumens", encumenRoutes);
+router.use("/encumen-members", encumenMemberRoutes);
+router.use("/events", eventRoutes);
+router.use("/event-galleries", eventGalleryRoutes);
+router.use("/facilities", facilityRoutes);
+router.use("/facility-galleries", facilityGalleryRoutes);
+router.use("/news", newsRoutes);
+router.use("/news-galleries", newsGalleryRoutes);
+router.use("/president", presidentRoutes);
+router.use("/president-galleries", presidentGalleryRoutes);
+router.use("/press-materials", pressMaterialRoutes);
+router.use("/public-notices", publicNoticeRoutes);
+router.use("/reports", reportRoutes);
+router.use("/services", serviceRoutes);
+router.use("/service-forms", serviceFormRoutes);
+router.use("/social-media", socialMediaRoutes);
+router.use("/suggestions", suggestionRoutes);
+router.use("/tenders", tenderRoutes);
+router.use("/vice-presidents", vicePresidentRoutes);
+
+module.exports = router;

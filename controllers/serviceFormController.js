@@ -1,0 +1,130 @@
+const { ServiceForm, Service } = require("../models");
+const fs = require("fs");
+const path = require("path");
+
+//Read
+exports.getFormsByServiceId = async (req, res, next) => {
+  try {
+    const { serviceId } = req.params;
+    const forms = await ServiceForm.findAll({
+      where: { service_id: serviceId },
+    });
+    return res.json({
+      success: 1,
+      data: forms,
+      message: "Formlar listelendi.",
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+//Create
+exports.addFormsToService = async (req, res, next) => {
+  try {
+    const { serviceId } = req.params;
+    const service = await Service.findByPk(serviceId);
+    if (!service) {
+      if (req.files && req.files["forms"]) {
+        req.files["forms"].forEach((f) => fs.unlinkSync(f.path));
+      }
+      return res
+        .status(404)
+        .json({ success: 0, message: "Hizmet bulunamadı." });
+    }
+    if (!req.files || !req.files["forms"]) {
+      return res
+        .status(400)
+        .json({
+          success: 0,
+          data: null,
+          message: "Yüklenecek dosya bulunamadı.",
+        });
+    }
+    const formData = req.files["forms"].map((file) => ({
+      service_id: serviceId,
+      form_name: file.originalname,
+      file_path: file.path.replace(/\\/g, "/"),
+    }));
+    const newForms = await ServiceForm.bulkCreate(formData);
+    return res.status(201).json({
+      success: 1,
+      data: newForms,
+      message: "Yeni formlar başarıyla eklendi.",
+    });
+  } catch (err) {
+    if (req.files && req.files["forms"]) {
+      req.files["forms"].forEach((f) => {
+        if (fs.existsSync(f.path)) fs.unlinkSync(f.path);
+      });
+    }
+    next(err);
+  }
+};
+
+//Update
+exports.updateForm = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { form_name } = req.body;
+    const form = await ServiceForm.findByPk(id);
+    if (!form) {
+      if (req.files && req.files["forms"]) {
+        req.files["forms"].forEach((f) => fs.unlinkSync(f.path));
+      }
+      return res
+        .status(404)
+        .json({ success: 0, message: "Güncellenecek form bulunamadı." });
+    }
+
+    let updatedData = {};
+    if (form_name) updatedData.form_name = form_name;
+
+    if (req.files && req.files["forms"]) {
+      const newFile = req.files["forms"][0];
+      if (fs.existsSync(form.file_path)) {
+        fs.unlinkSync(form.file_path);
+      }
+      updatedData.file_path = newFile.path.replace(/\\/g, "/");
+      if (!form_name) {
+        updatedData.form_name = newFile.originalname;
+      }
+    }
+    await form.update(updatedData);
+
+    return res.json({
+      success: 1,
+      data: form,
+      message: "Form başarıyla güncellendi.",
+    });
+  } catch (err) {
+    if (req.files && req.files["forms"]) {
+      req.files["forms"].forEach((f) => {
+        if (fs.existsSync(f.path)) fs.unlinkSync(f.path);
+      });
+    }
+    next(err);
+  }
+};
+
+//Delete
+exports.deleteForm = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const form = await ServiceForm.findByPk(id);
+    if (!form) {
+      return res.status(404).json({ success: 0, message: "Form bulunamadı." });
+    }
+    if (fs.existsSync(form.file_path)) {
+      fs.unlinkSync(form.file_path);
+    }
+    await form.destroy();
+    return res.json({
+      success: 1,
+      data: null,
+      message: "Form başarıyla kaldırıldı.",
+    });
+  } catch (err) {
+    next(err);
+  }
+};
