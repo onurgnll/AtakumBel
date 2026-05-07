@@ -3,6 +3,21 @@ const bcrypt = require("bcrypt");
 const { Op } = require("sequelize");
 const { normalizePermissions } = require("../helpers/adminPermissions");
 
+// Current admin profile from token
+exports.getMe = async (req, res, next) => {
+  try {
+    const admin = await Admin.findByPk(req.admin.id, {
+      attributes: { exclude: ["password"] },
+    });
+    if (!admin) {
+      return res.status(404).json({ success: 0, message: "Admin bulunamadı." });
+    }
+    res.json({ success: 1, data: admin, message: "Profil bilgileri getirildi." });
+  } catch (err) {
+    next(err);
+  }
+};
+
 //Read
 exports.getAllAdmins = async (req, res, next) => {
   try {

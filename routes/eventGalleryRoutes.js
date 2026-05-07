@@ -4,6 +4,7 @@ const eventGalleryController = require("../controllers/eventGalleryController");
 const { protect, authorize } = require("../middlewares/authMiddleware");
 const upload = require("../middlewares/upload");
 
+router.get("/:event_id", protect, authorize("events", "read"), eventGalleryController.getGalleryByEventId);
 router.post(
   "/:event_id",
   protect,

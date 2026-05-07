@@ -14,6 +14,7 @@ router.post("/login", loginValidation, authController.login);
 
 router.use(protect);
 
+router.get("/me", adminController.getMe);
 router.get("/", authorize("admins", "read"), paginationQuery, adminController.getAllAdmins);
 router.post("/register", authorizeSuperAdmin, adminRegisterValidation, authController.register);
 router.put("/:id", authorizeSuperAdmin, idParam(), adminUpdateValidation, adminController.updateAdmin);

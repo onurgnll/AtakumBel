@@ -1,6 +1,20 @@
 const { EventGallery, Event, sequelize } = require("../models");
 const fs = require("fs");
 
+//Read
+exports.getGalleryByEventId = async (req, res, next) => {
+  try {
+    const { event_id } = req.params;
+    const images = await EventGallery.findAll({
+      where: { event_id },
+      order: [["order", "ASC"]],
+    });
+    res.json({ success: 1, data: images, message: "Galeri listelendi." });
+  } catch (err) {
+    next(err);
+  }
+};
+
 //Create
 exports.addImageToGallery = async (req, res, next) => {
   try {

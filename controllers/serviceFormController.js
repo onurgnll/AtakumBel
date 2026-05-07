@@ -1,6 +1,29 @@
 const { ServiceForm, Service } = require("../models");
+const { getPaginationParams, getPagingData } = require("../helpers/pagination");
 const fs = require("fs");
 const path = require("path");
+
+// List all forms (paginated, with optional service_id filter)
+exports.getAllForms = async (req, res, next) => {
+  try {
+    const { limit, offset } = getPaginationParams(req.query.page, req.query.per_page);
+    const where = req.query.service_id ? { service_id: req.query.service_id } : {};
+    const { rows: forms, count } = await ServiceForm.findAndCountAll({
+      where,
+      include: [{ model: Service, attributes: ["id", "name"] }],
+      limit,
+      offset,
+      order: [["id", "DESC"]],
+    });
+    return res.json({
+      success: 1,
+      data: { forms, pagination: getPagingData(count, req.query.page, limit) },
+      message: "Formlar listelendi.",
+    });
+  } catch (err) {
+    next(err);
+  }
+};
 
 //Read
 exports.getFormsByServiceId = async (req, res, next) => {

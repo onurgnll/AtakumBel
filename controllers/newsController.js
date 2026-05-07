@@ -3,6 +3,19 @@ const { getPaginationParams, getPagingData } = require("../helpers/pagination");
 const fs = require("fs");
 const { Op } = require("sequelize");
 
+function coerceBoolean(value, whenMissing) {
+  if (value === undefined || value === null || value === "") {
+    return whenMissing;
+  }
+  if (typeof value === "boolean") return value;
+  if (typeof value === "string") {
+    const v = value.toLowerCase();
+    if (v === "true" || v === "1") return true;
+    if (v === "false" || v === "0") return false;
+  }
+  return Boolean(value);
+}
+
 const getUploadedFiles = (req) => {
   if (Array.isArray(req.files) && req.files.length > 0) return req.files;
   if (req.file) return [req.file];
@@ -104,7 +117,7 @@ exports.createNews = async (req, res, next) => {
       spot,
       content,
       publish_date: new Date(),
-      is_active,
+      is_active: coerceBoolean(is_active, true),
       view_count: 0,
     }, { transaction });
 
@@ -156,7 +169,7 @@ exports.updateNews = async (req, res, next) => {
       title: title ?? newsItem.title,
       spot: spot ?? newsItem.spot,
       content: content ?? newsItem.content,
-      is_active: is_active ?? newsItem.is_active,
+      is_active: coerceBoolean(is_active, newsItem.is_active),
     });
 
     const uploadedFiles = getUploadedFiles(req);

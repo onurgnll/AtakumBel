@@ -4,6 +4,7 @@ const newsGalleryController = require("../controllers/newsGalleryController");
 const { protect, authorize } = require("../middlewares/authMiddleware");
 const upload = require("../middlewares/upload");
 
+router.get("/:news_id", protect, authorize("news", "read"), newsGalleryController.getGalleryByNewsId);
 router.post(
   "/:news_id",
   protect,
