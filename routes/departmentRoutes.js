@@ -4,6 +4,7 @@ const departmentController = require("../controllers/departmentController");
 const { protect, authorize } = require("../middlewares/authMiddleware");
 
 router.get("/", departmentController.getAllDepartments);
+router.get("/:id", departmentController.getDepartmentById);
 router.post(
   "/",
   protect,

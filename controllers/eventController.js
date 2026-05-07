@@ -200,28 +200,21 @@ exports.createEvent = async (req, res, next) => {
       description,
     }, { transaction });
 
-    if (uploadedFiles.length === 0) {
-      await transaction.rollback();
-      return res.status(400).json({
-        success: 0,
-        data: null,
-        message: "Etkinlik oluştururken en az bir görsel yüklenmelidir.",
-      });
-    }
-
-    await Promise.all(
-      uploadedFiles.map((file, index) =>
-        EventGallery.create(
-          {
-            event_id: newEvent.id,
-            image_url: file.path.replace(/\\/g, "/"),
-            order: index + 1,
-            is_main: index === 0,
-          },
-          { transaction },
+    if (uploadedFiles.length > 0) {
+      await Promise.all(
+        uploadedFiles.map((file, index) =>
+          EventGallery.create(
+            {
+              event_id: newEvent.id,
+              image_url: file.path.replace(/\\/g, "/"),
+              order: index + 1,
+              is_main: index === 0,
+            },
+            { transaction },
+          ),
         ),
-      ),
-    );
+      );
+    }
     await transaction.commit();
 
     res

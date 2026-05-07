@@ -5,6 +5,7 @@ const { protect, authorize } = require("../middlewares/authMiddleware");
 const upload = require("../middlewares/upload");
 
 router.get("/", serviceController.getAllServices);
+router.get("/:id", serviceController.getServiceById);
 router.post(
   "/",
   protect,

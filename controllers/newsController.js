@@ -108,28 +108,21 @@ exports.createNews = async (req, res, next) => {
       view_count: 0,
     }, { transaction });
 
-    if (uploadedFiles.length === 0) {
-      await transaction.rollback();
-      return res.status(400).json({
-        success: 0,
-        data: null,
-        message: "Haber oluştururken en az bir görsel yüklenmelidir.",
-      });
-    }
-
-    await Promise.all(
-      uploadedFiles.map((file, index) =>
-        NewsGallery.create(
-          {
-            news_id: newNews.id,
-            image_url: file.path.replace(/\\/g, "/"),
-            order: index + 1,
-            is_main: index === 0,
-          },
-          { transaction },
+    if (uploadedFiles.length > 0) {
+      await Promise.all(
+        uploadedFiles.map((file, index) =>
+          NewsGallery.create(
+            {
+              news_id: newNews.id,
+              image_url: file.path.replace(/\\/g, "/"),
+              order: index + 1,
+              is_main: index === 0,
+            },
+            { transaction },
+          ),
         ),
-      ),
-    );
+      );
+    }
     await transaction.commit();
 
     return res
