@@ -10,9 +10,12 @@ module.exports = {
 
     return queryInterface.bulkInsert("Admins", [
       {
-        username: "admin",
+        first_name: "Sistem",
+        last_name: "Yonetici",
         password: hashedPassword,
         email: "admin@atakumbel.gov.tr",
+        phone_number: "05452049126",
+        role: "superadmin",
         createdAt: new Date(),
         updatedAt: new Date(),
         last_login: new Date(),
@@ -24,6 +27,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    return queryInterface.bulkDelete("Admins", { username: "admin" }, {});
+    return queryInterface.bulkDelete("Admins", { email: "admin@atakumbel.gov.tr" }, {});
   },
 };

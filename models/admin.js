@@ -16,7 +16,11 @@ module.exports = (sequelize, DataTypes) => {
         autoIncrement: true,
         primaryKey: true,
       },
-      username: {
+      first_name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      last_name: {
         type: DataTypes.STRING,
         allowNull: false,
       },
@@ -29,13 +33,23 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         unique: true,
       },
-      last_login: {
-        type: DataTypes.DATE,
+      phone_number: {
+        type: DataTypes.STRING,
         allowNull: false,
       },
-      permissions: {
-        type: DataTypes.JSON,
+      role: {
+        type: DataTypes.ENUM("superadmin", "admin"),
         allowNull: false,
+        defaultValue: "admin",
+      },
+      last_login: {
+        type: DataTypes.DATE,
+        allowNull: true,
+      },
+      permissions: {
+        type: DataTypes.JSONB,
+        allowNull: false,
+        defaultValue: {},
       },
     },
     {

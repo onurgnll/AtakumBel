@@ -2,12 +2,7 @@
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class CouncilMember extends Model {
-    static associate(models) {
-      CouncilMember.belongsTo(models.Council, {
-        foreignKey: "council_id",
-        as: "council",
-      });
-    }
+    static associate(models) {}
   }
 
   CouncilMember.init(
@@ -28,10 +23,6 @@ module.exports = (sequelize, DataTypes) => {
       },
       political_party: {
         type: DataTypes.STRING,
-        allowNull: false,
-      },
-      council_id: {
-        type: DataTypes.INTEGER,
         allowNull: false,
       },
       image_url: {

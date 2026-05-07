@@ -1,5 +1,6 @@
 const { Encumen, EncumenMembership, Employee } = require("../models");
 const { getPaginationParams, getPagingData } = require("../helpers/pagination");
+const { Op } = require("sequelize");
 
 //Read
 exports.getAllEncumens = async (req, res, next) => {
@@ -8,8 +9,15 @@ exports.getAllEncumens = async (req, res, next) => {
       req.query.page,
       req.query.per_page,
     );
+    const search = req.query.search ? req.query.search.trim() : null;
+    const whereCondition = search
+      ? {
+          term_name: { [Op.iLike]: `%${search}%` },
+        }
+      : {};
 
     const { rows: encumens, count } = await Encumen.findAndCountAll({
+      where: whereCondition,
       limit,
       offset,
       order: [["created_at", "DESC"]],

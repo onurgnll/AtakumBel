@@ -1,6 +1,7 @@
 const { Employee, Department, sequelize } = require("../models");
 const { getPaginationParams, getPagingData } = require("../helpers/pagination");
 const fs = require("fs");
+const { Op } = require("sequelize");
 
 //Read
 exports.getAllEmployees = async (req, res, next) => {
@@ -9,7 +10,19 @@ exports.getAllEmployees = async (req, res, next) => {
       req.query.page,
       req.query.per_page,
     );
+    const search = req.query.search ? req.query.search.trim() : null;
+    const whereCondition = search
+      ? {
+          [Op.or]: [
+            { first_name: { [Op.iLike]: `%${search}%` } },
+            { last_name: { [Op.iLike]: `%${search}%` } },
+            { title: { [Op.iLike]: `%${search}%` } },
+            { dahili_no: { [Op.iLike]: `%${search}%` } },
+          ],
+        }
+      : {};
     const { rows: employees, count } = await Employee.findAndCountAll({
+      where: whereCondition,
       limit,
       offset,
       include: [{ model: Department, as: "department", attributes: ["name"] }],
@@ -38,8 +51,10 @@ exports.createEmployee = async (req, res, next) => {
       last_name,
       title,
       department_id,
-      extension_no,
+      dahili_no,
       is_unit_manager,
+      is_contact_person,
+      is_active,
     } = req.body;
 
     const image_path = req.file ? req.file.path.replace(/\\/g, "/") : null;
@@ -60,9 +75,11 @@ exports.createEmployee = async (req, res, next) => {
       last_name,
       title,
       department_id,
-      extension_no,
+      dahili_no,
       image_url: image_path,
       is_unit_manager: is_unit_manager || false,
+      is_contact_person: is_contact_person || false,
+      is_active: is_active ?? true,
     });
 
     return res.status(201).json({
@@ -86,9 +103,11 @@ exports.updateEmployee = async (req, res, next) => {
       last_name,
       title,
       department_id,
-      extension_no,
+      dahili_no,
       image_url,
       is_unit_manager,
+      is_contact_person,
+      is_active,
     } = req.body;
     if (!employee) {
       return res
@@ -109,12 +128,17 @@ exports.updateEmployee = async (req, res, next) => {
       last_name: last_name ?? employee.last_name,
       title: title ?? employee.title,
       department_id: department_id ?? employee.department_id,
-      extension_no: extension_no ?? employee.extension_no,
+      dahili_no: dahili_no ?? employee.dahili_no,
       image_url: image_path,
       is_unit_manager:
         is_unit_manager !== undefined
           ? is_unit_manager
           : employee.is_unit_manager,
+      is_contact_person:
+        is_contact_person !== undefined
+          ? is_contact_person
+          : employee.is_contact_person,
+      is_active: is_active !== undefined ? is_active : employee.is_active,
     });
     return res.json({
       success: 1,

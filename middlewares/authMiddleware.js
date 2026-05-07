@@ -1,5 +1,30 @@
 const jwt = require("jsonwebtoken");
 
+const getActionFromRequest = (req) => {
+  if (req.method === "POST") return "create";
+  if (req.method === "PUT" || req.method === "PATCH") return "update";
+  if (req.method === "DELETE") return "delete";
+  return "read";
+};
+
+const hasModulePermission = (permissions, moduleName, action) => {
+  if (!permissions || typeof permissions !== "object") return false;
+  if (permissions.all === true) return true;
+
+  const modulePermission = permissions[moduleName];
+  if (!modulePermission) return false;
+
+  // Legacy compatibility: { module: "write" } / { module: "read" }
+  if (modulePermission === "write") return true;
+  if (modulePermission === "read") return action === "read";
+  if (modulePermission === true) return true;
+
+  if (typeof modulePermission === "object") {
+    return Boolean(modulePermission[action]);
+  }
+  return false;
+};
+
 const protect = (req, res, next) => {
   let token;
   if (
@@ -7,6 +32,12 @@ const protect = (req, res, next) => {
     req.headers.authorization.startsWith("Bearer")
   ) {
     try {
+      if (!process.env.JWT_SECRET) {
+        return res.status(500).json({
+          success: 0,
+          message: "Sunucu yapılandırma hatası: JWT_SECRET tanımlı değil.",
+        });
+      }
       token = req.headers.authorization.split(" ")[1];
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
       req.admin = decoded;
@@ -29,25 +60,34 @@ const protect = (req, res, next) => {
 
 // 2. Aşama: Yetki Kontrolü (İlgili modüle erişim izni var mı?)
 // Bu fonksiyon bir "middleware factory"dir; modül adını parametre olarak alır.
-const authorize = (moduleName) => {
+const authorize = (moduleName, action) => {
   return (req, res, next) => {
-    // req.admin verisi bir önceki 'protect' middleware'inden geliyor
-    const { permissions } = req.admin;
+    const { permissions, role } = req.admin;
+    const requestedAction = action || getActionFromRequest(req);
 
-    // 1. Süper Admin mi? (JSON içindeki 'all: true' kontrolü)
-    if (permissions && permissions.all === true) {
+    if (role === "superadmin") {
       return next();
     }
 
-    // 2. Modül bazlı yetki kontrolü (Örn: permissions.news === "write")
-    if (permissions && permissions[moduleName] === "write") {
+    if (hasModulePermission(permissions, moduleName, requestedAction)) {
       return next();
     }
+
     return res.status(403).json({
       success: 0,
-      message: `Bu işlemi gerçekleştirmek için '${moduleName}' modülünde yetkiniz bulunmamaktadır.`,
+      message: `'${moduleName}' modülünde '${requestedAction}' yetkiniz bulunmamaktadır.`,
     });
   };
 };
 
-module.exports = { protect, authorize };
+const authorizeSuperAdmin = (req, res, next) => {
+  if (req.admin?.role === "superadmin") {
+    return next();
+  }
+  return res.status(403).json({
+    success: 0,
+    message: "Bu işlem için superadmin yetkisi gereklidir.",
+  });
+};
+
+module.exports = { protect, authorize, authorizeSuperAdmin };

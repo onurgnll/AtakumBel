@@ -2,15 +2,19 @@ const express = require("express");
 const router = express.Router();
 const eventController = require("../controllers/eventController");
 const { protect, authorize } = require("../middlewares/authMiddleware");
+const { idParam, paginationQuery } = require("../validators/commonValidator");
+const { requireBody } = require("../validators/moduleValidators");
+const upload = require("../middlewares/upload");
 
-router.get("/", eventController.getAllEvents);
-router.get("/:id", eventController.getEventById);
-router.post("/", protect, authorize("events"), eventController.createEvent);
-router.put("/:id", protect, authorize("events"), eventController.updateEvent);
+router.get("/", paginationQuery, eventController.getAllEvents);
+router.get("/:id", idParam(), eventController.getEventById);
+router.post("/", protect, authorize("events"), upload.array("images", 10), requireBody, eventController.createEvent);
+router.put("/:id", protect, authorize("events"), idParam(), upload.array("images", 10), eventController.updateEvent);
 router.delete(
   "/:id",
   protect,
   authorize("events"),
+  idParam(),
   eventController.deleteEvent,
 );
 

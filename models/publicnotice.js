@@ -11,10 +11,6 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "decision_id",
         as: "decision",
       });
-      PublicNotice.hasMany(models.Tender, {
-        foreignKey: "notice_id",
-        as: "tenders",
-      });
     }
   }
 
@@ -30,13 +26,39 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
+      description: {
+        type: DataTypes.TEXT,
+        allowNull: true,
+      },
+      publish_date: {
+        type: DataTypes.DATEONLY,
+        allowNull: true,
+      },
+      is_active: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true,
+      },
+      files: {
+        type: DataTypes.JSONB,
+        allowNull: true,
+        defaultValue: [],
+      },
       content: {
         type: DataTypes.TEXT,
-        allowNull: false,
+        allowNull: true,
       },
       status: {
         type: DataTypes.ENUM("on_hold", "completed", "upcoming"),
-        allowNull: false,
+        allowNull: true,
+      },
+      start_date: {
+        type: DataTypes.DATEONLY,
+        allowNull: true,
+      },
+      end_date: {
+        type: DataTypes.DATEONLY,
+        allowNull: true,
       },
       file_url: {
         type: DataTypes.STRING,

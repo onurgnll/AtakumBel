@@ -1,6 +1,7 @@
-const { Council, CouncilMember, sequelize } = require("../models");
+const { CouncilMember } = require("../models");
 const { getPaginationParams, getPagingData } = require("../helpers/pagination");
 const fs = require("fs");
+const { Op } = require("sequelize");
 
 //Read
 exports.getAllCouncilMembers = async (req, res, next) => {
@@ -9,17 +10,20 @@ exports.getAllCouncilMembers = async (req, res, next) => {
       req.query.page,
       req.query.per_page,
     );
+    const search = req.query.search ? req.query.search.trim() : null;
+    const whereCondition = search
+      ? {
+          [Op.or]: [
+            { first_name: { [Op.iLike]: `%${search}%` } },
+            { last_name: { [Op.iLike]: `%${search}%` } },
+            { political_party: { [Op.iLike]: `%${search}%` } },
+          ],
+        }
+      : {};
     const { rows: members, count } = await CouncilMember.findAndCountAll({
+      where: whereCondition,
       limit,
       offset,
-      include: [
-        {
-          model: Council,
-          as: "council",
-          attributes: ["id", "term_name"],
-          where: { is_active: true },
-        },
-      ],
       order: [["id", "ASC"]],
     });
     return res.json({
@@ -38,33 +42,22 @@ exports.getAllCouncilMembers = async (req, res, next) => {
 //Create
 exports.addMemberToCouncil = async (req, res, next) => {
   try {
-    const { council_id, first_name, last_name, political_party } = req.body;
-    const council = await Council.findByPk(council_id);
-    if (!council) {
-      if (req.file) fs.unlinkSync(req.file.path);
-      return res.status(404).json({
-        success: 0,
-        data: null,
-        message: "Üye eklemek istediğiniz meclis bulunamadı.",
-      });
-    }
+    const { first_name, last_name, political_party } = req.body;
     const existingMember = await CouncilMember.findOne({
       where: {
         first_name,
         last_name,
-        council_id,
       },
     });
     if (existingMember) {
       if (req.file) fs.unlinkSync(req.file.path);
       return res.status(409).json({
         success: 0,
-        message: "Bu üye bu meclis döneminde zaten kayıtlı.",
+        message: "Bu üye zaten kayıtlı.",
       });
     }
     const image_path = req.file ? req.file.path.replace(/\\/g, "/") : null;
     const member = await CouncilMember.create({
-      council_id,
       first_name,
       last_name,
       political_party,
@@ -93,7 +86,7 @@ exports.updateMember = async (req, res, next) => {
         .json({ success: 0, message: "Güncellenecek üye bulunamadı." });
     }
 
-    const { first_name, last_name, political_party, council_id } = req.body;
+    const { first_name, last_name, political_party } = req.body;
     let image_path = member.image_url;
     if (req.file) {
       if (member.image_url && fs.existsSync(member.image_url)) {
@@ -106,7 +99,6 @@ exports.updateMember = async (req, res, next) => {
       first_name: first_name ?? member.first_name,
       last_name: last_name ?? member.last_name,
       political_party: political_party ?? member.political_party,
-      council_id: council_id ?? member.council_id,
       image_url: image_path,
     });
 

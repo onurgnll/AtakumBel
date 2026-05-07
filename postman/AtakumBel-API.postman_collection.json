@@ -1,0 +1,859 @@
+{
+  "info": {
+    "name": "AtakumBel API - Detailed",
+    "_postman_id": "0af6bdb7-89c5-4c47-a8c0-9b1a5b78ca56",
+    "description": "AtakumBel backend API collection. Includes authentication flow, CRUD requests for all modules, pagination/search examples, and multipart upload endpoints.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:5000/api" },
+    { "key": "token", "value": "" },
+    { "key": "adminId", "value": "1" },
+    { "key": "id", "value": "1" },
+    { "key": "news_id", "value": "1" },
+    { "key": "event_id", "value": "1" },
+    { "key": "facility_id", "value": "1" },
+    { "key": "president_id", "value": "1" },
+    { "key": "serviceId", "value": "1" }
+  ],
+  "item": [
+    {
+      "name": "1) Auth & Admin",
+      "item": [
+        {
+          "name": "Login (sets token)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@atakumbel.gov.tr\",\n  \"password\": \"Admin12345\"\n}"
+            },
+            "url": "{{baseUrl}}/admin/login",
+            "description": "Logs in admin and stores JWT in collection variable `token`."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "const jsonData = pm.response.json();",
+                  "if (jsonData && jsonData.token) {",
+                  "    pm.collectionVariables.set('token', jsonData.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get All Admins",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/admin?page=1&per_page=20"
+          }
+        },
+        {
+          "name": "Register Admin",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"first_name\": \"Editor\",\n  \"last_name\": \"Admin\",\n  \"email\": \"editor@atakumbel.gov.tr\",\n  \"phone_number\": \"+90 555 123 45 67\",\n  \"password\": \"StrongPass123\",\n  \"role\": \"admin\",\n  \"permissions\": {\n    \"all\": false,\n    \"admins\": { \"read\": true, \"create\": false, \"update\": false, \"delete\": false },\n    \"news\": { \"read\": true, \"create\": true, \"update\": true, \"delete\": true },\n    \"events\": { \"read\": true, \"create\": true, \"update\": true, \"delete\": false },\n    \"publicNotices\": { \"read\": true, \"create\": true, \"update\": true, \"delete\": false }\n  }\n}"
+            },
+            "url": "{{baseUrl}}/admin/register"
+          }
+        },
+        {
+          "name": "Update Admin",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"first_name\": \"Editor\",\n  \"last_name\": \"Admin Guncel\",\n  \"phone_number\": \"+90 555 999 88 77\",\n  \"role\": \"admin\",\n  \"permissions\": {\n    \"all\": false,\n    \"news\": { \"read\": true, \"create\": true, \"update\": true, \"delete\": true },\n    \"events\": { \"read\": true, \"create\": true, \"update\": true, \"delete\": true },\n    \"activityReports\": { \"read\": true, \"create\": true, \"update\": false, \"delete\": false },\n    \"pressMaterials\": { \"read\": true, \"create\": true, \"update\": true, \"delete\": false }\n  }\n}"
+            },
+            "url": "{{baseUrl}}/admin/{{adminId}}"
+          }
+        },
+        {
+          "name": "Delete Admin",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/admin/{{adminId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "2) Kurumsal",
+      "item": [
+        {
+          "name": "Departments",
+          "item": [
+            { "name": "List Departments", "request": { "method": "GET", "url": "{{baseUrl}}/departments" } },
+            {
+              "name": "Create Department",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{token}}" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": { "mode": "raw", "raw": "{\n  \"name\": \"Park ve Bahceler Mudurlugu\",\n  \"description\": \"Ilce genelinde yesil alan planlama ve bakim faaliyetleri.\",\n  \"phone\": \"+90 362 111 00 09\",\n  \"address\": \"Atakum Belediyesi Ek Hizmet Binasi\"\n}" },
+                "url": "{{baseUrl}}/departments"
+              }
+            },
+            {
+              "name": "Update Department",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{token}}" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": { "mode": "raw", "raw": "{\n  \"description\": \"Yesil alan, peyzaj ve mevsimlik bakim programlarini yurutur.\",\n  \"phone\": \"+90 362 111 00 19\"\n}" },
+                "url": "{{baseUrl}}/departments/{{id}}"
+              }
+            },
+            { "name": "Delete Department", "request": { "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }], "url": "{{baseUrl}}/departments/{{id}}" } }
+          ]
+        },
+        {
+          "name": "Employees",
+          "item": [
+            { "name": "List Employees", "request": { "method": "GET", "url": "{{baseUrl}}/employees" } },
+            {
+              "name": "Create Employee",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{token}}" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": { "mode": "raw", "raw": "{\n  \"first_name\": \"Ali\",\n  \"last_name\": \"Kaya\",\n  \"title\": \"Muhendis\",\n  \"department_id\": 1,\n  \"dahili_no\": \"2301\",\n  \"is_unit_manager\": false,\n  \"is_contact_person\": true,\n  \"is_active\": true\n}" },
+                "url": "{{baseUrl}}/employees"
+              }
+            },
+            {
+              "name": "Update Employee",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{token}}" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": { "mode": "raw", "raw": "{\n  \"title\": \"Birim Sefi\",\n  \"is_unit_manager\": true\n}" },
+                "url": "{{baseUrl}}/employees/{{id}}"
+              }
+            },
+            { "name": "Delete Employee", "request": { "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }], "url": "{{baseUrl}}/employees/{{id}}" } }
+          ]
+        },
+        {
+          "name": "Genelgeler",
+          "item": [
+            { "name": "List Directives", "request": { "method": "GET", "url": "{{baseUrl}}/directives" } },
+            { "name": "Get Directive By Id", "request": { "method": "GET", "url": "{{baseUrl}}/directives/{{id}}" } },
+            { "name": "Create Directive", "request": { "method": "POST", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"title\": \"Sifir Atik Uygulama Yonergesi\",\n  \"description\": \"Atik ayristirma ve toplama standartlari\",\n  \"publish_date\": \"2026-03-20\"\n}" }, "url": "{{baseUrl}}/directives" } },
+            { "name": "Update Directive", "request": { "method": "PUT", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"title\": \"Sifir Atik Yonergesi (Revize)\"\n}" }, "url": "{{baseUrl}}/directives/{{id}}" } },
+            { "name": "Delete Directive", "request": { "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }], "url": "{{baseUrl}}/directives/{{id}}" } }
+          ]
+        },
+        {
+          "name": "Raporlar",
+          "item": [
+            { "name": "List Activity Reports", "request": { "method": "GET", "url": "{{baseUrl}}/activity-reports" } },
+            { "name": "List Financial Expectation Reports", "request": { "method": "GET", "url": "{{baseUrl}}/financial-expectation-reports" } },
+            { "name": "List Performance Programs", "request": { "method": "GET", "url": "{{baseUrl}}/performance-programs" } },
+            { "name": "List Audit Reports", "request": { "method": "GET", "url": "{{baseUrl}}/audit-reports" } },
+            { "name": "List Strategic Plans", "request": { "method": "GET", "url": "{{baseUrl}}/strategic-plans" } },
+            { "name": "List KVKK Documents", "request": { "method": "GET", "url": "{{baseUrl}}/kvkk-documents" } },
+            { "name": "List Press Materials", "request": { "method": "GET", "url": "{{baseUrl}}/press-materials" } }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "3) Guncel",
+      "item": [
+        {
+          "name": "News",
+          "item": [
+            { "name": "List News", "request": { "method": "GET", "url": "{{baseUrl}}/news?page=1&per_page=20" } },
+            { "name": "Get News By Id", "request": { "method": "GET", "url": "{{baseUrl}}/news/{{id}}" } },
+            {
+              "name": "Create News",
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "body": { "mode": "formdata", "formdata": [{ "key": "title", "value": "Atakum Sahil Duzenleme Calismalari", "type": "text" }, { "key": "spot", "value": "Sahil yaya akslari yenileniyor.", "type": "text" }, { "key": "content", "value": "Proje etaplar halinde yururluge alindi.", "type": "text" }, { "key": "is_active", "value": "true", "type": "text" }, { "key": "images", "type": "file", "src": "" }, { "key": "images", "type": "file", "src": "" }] },
+                "url": "{{baseUrl}}/news"
+              }
+            },
+            {
+              "name": "Update News",
+              "request": {
+                "method": "PUT",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "body": { "mode": "formdata", "formdata": [{ "key": "title", "value": "Atakum Sahil Duzenleme Calismalari (Guncel)", "type": "text" }, { "key": "is_active", "value": "true", "type": "text" }, { "key": "images", "type": "file", "src": "" }, { "key": "images", "type": "file", "src": "" }] },
+                "url": "{{baseUrl}}/news/{{id}}"
+              }
+            },
+            { "name": "Delete News", "request": { "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }], "url": "{{baseUrl}}/news/{{id}}" } }
+          ]
+        },
+        {
+          "name": "News Gallery (multipart)",
+          "item": [
+            {
+              "name": "Add News Gallery Image",
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    { "key": "image", "type": "file", "src": "" },
+                    { "key": "is_main", "value": "true", "type": "text" },
+                    { "key": "order", "value": "1", "type": "text" }
+                  ]
+                },
+                "url": "{{baseUrl}}/news-galleries/{{news_id}}"
+              }
+            },
+            {
+              "name": "Update News Gallery Image",
+              "request": {
+                "method": "PUT",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    { "key": "image", "type": "file", "src": "" },
+                    { "key": "is_main", "value": "false", "type": "text" },
+                    { "key": "order", "value": "2", "type": "text" }
+                  ]
+                },
+                "url": "{{baseUrl}}/news-galleries/{{id}}"
+              }
+            },
+            { "name": "Delete News Gallery Image", "request": { "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }], "url": "{{baseUrl}}/news-galleries/{{id}}" } }
+          ]
+        },
+        {
+          "name": "Events",
+          "item": [
+            { "name": "List Events", "request": { "method": "GET", "url": "{{baseUrl}}/events?page=1&per_page=20" } },
+            { "name": "Get Event By Id", "request": { "method": "GET", "url": "{{baseUrl}}/events/{{id}}" } },
+            {
+              "name": "Create Event",
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "body": { "mode": "formdata", "formdata": [{ "key": "title", "value": "Atakum Cocuk Senligi", "type": "text" }, { "key": "type", "value": "activity", "type": "text" }, { "key": "start_date", "value": "2026-06-10", "type": "text" }, { "key": "end_date", "value": "2026-06-10", "type": "text" }, { "key": "event_time", "value": "14:00:00", "type": "text" }, { "key": "address", "value": "Atakum Kent Meydani", "type": "text" }, { "key": "description", "value": "Atolye ve sahne gosteri etkinligi", "type": "text" }, { "key": "images", "type": "file", "src": "" }, { "key": "images", "type": "file", "src": "" }] },
+                "url": "{{baseUrl}}/events"
+              }
+            },
+            {
+              "name": "Update Event",
+              "request": {
+                "method": "PUT",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "body": { "mode": "formdata", "formdata": [{ "key": "title", "value": "Atakum Cocuk Senligi 2026", "type": "text" }, { "key": "event_time", "value": "15:00:00", "type": "text" }, { "key": "images", "type": "file", "src": "" }, { "key": "images", "type": "file", "src": "" }] },
+                "url": "{{baseUrl}}/events/{{id}}"
+              }
+            },
+            { "name": "Delete Event", "request": { "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }], "url": "{{baseUrl}}/events/{{id}}" } }
+          ]
+        },
+        {
+          "name": "Event Gallery (multipart)",
+          "item": [
+            {
+              "name": "Add Event Gallery Image",
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "body": { "mode": "formdata", "formdata": [{ "key": "image", "type": "file", "src": "" }, { "key": "is_main", "value": "true", "type": "text" }, { "key": "order", "value": "1", "type": "text" }] },
+                "url": "{{baseUrl}}/event-galleries/{{event_id}}"
+              }
+            },
+            {
+              "name": "Update Event Gallery Image",
+              "request": {
+                "method": "PUT",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "body": { "mode": "formdata", "formdata": [{ "key": "image", "type": "file", "src": "" }, { "key": "is_main", "value": "false", "type": "text" }, { "key": "order", "value": "2", "type": "text" }] },
+                "url": "{{baseUrl}}/event-galleries/{{id}}"
+              }
+            },
+            { "name": "Delete Event Gallery Image", "request": { "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }], "url": "{{baseUrl}}/event-galleries/{{id}}" } }
+          ]
+        },
+        {
+          "name": "Facilities",
+          "item": [
+            { "name": "List Facilities", "request": { "method": "GET", "url": "{{baseUrl}}/facilities" } },
+            { "name": "Get Facility By Id", "request": { "method": "GET", "url": "{{baseUrl}}/facilities/{{id}}" } },
+            {
+              "name": "Create Facility",
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "body": { "mode": "formdata", "formdata": [{ "key": "name", "value": "Genclik Merkezi", "type": "text" }, { "key": "address", "value": "Denizevleri Mah. No:10", "type": "text" }, { "key": "images", "type": "file", "src": "" }, { "key": "images", "type": "file", "src": "" }] },
+                "url": "{{baseUrl}}/facilities"
+              }
+            },
+            {
+              "name": "Update Facility",
+              "request": {
+                "method": "PUT",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "body": { "mode": "formdata", "formdata": [{ "key": "address", "value": "Denizevleri Mah. Cumhuriyet Cad. No:10", "type": "text" }, { "key": "images", "type": "file", "src": "" }, { "key": "images", "type": "file", "src": "" }] },
+                "url": "{{baseUrl}}/facilities/{{id}}"
+              }
+            },
+            { "name": "Delete Facility", "request": { "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }], "url": "{{baseUrl}}/facilities/{{id}}" } }
+          ]
+        },
+        {
+          "name": "Facility Gallery (multipart)",
+          "item": [
+            {
+              "name": "Add Facility Gallery Image",
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "body": { "mode": "formdata", "formdata": [{ "key": "image", "type": "file", "src": "" }, { "key": "is_main", "value": "true", "type": "text" }, { "key": "order", "value": "1", "type": "text" }] },
+                "url": "{{baseUrl}}/facility-galleries/{{facility_id}}"
+              }
+            },
+            {
+              "name": "Update Facility Gallery Image",
+              "request": {
+                "method": "PUT",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "body": { "mode": "formdata", "formdata": [{ "key": "image", "type": "file", "src": "" }, { "key": "is_main", "value": "false", "type": "text" }, { "key": "order", "value": "2", "type": "text" }] },
+                "url": "{{baseUrl}}/facility-galleries/{{id}}"
+              }
+            },
+            { "name": "Delete Facility Gallery Image", "request": { "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }], "url": "{{baseUrl}}/facility-galleries/{{id}}" } }
+          ]
+        },
+        {
+          "name": "President & Gallery",
+          "item": [
+            { "name": "Get President", "request": { "method": "GET", "url": "{{baseUrl}}/president" } },
+            { "name": "Get President Message", "request": { "method": "GET", "url": "{{baseUrl}}/president/message" } },
+            {
+              "name": "Create/Update President (multipart)",
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    { "key": "first_name", "value": "Murat", "type": "text" },
+                    { "key": "last_name", "value": "Topaloglu", "type": "text" },
+                    { "key": "biography", "value": "Baskan biyografisi", "type": "text" },
+                    { "key": "message", "value": "Baskan mesaji", "type": "text" },
+                    { "key": "social_media_accounts", "value": "[{\"platform\":\"Instagram\",\"url\":\"https://instagram.com/atakumbelediyesi\"},{\"platform\":\"X\",\"url\":\"https://x.com/atakumbelediye\"}]", "type": "text" },
+                    { "key": "image", "type": "file", "src": "" }
+                  ]
+                },
+                "url": "{{baseUrl}}/president"
+              }
+            },
+            { "name": "Get President Gallery", "request": { "method": "GET", "url": "{{baseUrl}}/president-galleries/{{president_id}}" } },
+            {
+              "name": "Add President Gallery Image",
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "body": { "mode": "formdata", "formdata": [{ "key": "image", "type": "file", "src": "" }, { "key": "order", "value": "1", "type": "text" }, { "key": "is_main", "value": "true", "type": "text" }] },
+                "url": "{{baseUrl}}/president-galleries/{{president_id}}"
+              }
+            },
+            {
+              "name": "Update President Gallery Image",
+              "request": {
+                "method": "PUT",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "body": { "mode": "formdata", "formdata": [{ "key": "image", "type": "file", "src": "" }, { "key": "order", "value": "2", "type": "text" }, { "key": "is_main", "value": "false", "type": "text" }] },
+                "url": "{{baseUrl}}/president-galleries/{{id}}"
+              }
+            },
+            { "name": "Delete President Gallery Image", "request": { "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }], "url": "{{baseUrl}}/president-galleries/{{id}}" } }
+          ]
+        },
+        {
+          "name": "Press Materials (multipart)",
+          "item": [
+            { "name": "List Press Materials", "request": { "method": "GET", "url": "{{baseUrl}}/press-materials" } },
+            {
+              "name": "Create Press Material",
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "body": { "mode": "formdata", "formdata": [{ "key": "title", "value": "Basin Bulteni", "type": "text" }, { "key": "description", "value": "Basin materyali aciklamasi", "type": "text" }, { "key": "publish_date", "value": "2026-06-01", "type": "text" }, { "key": "is_active", "value": "true", "type": "text" }, { "key": "documents", "type": "file", "src": "" }, { "key": "documents", "type": "file", "src": "" }] },
+                "url": "{{baseUrl}}/press-materials"
+              }
+            },
+            {
+              "name": "Update Press Material",
+              "request": {
+                "method": "PUT",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "body": { "mode": "formdata", "formdata": [{ "key": "title", "value": "Basin Bulteni Guncel", "type": "text" }, { "key": "documents", "type": "file", "src": "" }, { "key": "documents", "type": "file", "src": "" }] },
+                "url": "{{baseUrl}}/press-materials/{{id}}"
+              }
+            },
+            { "name": "Delete Press Material", "request": { "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }], "url": "{{baseUrl}}/press-materials/{{id}}" } }
+          ]
+        },
+        {
+          "name": "Activity Reports",
+          "item": [
+            { "name": "List Activity Reports", "request": { "method": "GET", "url": "{{baseUrl}}/activity-reports" } },
+            {
+              "name": "Create Activity Report",
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "body": { "mode": "formdata", "formdata": [{ "key": "title", "value": "2026 Faaliyet Raporu", "type": "text" }, { "key": "description", "value": "Faaliyet raporu aciklamasi", "type": "text" }, { "key": "publish_date", "value": "2026-06-01", "type": "text" }, { "key": "is_active", "value": "true", "type": "text" }, { "key": "document", "type": "file", "src": "" }] },
+                "url": "{{baseUrl}}/activity-reports"
+              }
+            },
+            {
+              "name": "Update Activity Report",
+              "request": {
+                "method": "PUT",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "body": { "mode": "formdata", "formdata": [{ "key": "title", "value": "2026 Faaliyet Raporu Guncel", "type": "text" }, { "key": "document", "type": "file", "src": "" }] },
+                "url": "{{baseUrl}}/activity-reports/{{id}}"
+              }
+            },
+            { "name": "Delete Activity Report", "request": { "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }], "url": "{{baseUrl}}/activity-reports/{{id}}" } }
+          ]
+        },
+        {
+          "name": "Financial Expectation Reports",
+          "item": [
+            { "name": "List Financial Expectation Reports", "request": { "method": "GET", "url": "{{baseUrl}}/financial-expectation-reports" } },
+            { "name": "Create Financial Expectation Report", "request": { "method": "POST", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }], "body": { "mode": "formdata", "formdata": [{ "key": "title", "value": "Mali Beklenti Raporu", "type": "text" }, { "key": "document", "type": "file", "src": "" }] }, "url": "{{baseUrl}}/financial-expectation-reports" } },
+            { "name": "Update Financial Expectation Report", "request": { "method": "PUT", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }], "body": { "mode": "formdata", "formdata": [{ "key": "title", "value": "Mali Beklenti Raporu Guncel", "type": "text" }, { "key": "document", "type": "file", "src": "" }] }, "url": "{{baseUrl}}/financial-expectation-reports/{{id}}" } },
+            { "name": "Delete Financial Expectation Report", "request": { "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }], "url": "{{baseUrl}}/financial-expectation-reports/{{id}}" } }
+          ]
+        },
+        {
+          "name": "Performance Programs",
+          "item": [
+            { "name": "List Performance Programs", "request": { "method": "GET", "url": "{{baseUrl}}/performance-programs" } },
+            { "name": "Create Performance Program", "request": { "method": "POST", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }], "body": { "mode": "formdata", "formdata": [{ "key": "title", "value": "Performans Programi", "type": "text" }, { "key": "document", "type": "file", "src": "" }] }, "url": "{{baseUrl}}/performance-programs" } },
+            { "name": "Update Performance Program", "request": { "method": "PUT", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }], "body": { "mode": "formdata", "formdata": [{ "key": "title", "value": "Performans Programi Guncel", "type": "text" }, { "key": "document", "type": "file", "src": "" }] }, "url": "{{baseUrl}}/performance-programs/{{id}}" } },
+            { "name": "Delete Performance Program", "request": { "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }], "url": "{{baseUrl}}/performance-programs/{{id}}" } }
+          ]
+        },
+        {
+          "name": "Audit Reports",
+          "item": [
+            { "name": "List Audit Reports", "request": { "method": "GET", "url": "{{baseUrl}}/audit-reports" } },
+            { "name": "Create Audit Report", "request": { "method": "POST", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }], "body": { "mode": "formdata", "formdata": [{ "key": "title", "value": "Denetim Raporu", "type": "text" }, { "key": "document", "type": "file", "src": "" }] }, "url": "{{baseUrl}}/audit-reports" } },
+            { "name": "Update Audit Report", "request": { "method": "PUT", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }], "body": { "mode": "formdata", "formdata": [{ "key": "title", "value": "Denetim Raporu Guncel", "type": "text" }, { "key": "document", "type": "file", "src": "" }] }, "url": "{{baseUrl}}/audit-reports/{{id}}" } },
+            { "name": "Delete Audit Report", "request": { "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }], "url": "{{baseUrl}}/audit-reports/{{id}}" } }
+          ]
+        },
+        {
+          "name": "Strategic Plans",
+          "item": [
+            { "name": "List Strategic Plans", "request": { "method": "GET", "url": "{{baseUrl}}/strategic-plans" } },
+            { "name": "Create Strategic Plan", "request": { "method": "POST", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }], "body": { "mode": "formdata", "formdata": [{ "key": "title", "value": "Stratejik Plan", "type": "text" }, { "key": "document", "type": "file", "src": "" }] }, "url": "{{baseUrl}}/strategic-plans" } },
+            { "name": "Update Strategic Plan", "request": { "method": "PUT", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }], "body": { "mode": "formdata", "formdata": [{ "key": "title", "value": "Stratejik Plan Guncel", "type": "text" }, { "key": "document", "type": "file", "src": "" }] }, "url": "{{baseUrl}}/strategic-plans/{{id}}" } },
+            { "name": "Delete Strategic Plan", "request": { "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }], "url": "{{baseUrl}}/strategic-plans/{{id}}" } }
+          ]
+        },
+        {
+          "name": "KVKK Documents",
+          "item": [
+            { "name": "List KVKK Documents", "request": { "method": "GET", "url": "{{baseUrl}}/kvkk-documents" } },
+            { "name": "Create KVKK Document", "request": { "method": "POST", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }], "body": { "mode": "formdata", "formdata": [{ "key": "title", "value": "KVKK Dokumani", "type": "text" }, { "key": "document", "type": "file", "src": "" }] }, "url": "{{baseUrl}}/kvkk-documents" } },
+            { "name": "Update KVKK Document", "request": { "method": "PUT", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }], "body": { "mode": "formdata", "formdata": [{ "key": "title", "value": "KVKK Dokumani Guncel", "type": "text" }, { "key": "document", "type": "file", "src": "" }] }, "url": "{{baseUrl}}/kvkk-documents/{{id}}" } },
+            { "name": "Delete KVKK Document", "request": { "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }], "url": "{{baseUrl}}/kvkk-documents/{{id}}" } }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "4) Yonetim",
+      "item": [
+        {
+          "name": "Council Members (multipart)",
+          "item": [
+            { "name": "List Council Members", "request": { "method": "GET", "url": "{{baseUrl}}/council-members?page=1&per_page=20" } },
+            {
+              "name": "Create Council Member",
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    { "key": "first_name", "value": "Ahmet", "type": "text" },
+                    { "key": "last_name", "value": "Sahin", "type": "text" },
+                    { "key": "political_party", "value": "CHP", "type": "text" },
+                    { "key": "image", "type": "file", "src": "" }
+                  ]
+                },
+                "url": "{{baseUrl}}/council-members"
+              }
+            },
+            {
+              "name": "Update Council Member",
+              "request": {
+                "method": "PUT",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    { "key": "political_party", "value": "Independent", "type": "text" },
+                    { "key": "image", "type": "file", "src": "" }
+                  ]
+                },
+                "url": "{{baseUrl}}/council-members/{{id}}"
+              }
+            },
+            { "name": "Delete Council Member", "request": { "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }], "url": "{{baseUrl}}/council-members/{{id}}" } }
+          ]
+        },
+        {
+          "name": "Baskan Yardimcilari",
+          "item": [
+            { "name": "List Vice Presidents", "request": { "method": "GET", "url": "{{baseUrl}}/vice-presidents" } },
+            {
+              "name": "Create Vice President",
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "body": { "mode": "formdata", "formdata": [{ "key": "first_name", "value": "Selim", "type": "text" }, { "key": "last_name", "value": "Demir", "type": "text" }, { "key": "biography", "value": "Biyografi metni", "type": "text" }, { "key": "department_ids", "value": "[1,2]", "type": "text" }, { "key": "image", "type": "file", "src": "" }] },
+                "url": "{{baseUrl}}/vice-presidents"
+              }
+            },
+            {
+              "name": "Update Vice President",
+              "request": {
+                "method": "PUT",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "body": { "mode": "formdata", "formdata": [{ "key": "department_ids", "value": "[2,3]", "type": "text" }, { "key": "image", "type": "file", "src": "" }] },
+                "url": "{{baseUrl}}/vice-presidents/{{id}}"
+              }
+            },
+            { "name": "Delete Vice President", "request": { "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }], "url": "{{baseUrl}}/vice-presidents/{{id}}" } }
+          ]
+        },
+        {
+          "name": "Encumen",
+          "item": [
+            { "name": "List Encumens", "request": { "method": "GET", "url": "{{baseUrl}}/encumens" } },
+            {
+              "name": "Create Encumen",
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Content-Type", "value": "application/json" }],
+                "body": { "mode": "raw", "raw": "{\n  \"term_name\": \"2026 Encumen Donemi\",\n  \"is_active\": true\n}" },
+                "url": "{{baseUrl}}/encumens"
+              }
+            },
+            {
+              "name": "Update Encumen",
+              "request": {
+                "method": "PUT",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Content-Type", "value": "application/json" }],
+                "body": { "mode": "raw", "raw": "{\n  \"is_active\": false\n}" },
+                "url": "{{baseUrl}}/encumens/{{id}}"
+              }
+            },
+            { "name": "Delete Encumen", "request": { "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }], "url": "{{baseUrl}}/encumens/{{id}}" } }
+          ]
+        },
+        {
+          "name": "Encumen Memberships",
+          "item": [
+            { "name": "Get Encumen With Members", "request": { "method": "GET", "url": "{{baseUrl}}/encumen-members" } },
+            {
+              "name": "Add Encumen Member",
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Content-Type", "value": "application/json" }],
+                "body": { "mode": "raw", "raw": "{\n  \"encumen_id\": 1,\n  \"member_type\": \"staff\",\n  \"member_id\": 1\n}" },
+                "url": "{{baseUrl}}/encumen-members"
+              }
+            },
+            { "name": "Delete Encumen Member", "request": { "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }], "url": "{{baseUrl}}/encumen-members/{{id}}" } }
+          ]
+        },
+        {
+          "name": "Directives",
+          "item": [
+            { "name": "List Directives", "request": { "method": "GET", "url": "{{baseUrl}}/directives" } },
+            { "name": "Get Directive By Id", "request": { "method": "GET", "url": "{{baseUrl}}/directives/{{id}}" } },
+            {
+              "name": "Create Directive",
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Content-Type", "value": "application/json" }],
+                "body": { "mode": "raw", "raw": "{\n  \"title\": \"Sifir Atik Uygulama Yonergesi\",\n  \"description\": \"Atik ayristirma ve toplama standartlari\",\n  \"publish_date\": \"2026-03-20\"\n}" },
+                "url": "{{baseUrl}}/directives"
+              }
+            },
+            {
+              "name": "Update Directive",
+              "request": {
+                "method": "PUT",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Content-Type", "value": "application/json" }],
+                "body": { "mode": "raw", "raw": "{\n  \"title\": \"Sifir Atik Yonergesi (Revize)\"\n}" },
+                "url": "{{baseUrl}}/directives/{{id}}"
+              }
+            },
+            { "name": "Delete Directive", "request": { "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }], "url": "{{baseUrl}}/directives/{{id}}" } }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "5) Ilanlar",
+      "item": [
+        {
+          "name": "Kararlar",
+          "item": [
+            { "name": "List Decisions", "request": { "method": "GET", "url": "{{baseUrl}}/council-decisions" } },
+            {
+              "name": "Create Decision",
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "body": { "mode": "formdata", "formdata": [{ "key": "title", "value": "Meclis Karari - Sahil Projesi", "type": "text" }, { "key": "description", "value": "Sahil duzenleme etap-1 karar aciklamasi", "type": "text" }, { "key": "publish_date", "value": "2026-05-15", "type": "text" }, { "key": "is_active", "value": "true", "type": "text" }, { "key": "file", "type": "file", "src": "" }] },
+                "url": "{{baseUrl}}/council-decisions"
+              }
+            },
+            {
+              "name": "Update Decision",
+              "request": {
+                "method": "PUT",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "body": { "mode": "formdata", "formdata": [{ "key": "description", "value": "Sahil duzenleme etap-1 karari (guncel)", "type": "text" }, { "key": "is_active", "value": "true", "type": "text" }, { "key": "file", "type": "file", "src": "" }] },
+                "url": "{{baseUrl}}/council-decisions/{{id}}"
+              }
+            },
+            { "name": "Delete Decision", "request": { "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }], "url": "{{baseUrl}}/council-decisions/{{id}}" } }
+          ]
+        },
+        {
+          "name": "Ilanlar",
+          "item": [
+            { "name": "List Public Notices", "request": { "method": "GET", "url": "{{baseUrl}}/public-notices?page=1&per_page=20" } },
+            { "name": "Get Public Notice By Id", "request": { "method": "GET", "url": "{{baseUrl}}/public-notices/{{id}}" } },
+            {
+              "name": "Create Public Notice",
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    { "key": "title", "value": "Yeni Duyuru", "type": "text" },
+                    { "key": "description", "value": "Duyuru aciklamasi", "type": "text" },
+                    { "key": "publish_date", "value": "2026-05-20", "type": "text" },
+                    { "key": "is_active", "value": "true", "type": "text" },
+                    { "key": "file", "type": "file", "src": "" }
+                  ]
+                },
+                "url": "{{baseUrl}}/public-notices"
+              }
+            },
+            {
+              "name": "Update Public Notice",
+              "request": {
+                "method": "PUT",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    { "key": "description", "value": "Duyuru aciklamasi guncellendi", "type": "text" },
+                    { "key": "is_active", "value": "false", "type": "text" },
+                    { "key": "file", "type": "file", "src": "" }
+                  ]
+                },
+                "url": "{{baseUrl}}/public-notices/{{id}}"
+              }
+            },
+            { "name": "Delete Public Notice", "request": { "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }], "url": "{{baseUrl}}/public-notices/{{id}}" } }
+          ]
+        },
+        {
+          "name": "Ihale Ilanlari",
+          "item": [
+            { "name": "List Tenders", "request": { "method": "GET", "url": "{{baseUrl}}/tenders?page=1&per_page=20&search=ATK-2026" } },
+            { "name": "Get Tender By Id", "request": { "method": "GET", "url": "{{baseUrl}}/tenders/{{id}}" } },
+            {
+              "name": "Create Tender",
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "body": { "mode": "formdata", "formdata": [{ "key": "title", "value": "Ihale Ilani - Park Duzenleme", "type": "text" }, { "key": "description", "value": "Ihale aciklamasi", "type": "text" }, { "key": "publish_date", "value": "2026-06-01", "type": "text" }, { "key": "is_active", "value": "true", "type": "text" }, { "key": "file", "type": "file", "src": "" }] },
+                "url": "{{baseUrl}}/tenders"
+              }
+            },
+            {
+              "name": "Update Tender",
+              "request": {
+                "method": "PUT",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "body": { "mode": "formdata", "formdata": [{ "key": "description", "value": "Ihale aciklamasi guncellendi", "type": "text" }, { "key": "is_active", "value": "false", "type": "text" }, { "key": "file", "type": "file", "src": "" }] },
+                "url": "{{baseUrl}}/tenders/{{id}}"
+              }
+            },
+            { "name": "Delete Tender", "request": { "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }], "url": "{{baseUrl}}/tenders/{{id}}" } }
+          ]
+        },
+        {
+          "name": "Emlak Ilanlari",
+          "item": [
+            { "name": "List Real Estate Listings", "request": { "method": "GET", "url": "{{baseUrl}}/real-estate-listings?page=1&per_page=20" } },
+            { "name": "Get Real Estate Listing By Id", "request": { "method": "GET", "url": "{{baseUrl}}/real-estate-listings/{{id}}" } },
+            {
+              "name": "Create Real Estate Listing",
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "body": { "mode": "formdata", "formdata": [{ "key": "title", "value": "Emlak Ilani - Satilik Arsa", "type": "text" }, { "key": "description", "value": "Emlak ilani aciklamasi", "type": "text" }, { "key": "publish_date", "value": "2026-06-05", "type": "text" }, { "key": "is_active", "value": "true", "type": "text" }, { "key": "file", "type": "file", "src": "" }] },
+                "url": "{{baseUrl}}/real-estate-listings"
+              }
+            },
+            {
+              "name": "Update Real Estate Listing",
+              "request": {
+                "method": "PUT",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "body": { "mode": "formdata", "formdata": [{ "key": "description", "value": "Emlak ilani aciklamasi guncellendi", "type": "text" }, { "key": "is_active", "value": "false", "type": "text" }, { "key": "file", "type": "file", "src": "" }] },
+                "url": "{{baseUrl}}/real-estate-listings/{{id}}"
+              }
+            },
+            { "name": "Delete Real Estate Listing", "request": { "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }], "url": "{{baseUrl}}/real-estate-listings/{{id}}" } }
+          ]
+        },
+        {
+          "name": "Services",
+          "item": [
+            { "name": "List Services", "request": { "method": "GET", "url": "{{baseUrl}}/services" } },
+            {
+              "name": "Create Service",
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Content-Type", "value": "application/json" }],
+                "body": { "mode": "raw", "raw": "{\n  \"name\": \"Online Imar Belgesi\",\n  \"content\": \"E-belediye uzerinden basvuru\",\n  \"image_url\": \"/uploads/services/imar.jpg\"\n}" },
+                "url": "{{baseUrl}}/services"
+              }
+            },
+            {
+              "name": "Update Service",
+              "request": {
+                "method": "PUT",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Content-Type", "value": "application/json" }],
+                "body": { "mode": "raw", "raw": "{\n  \"content\": \"E-belediye ve mobil uygulama uzerinden basvuru\"\n}" },
+                "url": "{{baseUrl}}/services/{{id}}"
+              }
+            },
+            { "name": "Delete Service", "request": { "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }], "url": "{{baseUrl}}/services/{{id}}" } }
+          ]
+        },
+        {
+          "name": "Service Forms (multipart)",
+          "item": [
+            { "name": "Get Service Forms By Service Id", "request": { "method": "GET", "url": "{{baseUrl}}/service-forms/{{serviceId}}" } },
+            {
+              "name": "Add Service Forms",
+              "request": {
+                "method": "POST",
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    { "key": "forms", "type": "file", "src": "" },
+                    { "key": "forms", "type": "file", "src": "" }
+                  ]
+                },
+                "url": "{{baseUrl}}/service-forms/{{serviceId}}"
+              }
+            },
+            {
+              "name": "Update Service Form",
+              "request": {
+                "method": "PUT",
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    { "key": "forms", "type": "file", "src": "" }
+                  ]
+                },
+                "url": "{{baseUrl}}/service-forms/{{id}}"
+              }
+            },
+            { "name": "Delete Service Form", "request": { "method": "DELETE", "url": "{{baseUrl}}/service-forms/{{id}}" } }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "6) Diger",
+      "item": [
+        {
+          "name": "Map Layers",
+          "item": [
+            { "name": "List Gathering Areas", "request": { "method": "GET", "url": "{{baseUrl}}/gathering-areas" } },
+            { "name": "List Free Wifi Points", "request": { "method": "GET", "url": "{{baseUrl}}/free-wifi-points" } },
+            { "name": "List Waste Points", "request": { "method": "GET", "url": "{{baseUrl}}/waste-points" } },
+            { "name": "List Marketplaces", "request": { "method": "GET", "url": "{{baseUrl}}/marketplaces" } }
+          ]
+        },
+        {
+          "name": "Suggestions",
+          "item": [
+            { "name": "List Suggestions (authorized)", "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }], "url": "{{baseUrl}}/suggestions?page=1&per_page=20" } },
+            {
+              "name": "Create Suggestion (public)",
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "body": { "mode": "raw", "raw": "{\n  \"project_name\": \"Mahalle Kompost Noktalari\",\n  \"project_purpose\": \"Organik atiklarin degerlendirilmesi\",\n  \"application_duration\": \"6 ay\",\n  \"total_budget\": \"1250000 TL\",\n  \"location\": \"Atakum merkez mahalleleri\",\n  \"stakeholders\": \"Muhtarliklar, STKlar\",\n  \"beneficiaries\": \"Vatandaslar\",\n  \"main_activities\": \"Kurulum ve egitim\",\n  \"expected_results\": \"Atik miktarinda azalma\",\n  \"status\": \"pending\"\n}" },
+                "url": "{{baseUrl}}/suggestions"
+              }
+            },
+            {
+              "name": "Update Suggestion Status",
+              "request": {
+                "method": "PUT",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Content-Type", "value": "application/json" }],
+                "body": { "mode": "raw", "raw": "{\n  \"status\": \"reviewed\"\n}" },
+                "url": "{{baseUrl}}/suggestions/{{id}}"
+              }
+            },
+            { "name": "Delete Suggestion", "request": { "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }], "url": "{{baseUrl}}/suggestions/{{id}}" } }
+          ]
+        }
+      ]
+    }
+  ]
+}

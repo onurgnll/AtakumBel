@@ -1,6 +1,7 @@
 const { Admin } = require("../models");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const { normalizePermissions } = require("../helpers/adminPermissions");
 
 // Login
 exports.login = async (req, res, next) => {
@@ -17,10 +18,12 @@ exports.login = async (req, res, next) => {
     const token = jwt.sign(
       {
         id: admin.id,
-        username: admin.username,
-        permissions: admin.permissions,
+        first_name: admin.first_name,
+        last_name: admin.last_name,
+        role: admin.role,
+        permissions: normalizePermissions(admin.permissions),
       },
-      process.env.JWT_SECRET || "atakum_secret_key",
+      process.env.JWT_SECRET,
       { expiresIn: "1d" },
     );
 
@@ -36,22 +39,28 @@ exports.login = async (req, res, next) => {
 // Sadece mevcut adminlerin erişebileceği bir fonksiyon
 exports.register = async (req, res, next) => {
   try {
-    const { username, email, password, permissions } = req.body;
+    const { first_name, last_name, email, password, phone_number, permissions, role } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const newAdmin = await Admin.create({
-      username,
+      first_name,
+      last_name,
       email,
+      phone_number,
+      role: role || "admin",
       password: hashedPassword,
       createdAt: new Date(),
       updatedAt: new Date(),
-      permissions: permissions || {},
+      permissions: normalizePermissions(permissions),
       last_login: new Date(),
     });
 
+    const adminData = newAdmin.toJSON();
+    delete adminData.password;
+
     res.status(201).json({
       success: 1,
-      data: newAdmin,
+      data: adminData,
       message: "Admin başarıyla oluşturuldu.",
     });
   } catch (err) {

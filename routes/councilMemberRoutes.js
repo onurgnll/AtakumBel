@@ -3,26 +3,32 @@ const router = express.Router();
 const councilMemberController = require("../controllers/councilMemberController");
 const upload = require("../middlewares/upload");
 const { protect, authorize } = require("../middlewares/authMiddleware");
+const { idParam, paginationQuery } = require("../validators/commonValidator");
+const { requireBody } = require("../validators/moduleValidators");
 
-router.get("/", councilMemberController.getAllCouncilMembers);
+router.get("/", paginationQuery, councilMemberController.getAllCouncilMembers);
 router.post(
   "/",
   protect,
-  authorize("council-member"),
+  authorize("councilMembers"),
   upload.single("image"),
+  requireBody,
   councilMemberController.addMemberToCouncil,
 );
 router.put(
   "/:id",
-  upload.single("image"),
   protect,
-  authorize("council-member"),
+  authorize("councilMembers"),
+  idParam(),
+  upload.single("image"),
+  requireBody,
   councilMemberController.updateMember,
 );
 router.delete(
   "/:id",
   protect,
-  authorize("council-member"),
+  authorize("councilMembers"),
+  idParam(),
   councilMemberController.deleteMember,
 );
 

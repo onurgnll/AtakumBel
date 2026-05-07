@@ -3,9 +3,9 @@ const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Tender extends Model {
     static associate(models) {
-      Tender.belongsTo(models.PublicNotice, {
-        foreignKey: "notice_id",
-        as: "notice",
+      Tender.belongsTo(models.Department, {
+        foreignKey: "department_id",
+        as: "department",
       });
     }
   }
@@ -18,21 +18,44 @@ module.exports = (sequelize, DataTypes) => {
         autoIncrement: true,
         primaryKey: true,
       },
-      notice_id: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
       start_date: {
         type: DataTypes.DATEONLY,
-        allowNull: false,
+        allowNull: true,
       },
       end_date: {
         type: DataTypes.DATEONLY,
-        allowNull: false,
+        allowNull: true,
       },
       tender_number: {
         type: DataTypes.STRING,
+        allowNull: true,
+        unique: true,
+      },
+      title: {
+        type: DataTypes.STRING,
         allowNull: false,
+      },
+      description: {
+        type: DataTypes.TEXT,
+        allowNull: true,
+      },
+      publish_date: {
+        type: DataTypes.DATEONLY,
+        allowNull: true,
+      },
+      is_active: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true,
+      },
+      files: {
+        type: DataTypes.JSONB,
+        allowNull: true,
+        defaultValue: [],
+      },
+      department_id: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
       },
     },
     {

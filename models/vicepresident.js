@@ -4,9 +4,15 @@ const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class VicePresident extends Model {
     static associate(models) {
-      VicePresident.belongsTo(models.Department, {
-        foreignKey: "department_id",
-        as: "department",
+      VicePresident.belongsToMany(models.Department, {
+        through: models.VicePresidentDepartment,
+        foreignKey: "vice_president_id",
+        otherKey: "department_id",
+        as: "departments",
+      });
+      VicePresident.hasMany(models.VicePresidentDepartment, {
+        foreignKey: "vice_president_id",
+        as: "department_relations",
       });
     }
   }
@@ -37,7 +43,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       department_id: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
       },
     },
     {

@@ -1,6 +1,13 @@
 const { Event, EventGallery, sequelize } = require("../models");
 const { getPaginationParams, getPagingData } = require("../helpers/pagination");
 const fs = require("fs");
+const { Op } = require("sequelize");
+
+const getUploadedFiles = (req) => {
+  if (Array.isArray(req.files) && req.files.length > 0) return req.files;
+  if (req.file) return [req.file];
+  return [];
+};
 
 //Read
 exports.getAllEvents = async (req, res, next) => {
@@ -10,8 +17,16 @@ exports.getAllEvents = async (req, res, next) => {
       req.query.per_page,
     );
     const { type } = req.query;
+    const search = req.query.search ? req.query.search.trim() : null;
 
     const whereCondition = type ? { type } : {};
+    if (search) {
+      whereCondition[Op.or] = [
+        { title: { [Op.iLike]: `%${search}%` } },
+        { description: { [Op.iLike]: `%${search}%` } },
+        { address: { [Op.iLike]: `%${search}%` } },
+      ];
+    }
 
     const { rows: events, count } = await Event.findAndCountAll({
       where: whereCondition,
@@ -66,6 +81,7 @@ exports.getEventById = async (req, res, next) => {
 
 //Update
 exports.updateEvent = async (req, res, next) => {
+  let transaction;
   try {
     const { id } = req.params;
     const {
@@ -97,18 +113,50 @@ exports.updateEvent = async (req, res, next) => {
       address: address ?? event.address,
       description: description ?? event.description,
     });
+
+    const uploadedFiles = getUploadedFiles(req);
+    if (uploadedFiles.length > 0) {
+      transaction = await sequelize.transaction();
+      await EventGallery.update(
+        { is_main: false },
+        { where: { event_id: event.id, is_main: true }, transaction },
+      );
+      const maxOrder = await EventGallery.max("order", { where: { event_id: event.id } });
+      const startOrder = Number(maxOrder) > 0 ? Number(maxOrder) + 1 : 1;
+      await Promise.all(
+        uploadedFiles.map((file, index) =>
+          EventGallery.create(
+            {
+              event_id: event.id,
+              image_url: file.path.replace(/\\/g, "/"),
+              order: startOrder + index,
+              is_main: index === 0,
+            },
+            { transaction },
+          ),
+        ),
+      );
+      await transaction.commit();
+    }
+
     res.json({
       success: 1,
       data: event,
       message: "Etkinlik başarıyla güncellendi.",
     });
   } catch (err) {
+    if (transaction) await transaction.rollback();
+    const uploadedFiles = getUploadedFiles(req);
+    uploadedFiles.forEach((file) => {
+      if (file?.path && fs.existsSync(file.path)) fs.unlinkSync(file.path);
+    });
     next(err);
   }
 };
 
 //Create
 exports.createEvent = async (req, res, next) => {
+  let transaction;
   try {
     const {
       title,
@@ -127,7 +175,11 @@ exports.createEvent = async (req, res, next) => {
     };
 
     const existingEvent = await Event.findOne({ where: { title } });
+    const uploadedFiles = getUploadedFiles(req);
     if (existingEvent) {
+      uploadedFiles.forEach((file) => {
+        if (file?.path && fs.existsSync(file.path)) fs.unlinkSync(file.path);
+      });
       return res
         .status(400)
         .json({
@@ -137,6 +189,7 @@ exports.createEvent = async (req, res, next) => {
         });
     }
 
+    transaction = await sequelize.transaction();
     const newEvent = await Event.create({
       title,
       type,
@@ -145,12 +198,41 @@ exports.createEvent = async (req, res, next) => {
       event_time,
       address,
       description,
-    });
+    }, { transaction });
+
+    if (uploadedFiles.length === 0) {
+      await transaction.rollback();
+      return res.status(400).json({
+        success: 0,
+        data: null,
+        message: "Etkinlik oluştururken en az bir görsel yüklenmelidir.",
+      });
+    }
+
+    await Promise.all(
+      uploadedFiles.map((file, index) =>
+        EventGallery.create(
+          {
+            event_id: newEvent.id,
+            image_url: file.path.replace(/\\/g, "/"),
+            order: index + 1,
+            is_main: index === 0,
+          },
+          { transaction },
+        ),
+      ),
+    );
+    await transaction.commit();
 
     res
       .status(201)
       .json({ success: 1, data: newEvent, message: "Etkinlik oluşturuldu." });
   } catch (err) {
+    if (transaction) await transaction.rollback();
+    const uploadedFiles = getUploadedFiles(req);
+    uploadedFiles.forEach((file) => {
+      if (file?.path && fs.existsSync(file.path)) fs.unlinkSync(file.path);
+    });
     next(err);
   }
 };

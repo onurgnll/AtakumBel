@@ -5,6 +5,7 @@ const {
   PublicNotice,
 } = require("../models");
 const { getPaginationParams, getPagingData } = require("../helpers/pagination");
+const { Op } = require("sequelize");
 
 //Read
 exports.getAllDepartments = async (req, res, next) => {
@@ -13,11 +14,53 @@ exports.getAllDepartments = async (req, res, next) => {
       req.query.page,
       req.query.per_page,
     );
+    const search = req.query.search ? req.query.search.trim() : null;
+    const whereCondition = search
+      ? {
+          [Op.or]: [
+            { name: { [Op.iLike]: `%${search}%` } },
+            { description: { [Op.iLike]: `%${search}%` } },
+            { address: { [Op.iLike]: `%${search}%` } },
+            { phone: { [Op.iLike]: `%${search}%` } },
+          ],
+        }
+      : {};
 
     const { rows: departments, count } = await Department.findAndCountAll({
+      where: whereCondition,
       limit,
       offset,
       order: [["name", "ASC"]],
+      include: [
+        {
+          model: Employee,
+          as: "employees",
+          where: { is_active: true },
+          required: false,
+          attributes: [
+            "id",
+            "first_name",
+            "last_name",
+            "title",
+            "dahili_no",
+            "is_active",
+          ],
+        },
+        {
+          model: Employee,
+          as: "manager",
+          required: false,
+          where: { is_active: true },
+          attributes: ["id", "first_name", "last_name", "title", "dahili_no"],
+        },
+        {
+          model: Employee,
+          as: "contact_personnel",
+          required: false,
+          where: { is_active: true, is_contact_person: true },
+          attributes: ["id", "first_name", "last_name", "title", "dahili_no"],
+        },
+      ],
       distinct: true,
     });
     if (departments.length === 0) {
@@ -53,6 +96,8 @@ exports.getDepartmentById = async (req, res, next) => {
         {
           model: Employee,
           as: "employees",
+          where: { is_active: true },
+          required: false,
           attributes: [
             "id",
             "first_name",
@@ -60,7 +105,23 @@ exports.getDepartmentById = async (req, res, next) => {
             "title",
             "image_url",
             "is_unit_manager",
+            "dahili_no",
+            "is_active",
           ],
+        },
+        {
+          model: Employee,
+          as: "manager",
+          required: false,
+          where: { is_active: true },
+          attributes: ["id", "first_name", "last_name", "title", "dahili_no"],
+        },
+        {
+          model: Employee,
+          as: "contact_personnel",
+          required: false,
+          where: { is_active: true, is_contact_person: true },
+          attributes: ["id", "first_name", "last_name", "title", "dahili_no"],
         },
         {
           model: VicePresident,
@@ -95,7 +156,7 @@ exports.getDepartmentById = async (req, res, next) => {
 //Create
 exports.createDepartment = async (req, res, next) => {
   try {
-    const { name, description, phone, address } = req.body;
+    const { name, description, phone, address, manager_employee_id } = req.body;
     const existing = await Department.findOne({ where: { name } });
     if (existing) {
       return res.status(409).json({
@@ -109,6 +170,7 @@ exports.createDepartment = async (req, res, next) => {
       description,
       phone,
       address,
+      manager_employee_id: manager_employee_id || null,
     });
     return res
       .status(201)
@@ -123,7 +185,7 @@ exports.updateDepartment = async (req, res, next) => {
   try {
     const { id } = req.params;
     const department = await Department.findByPk(id);
-    const { name, description, phone, address } = req.body;
+    const { name, description, phone, address, manager_employee_id } = req.body;
     if (!department) {
       return res.status(404).json({
         success: 0,
@@ -136,6 +198,8 @@ exports.updateDepartment = async (req, res, next) => {
       description: description ?? department.description,
       phone: phone ?? department.phone,
       address: address ?? department.address,
+      manager_employee_id:
+        manager_employee_id ?? department.manager_employee_id,
     });
     res.json({
       success: 1,

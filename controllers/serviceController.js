@@ -1,6 +1,7 @@
 const { Service, ServiceForm, sequelize } = require("../models");
 const { getPaginationParams, getPagingData } = require("../helpers/pagination");
 const fs = require("fs");
+const { Op } = require("sequelize");
 
 //Read
 exports.getAllServices = async (req, res, next) => {
@@ -9,7 +10,17 @@ exports.getAllServices = async (req, res, next) => {
       req.query.page,
       req.query.per_page,
     );
+    const search = req.query.search ? req.query.search.trim() : null;
+    const whereCondition = search
+      ? {
+          [Op.or]: [
+            { name: { [Op.iLike]: `%${search}%` } },
+            { content: { [Op.iLike]: `%${search}%` } },
+          ],
+        }
+      : {};
     const { rows: services, count } = await Service.findAndCountAll({
+      where: whereCondition,
       limit,
       offset,
       attributes: { exclude: ["content"] },

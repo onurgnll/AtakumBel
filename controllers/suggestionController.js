@@ -1,5 +1,6 @@
 const { Suggestion } = require("../models");
 const { getPaginationParams, getPagingData } = require("../helpers/pagination");
+const { Op } = require("sequelize");
 
 //Read
 exports.getAllSuggestions = async (req, res, next) => {
@@ -9,7 +10,15 @@ exports.getAllSuggestions = async (req, res, next) => {
       req.query.per_page,
     );
     const { status } = req.query;
+    const search = req.query.search ? req.query.search.trim() : null;
     const whereCondition = status ? { status } : {};
+    if (search) {
+      whereCondition[Op.or] = [
+        { project_name: { [Op.iLike]: `%${search}%` } },
+        { project_purpose: { [Op.iLike]: `%${search}%` } },
+        { location: { [Op.iLike]: `%${search}%` } },
+      ];
+    }
     const { rows: suggestions, count } = await Suggestion.findAndCountAll({
       where: whereCondition,
       limit,

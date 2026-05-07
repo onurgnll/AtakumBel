@@ -25,7 +25,13 @@ exports.getPresident = async (req, res, next) => {
 exports.getPresidentMessage = async (req, res, next) => {
   try {
     const president = await President.findOne({
-      attributes: ["first_name", "last_name", "message", "president_image_url"],
+      attributes: [
+        "first_name",
+        "last_name",
+        "message",
+        "president_image_url",
+        "social_media_accounts",
+      ],
       order: [["id", "DESC"]],
     });
 
@@ -51,7 +57,8 @@ exports.getPresidentMessage = async (req, res, next) => {
 exports.upsertPresident = async (req, res, next) => {
   const t = await sequelize.transaction();
   try {
-    const { first_name, last_name, biography, message } = req.body;
+    const { first_name, last_name, biography, message, social_media_accounts } =
+      req.body;
     let president = await President.findOne();
 
     let finalProfileImage = president ? president.president_image_url : "";
@@ -68,12 +75,24 @@ exports.upsertPresident = async (req, res, next) => {
       finalProfileImage = uploadedFile.path.replace(/\\/g, "/");
     }
 
+    let parsedSocialMedia = president?.social_media_accounts || [];
+    if (social_media_accounts) {
+      parsedSocialMedia =
+        typeof social_media_accounts === "string"
+          ? JSON.parse(social_media_accounts)
+          : social_media_accounts;
+      if (!Array.isArray(parsedSocialMedia)) {
+        throw new Error("social_media_accounts bir dizi olmalıdır.");
+      }
+    }
+
     const presidentData = {
       first_name: first_name ?? president?.first_name,
       last_name: last_name ?? president?.last_name,
       biography: biography ?? president?.biography,
       message: message ?? president?.message,
       president_image_url: finalProfileImage,
+      social_media_accounts: parsedSocialMedia,
     };
 
     if (president) {

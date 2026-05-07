@@ -2,12 +2,14 @@ const express = require("express");
 const router = express.Router();
 const councilDecisionController = require("../controllers/councilDecisionController");
 const { protect, authorize } = require("../middlewares/authMiddleware");
+const upload = require("../middlewares/upload");
 
 router.get("/", councilDecisionController.getAllDecisions);
 router.post(
   "/",
   protect,
   authorize("councilDecisions"),
+  upload.single("file"),
   councilDecisionController.createDecision,
 );
 router.delete(
@@ -20,6 +22,7 @@ router.put(
   "/:id",
   protect,
   authorize("councilDecisions"),
+  upload.single("file"),
   councilDecisionController.updateDecision,
 );
 

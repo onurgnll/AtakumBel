@@ -3,10 +3,6 @@ const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class CouncilDecision extends Model {
     static associate(models) {
-      CouncilDecision.belongsTo(models.Council, {
-        foreignKey: "council_id",
-        as: "council",
-      });
       CouncilDecision.hasMany(models.PublicNotice, {
         foreignKey: "decision_id",
         as: "public_notices",
@@ -22,25 +18,47 @@ module.exports = (sequelize, DataTypes) => {
         autoIncrement: true,
         primaryKey: true,
       },
-      decision_no: {
+      title: {
         type: DataTypes.STRING,
         allowNull: false,
       },
+      description: {
+        type: DataTypes.TEXT,
+        allowNull: true,
+      },
+      publish_date: {
+        type: DataTypes.DATEONLY,
+        allowNull: true,
+      },
+      is_active: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true,
+      },
+      files: {
+        type: DataTypes.JSONB,
+        allowNull: true,
+        defaultValue: [],
+      },
+      decision_no: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
       summary: {
         type: DataTypes.TEXT,
-        allowNull: false,
+        allowNull: true,
       },
       full_text: {
         type: DataTypes.TEXT,
-        allowNull: false,
+        allowNull: true,
       },
       date: {
         type: DataTypes.DATEONLY,
-        allowNull: false,
+        allowNull: true,
       },
-      council_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
+      file_url: {
+        type: DataTypes.STRING,
+        allowNull: true,
       },
     },
     {

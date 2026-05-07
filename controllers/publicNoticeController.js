@@ -1,12 +1,31 @@
-const {
-  PublicNotice,
-  Department,
-  CouncilDecision,
-  Tender,
-  sequelize,
-} = require("../models");
+const { PublicNotice } = require("../models");
 const { getPaginationParams, getPagingData } = require("../helpers/pagination");
 const fs = require("fs");
+const { Op } = require("sequelize");
+
+const normalizeFiles = (existingFiles, bodyFiles, uploadedFile) => {
+  const files = Array.isArray(existingFiles) ? [...existingFiles] : [];
+
+  if (bodyFiles) {
+    if (Array.isArray(bodyFiles)) {
+      files.push(...bodyFiles);
+    } else if (typeof bodyFiles === "string") {
+      try {
+        const parsed = JSON.parse(bodyFiles);
+        if (Array.isArray(parsed)) files.push(...parsed);
+        else files.push(bodyFiles);
+      } catch {
+        files.push(bodyFiles);
+      }
+    }
+  }
+
+  if (uploadedFile) {
+    files.push(uploadedFile.path.replace(/\\/g, "/"));
+  }
+
+  return files;
+};
 
 // Read
 exports.getAllNotices = async (req, res, next) => {
@@ -15,16 +34,21 @@ exports.getAllNotices = async (req, res, next) => {
       req.query.page,
       req.query.per_page,
     );
-    const { status } = req.query;
-
-    const whereCondition = status ? { status } : {};
+    const search = req.query.search ? req.query.search.trim() : null;
+    const whereCondition = search
+      ? {
+          [Op.or]: [
+            { title: { [Op.iLike]: `%${search}%` } },
+            { description: { [Op.iLike]: `%${search}%` } },
+          ],
+        }
+      : {};
 
     const { rows: notices, count } = await PublicNotice.findAndCountAll({
       where: whereCondition,
       limit,
       offset,
-      attributes: ["id", "title", "status", "department_id"],
-      include: [{ model: Department, as: "department", attributes: ["name"] }],
+      attributes: ["id", "title", "description", "publish_date", "is_active", "files"],
       order: [["id", "DESC"]],
       distinct: true,
     });
@@ -45,13 +69,7 @@ exports.getAllNotices = async (req, res, next) => {
 exports.getNoticeById = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const notice = await PublicNotice.findByPk(id, {
-      include: [
-        { model: Department, as: "department" },
-        { model: CouncilDecision, as: "decision" },
-        { model: Tender, as: "tenders" },
-      ],
-    });
+    const notice = await PublicNotice.findByPk(id);
 
     if (!notice) {
       return res
@@ -72,30 +90,29 @@ exports.getNoticeById = async (req, res, next) => {
 //Create
 exports.createNotice = async (req, res, next) => {
   try {
-    const { title, content, status, department_id, decision_id } = req.body;
-    const allowedStatuses = ["on_hold", "completed", "upcoming"];
-    if (status && !allowedStatuses.includes(status)) {
-      if (req.file) fs.unlinkSync(req.file.path);
-
+    const {
+      title,
+      description,
+      publish_date,
+      is_active,
+      files,
+    } = req.body;
+    if (!title) {
       return res.status(400).json({
         success: 0,
         data: null,
-        message:
-          "Geçersiz durum (status) değeri. Beklenen: on_hold, completed veya upcoming",
+        message: "title zorunludur.",
       });
     }
     const uploadedFile =
       req.file || (req.files && Object.values(req.files).flat()[0]);
-    const file_url = uploadedFile
-      ? uploadedFile.path.replace(/\\/g, "/")
-      : null;
+
     const newNotice = await PublicNotice.create({
       title,
-      content,
-      status: status || "on_hold",
-      file_url: file_url || null,
-      department_id,
-      decision_id: decision_id || null,
+      description: description || null,
+      publish_date: publish_date || null,
+      is_active: is_active ?? true,
+      files: normalizeFiles([], files, uploadedFile),
     });
 
     res.status(201).json({
@@ -118,17 +135,13 @@ exports.updateNotice = async (req, res, next) => {
   try {
     const { id } = req.params;
     const notice = await PublicNotice.findByPk(id);
-    const { title, content, status, department_id, decision_id } = req.body;
-    const allowedStatuses = ["on_hold", "completed", "upcoming"];
-    if (status && !allowedStatuses.includes(status)) {
-      if (req.file) fs.unlinkSync(req.file.path);
-      return res.status(400).json({
-        success: 0,
-        data: null,
-        message:
-          "Geçersiz durum (status) değeri. Beklenen: on_hold, completed veya upcoming",
-      });
-    }
+    const {
+      title,
+      description,
+      publish_date,
+      is_active,
+      files,
+    } = req.body;
 
     if (!notice) {
       if (req.file) fs.unlinkSync(req.file.path);
@@ -137,21 +150,15 @@ exports.updateNotice = async (req, res, next) => {
         .json({ success: 0, data: null, message: "İlan bulunamadı." });
     }
 
-    let file_url = notice.file_url;
+    const uploadedFile =
+      req.file || (req.files && Object.values(req.files).flat()[0]);
 
-    if (req.file) {
-      if (notice.file_url && fs.existsSync(notice.file_url)) {
-        fs.unlinkSync(notice.file_url);
-      }
-      file_url = req.file.path.replace(/\\/g, "/");
-    }
     await notice.update({
       title: title ?? notice.title,
-      content: content ?? notice.content,
-      status: status ?? notice.status,
-      file_url: file_url ?? notice.file_url,
-      department_id: department_id ?? notice.department_id,
-      decision_id: decision_id ?? notice.decision_id,
+      description: description ?? notice.description,
+      publish_date: publish_date ?? notice.publish_date,
+      is_active: is_active ?? notice.is_active,
+      files: normalizeFiles(notice.files, files, uploadedFile),
     });
 
     return res.json({
@@ -175,13 +182,13 @@ exports.deleteNotice = async (req, res, next) => {
         .status(404)
         .json({ success: 0, data: null, message: "İlan bulunamadı." });
     }
-    const fileToDelete = notice.file_url;
+    const filesToDelete = Array.isArray(notice.files) ? notice.files : [];
 
     await notice.destroy();
 
-    if (fileToDelete && fs.existsSync(fileToDelete)) {
-      fs.unlinkSync(fileToDelete);
-    }
+    filesToDelete.forEach((filePath) => {
+      if (filePath && fs.existsSync(filePath)) fs.unlinkSync(filePath);
+    });
 
     res.json({
       success: 1,

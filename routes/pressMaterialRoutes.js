@@ -3,26 +3,29 @@ const router = express.Router();
 const pressMaterialController = require("../controllers/pressMaterialController");
 const { protect, authorize } = require("../middlewares/authMiddleware");
 const upload = require("../middlewares/upload");
+const { idParam, paginationQuery } = require("../validators/commonValidator");
 
-router.get("/", pressMaterialController.getAllPressMaterials);
+router.get("/", paginationQuery, pressMaterialController.getAllPressMaterials);
 router.post(
   "/",
   protect,
   authorize("pressMaterials"),
-  upload.array("document"),
+  upload.array("documents", 10),
   pressMaterialController.createPressMaterial,
 );
 router.put(
   "/:id",
   protect,
   authorize("pressMaterials"),
-  upload.single("document"),
+  idParam(),
+  upload.array("documents", 10),
   pressMaterialController.updatePressMaterial,
 );
 router.delete(
   "/:id",
   protect,
   authorize("pressMaterials"),
+  idParam(),
   pressMaterialController.deletePressMaterial,
 );
 

@@ -1,6 +1,13 @@
 const { FacilityGallery, Facility, sequelize } = require("../models");
 const { getPaginationParams, getPagingData } = require("../helpers/pagination");
 const fs = require("fs");
+const { Op } = require("sequelize");
+
+const getUploadedFiles = (req) => {
+  if (Array.isArray(req.files) && req.files.length > 0) return req.files;
+  if (req.file) return [req.file];
+  return [];
+};
 
 //Read
 exports.getAllFacilities = async (req, res, next) => {
@@ -9,7 +16,17 @@ exports.getAllFacilities = async (req, res, next) => {
       req.query.page,
       req.query.per_page,
     );
+    const search = req.query.search ? req.query.search.trim() : null;
+    const whereCondition = search
+      ? {
+          [Op.or]: [
+            { name: { [Op.iLike]: `%${search}%` } },
+            { address: { [Op.iLike]: `%${search}%` } },
+          ],
+        }
+      : {};
     const { rows: facilities, count } = await Facility.findAndCountAll({
+      where: whereCondition,
       limit,
       offset,
       include: [
@@ -56,29 +73,66 @@ exports.getFacilityById = async (req, res, next) => {
 
 //Create
 exports.createFacility = async (req, res, next) => {
+  let transaction;
   try {
     const { name, address } = req.body;
+    const uploadedFiles = getUploadedFiles(req);
     const existing = await Facility.findOne({ where: { name } });
     if (existing) {
+      uploadedFiles.forEach((file) => {
+        if (file?.path && fs.existsSync(file.path)) fs.unlinkSync(file.path);
+      });
       return res.status(409).json({
         success: 0,
         data: existing,
         message: "Bu tesis zaten kayıtlı.",
       });
     }
-    const newFacility = await Facility.create({ name, address });
+    transaction = await sequelize.transaction();
+    const newFacility = await Facility.create({ name, address }, { transaction });
+
+    if (uploadedFiles.length === 0) {
+      await transaction.rollback();
+      return res.status(400).json({
+        success: 0,
+        data: null,
+        message: "Tesis oluştururken en az bir görsel yüklenmelidir.",
+      });
+    }
+
+    await Promise.all(
+      uploadedFiles.map((file, index) =>
+        FacilityGallery.create(
+          {
+            facility_id: newFacility.id,
+            image_url: file.path.replace(/\\/g, "/"),
+            order: index + 1,
+            is_main: index === 0,
+          },
+          { transaction },
+        ),
+      ),
+    );
+    await transaction.commit();
+
     return res.status(201).json({
       success: 1,
       data: newFacility,
       message: "Tesis başarıyla eklendi.",
     });
   } catch (err) {
+    if (transaction) await transaction.rollback();
+    const uploadedFiles = getUploadedFiles(req);
+    uploadedFiles.forEach((file) => {
+      if (file?.path && fs.existsSync(file.path)) fs.unlinkSync(file.path);
+    });
     next(err);
   }
 };
 
 //Update
 exports.updateFacility = async (req, res, next) => {
+  let transaction;
   try {
     const { id } = req.params;
     const { name, address } = req.body;
@@ -94,12 +148,45 @@ exports.updateFacility = async (req, res, next) => {
       name: name ?? facility.name,
       address: address ?? facility.address,
     });
+
+    const uploadedFiles = getUploadedFiles(req);
+    if (uploadedFiles.length > 0) {
+      transaction = await sequelize.transaction();
+      await FacilityGallery.update(
+        { is_main: false },
+        { where: { facility_id: facility.id, is_main: true }, transaction },
+      );
+      const maxOrder = await FacilityGallery.max("order", {
+        where: { facility_id: facility.id },
+      });
+      const startOrder = Number(maxOrder) > 0 ? Number(maxOrder) + 1 : 1;
+      await Promise.all(
+        uploadedFiles.map((file, index) =>
+          FacilityGallery.create(
+            {
+              facility_id: facility.id,
+              image_url: file.path.replace(/\\/g, "/"),
+              order: startOrder + index,
+              is_main: index === 0,
+            },
+            { transaction },
+          ),
+        ),
+      );
+      await transaction.commit();
+    }
+
     return res.json({
       success: 1,
       data: facility,
       message: "Tesis bilgileri güncellendi.",
     });
   } catch (err) {
+    if (transaction) await transaction.rollback();
+    const uploadedFiles = getUploadedFiles(req);
+    uploadedFiles.forEach((file) => {
+      if (file?.path && fs.existsSync(file.path)) fs.unlinkSync(file.path);
+    });
     next(err);
   }
 };
