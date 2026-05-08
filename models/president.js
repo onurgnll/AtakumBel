@@ -43,6 +43,37 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         defaultValue: [],
       },
+      birth_place: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      birth_year: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+      },
+      grown_place: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      marital_status: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      education: {
+        type: DataTypes.JSONB,
+        allowNull: false,
+        defaultValue: [],
+      },
+      political_career: {
+        type: DataTypes.JSONB,
+        allowNull: false,
+        defaultValue: [],
+      },
+      work_life: {
+        type: DataTypes.JSONB,
+        allowNull: false,
+        defaultValue: [],
+      },
     },
     {
       sequelize,

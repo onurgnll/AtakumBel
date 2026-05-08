@@ -166,12 +166,26 @@ exports.updateNotice = async (req, res, next) => {
 
     const uploadedFiles = getUploadedFiles(req);
 
+    const previousFiles = Array.isArray(notice.files) ? notice.files : [];
+    const hasFilesPayload = files !== undefined;
+    const nextFiles = hasFilesPayload
+      // If client sends files field, treat it as the new source of truth.
+      ? normalizeFiles([], files, uploadedFiles)
+      // Otherwise keep existing files and append newly uploaded ones.
+      : normalizeFiles(previousFiles, undefined, uploadedFiles);
+
+    // Remove physical files that were explicitly removed by the client.
+    const removedFiles = previousFiles.filter((filePath) => !nextFiles.includes(filePath));
+    removedFiles.forEach((filePath) => {
+      if (filePath && fs.existsSync(filePath)) fs.unlinkSync(filePath);
+    });
+
     await notice.update({
       title: title ?? notice.title,
       description: description ?? notice.description,
       publish_date: publish_date ?? notice.publish_date,
       is_active: is_active ?? notice.is_active,
-      files: normalizeFiles(notice.files, files, uploadedFiles),
+      files: nextFiles,
     });
 
     return res.json({

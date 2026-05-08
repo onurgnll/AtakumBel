@@ -20,6 +20,7 @@ const PERMISSION_MODULES = [
   "suggestions",
   "directives",
   "pressMaterials",
+  "photoGallery",
   "activityReports",
   "financialExpectationReports",
   "performancePrograms",

@@ -22,6 +22,7 @@ exports.getAllFacilities = async (req, res, next) => {
           [Op.or]: [
             { name: { [Op.iLike]: `%${search}%` } },
             { address: { [Op.iLike]: `%${search}%` } },
+            { description: { [Op.iLike]: `%${search}%` } },
           ],
         }
       : {};
@@ -75,7 +76,7 @@ exports.getFacilityById = async (req, res, next) => {
 exports.createFacility = async (req, res, next) => {
   let transaction;
   try {
-    const { name, address, latitude, longitude } = req.body;
+    const { name, address, description, latitude, longitude } = req.body;
     const uploadedFiles = getUploadedFiles(req);
     const existing = await Facility.findOne({ where: { name } });
     if (existing) {
@@ -93,6 +94,7 @@ exports.createFacility = async (req, res, next) => {
       {
         name,
         address,
+        description: description ?? null,
         latitude: latitude ?? null,
         longitude: longitude ?? null,
       },
@@ -143,7 +145,7 @@ exports.updateFacility = async (req, res, next) => {
   let transaction;
   try {
     const { id } = req.params;
-    const { name, address, latitude, longitude } = req.body;
+    const { name, address, description, latitude, longitude } = req.body;
     const facility = await Facility.findByPk(id);
     if (!facility) {
       return res.status(404).json({
@@ -155,6 +157,7 @@ exports.updateFacility = async (req, res, next) => {
     await facility.update({
       name: name ?? facility.name,
       address: address ?? facility.address,
+      description: description ?? facility.description,
       latitude: latitude ?? facility.latitude,
       longitude: longitude ?? facility.longitude,
     });

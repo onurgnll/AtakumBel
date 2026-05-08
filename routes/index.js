@@ -35,6 +35,7 @@ const freeWifiPointRoutes = require("./freeWifiPointRoutes");
 const wastePointRoutes = require("./wastePointRoutes");
 const marketplaceRoutes = require("./marketplaceRoutes");
 const editorImageRoutes = require("./editorImageRoutes");
+const photoGalleryRoutes = require("./photoGalleryRoutes");
 
 // Rotaları ana router'a bağlıyoruz
 router.use("/admin", adminRoutes);
@@ -70,5 +71,6 @@ router.use("/free-wifi-points", freeWifiPointRoutes);
 router.use("/waste-points", wastePointRoutes);
 router.use("/marketplaces", marketplaceRoutes);
 router.use("/editor-images", editorImageRoutes);
+router.use("/photo-gallery", photoGalleryRoutes);
 
 module.exports = router;

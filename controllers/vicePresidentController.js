@@ -8,6 +8,45 @@ const { getPaginationParams, getPagingData } = require("../helpers/pagination");
 const fs = require("fs");
 const { Op } = require("sequelize");
 
+function parseDepartmentIds(department_ids, department_id) {
+  let parsedDepartmentIds = [];
+  if (department_ids !== undefined && department_ids !== null) {
+    parsedDepartmentIds =
+      typeof department_ids === "string"
+        ? JSON.parse(department_ids)
+        : department_ids || [];
+  } else if (department_id) {
+    parsedDepartmentIds = [department_id];
+  }
+  return Array.from(
+    new Set(
+      parsedDepartmentIds
+        .map((id) => Number(id))
+        .filter((id) => Number.isInteger(id) && id > 0),
+    ),
+  );
+}
+
+async function ensureDepartmentsUnassigned(departmentIds, currentVicePresidentId, transaction) {
+  if (!Array.isArray(departmentIds) || departmentIds.length === 0) return null;
+
+  const conflictWhere = {
+    department_id: { [Op.in]: departmentIds },
+  };
+  if (currentVicePresidentId) {
+    conflictWhere.vice_president_id = { [Op.ne]: Number(currentVicePresidentId) };
+  }
+
+  const conflicts = await VicePresidentDepartment.findAll({
+    where: conflictWhere,
+    include: [{ model: Department, as: "department", attributes: ["id", "name"] }],
+    transaction,
+  });
+
+  if (conflicts.length === 0) return null;
+  return conflicts.map((item) => item.department?.name || `ID:${item.department_id}`);
+}
+
 //Read
 exports.getAllVicePresidents = async (req, res, next) => {
   try {
@@ -94,15 +133,19 @@ exports.createVicePresident = async (req, res, next) => {
       image_url: image_path,
     }, { transaction: t });
 
-    let parsedDepartmentIds = [];
-    if (department_ids || department_id) {
-      parsedDepartmentIds =
-        typeof department_ids === "string"
-          ? JSON.parse(department_ids)
-          : department_ids || [];
-      if (parsedDepartmentIds.length === 0 && department_id) {
-        parsedDepartmentIds = [department_id];
-      }
+    const parsedDepartmentIds = parseDepartmentIds(department_ids, department_id);
+    const conflictingDepartments = await ensureDepartmentsUnassigned(
+      parsedDepartmentIds,
+      null,
+      t,
+    );
+    if (conflictingDepartments) {
+      await t.rollback();
+      return res.status(409).json({
+        success: 0,
+        data: null,
+        message: `Bu mudurlukler baska bir baskan yardimcisina bagli: ${conflictingDepartments.join(", ")}`,
+      });
     }
 
     if (parsedDepartmentIds.length > 0) {
@@ -157,15 +200,22 @@ exports.updateVicePresident = async (req, res, next) => {
       { transaction: t },
     );
 
-    if (department_ids || department_id) {
-      const parsedDepartmentIds =
-        typeof department_ids === "string"
-          ? JSON.parse(department_ids)
-          : department_ids || [];
-      const finalDepartmentIds =
-        parsedDepartmentIds.length === 0 && department_id
-          ? [department_id]
-          : parsedDepartmentIds;
+    if (department_ids !== undefined || department_id !== undefined) {
+      const finalDepartmentIds = parseDepartmentIds(department_ids, department_id);
+      const conflictingDepartments = await ensureDepartmentsUnassigned(
+        finalDepartmentIds,
+        id,
+        t,
+      );
+      if (conflictingDepartments) {
+        await t.rollback();
+        return res.status(409).json({
+          success: 0,
+          data: null,
+          message: `Bu mudurlukler baska bir baskan yardimcisina bagli: ${conflictingDepartments.join(", ")}`,
+        });
+      }
+
       await VicePresidentDepartment.destroy({
         where: { vice_president_id: id },
         transaction: t,

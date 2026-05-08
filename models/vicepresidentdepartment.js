@@ -30,6 +30,7 @@ module.exports = (sequelize, DataTypes) => {
       department_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
+        unique: true,
       },
     },
     {

@@ -1,6 +1,18 @@
 ﻿const { President, PresidentGallery, sequelize } = require("../models");
 const fs = require("fs");
 
+function parseJsonArrayField(rawValue, fallback = []) {
+  if (rawValue === undefined || rawValue === null || rawValue === "") {
+    return fallback;
+  }
+  const parsed =
+    typeof rawValue === "string" ? JSON.parse(rawValue) : rawValue;
+  if (!Array.isArray(parsed)) {
+    throw new Error("Beklenen alan dizi formatinda olmali.");
+  }
+  return parsed;
+}
+
 //Read
 exports.getPresident = async (req, res, next) => {
   try {
@@ -57,8 +69,20 @@ exports.getPresidentMessage = async (req, res, next) => {
 exports.upsertPresident = async (req, res, next) => {
   const t = await sequelize.transaction();
   try {
-    const { first_name, last_name, biography, message, social_media_accounts } =
-      req.body;
+    const {
+      first_name,
+      last_name,
+      biography,
+      message,
+      social_media_accounts,
+      birth_place,
+      birth_year,
+      grown_place,
+      marital_status,
+      education,
+      political_career,
+      work_life,
+    } = req.body;
     let president = await President.findOne();
 
     let finalProfileImage = president ? president.president_image_url : "";
@@ -86,6 +110,19 @@ exports.upsertPresident = async (req, res, next) => {
       }
     }
 
+    const parsedEducation = parseJsonArrayField(
+      education,
+      president?.education || [],
+    );
+    const parsedPoliticalCareer = parseJsonArrayField(
+      political_career,
+      president?.political_career || [],
+    );
+    const parsedWorkLife = parseJsonArrayField(
+      work_life,
+      president?.work_life || [],
+    );
+
     const presidentData = {
       first_name: first_name ?? president?.first_name,
       last_name: last_name ?? president?.last_name,
@@ -93,6 +130,16 @@ exports.upsertPresident = async (req, res, next) => {
       message: message ?? president?.message,
       president_image_url: finalProfileImage,
       social_media_accounts: parsedSocialMedia,
+      birth_place: birth_place ?? president?.birth_place ?? null,
+      birth_year:
+        birth_year !== undefined && birth_year !== null && birth_year !== ""
+          ? Number(birth_year)
+          : (president?.birth_year ?? null),
+      grown_place: grown_place ?? president?.grown_place ?? null,
+      marital_status: marital_status ?? president?.marital_status ?? null,
+      education: parsedEducation,
+      political_career: parsedPoliticalCareer,
+      work_life: parsedWorkLife,
     };
 
     if (president) {
