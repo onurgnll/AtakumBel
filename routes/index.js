@@ -8,8 +8,6 @@ const councilMemberRoutes = require("./councilMemberRoutes");
 const departmentRoutes = require("./departmentRoutes");
 const directiveRoutes = require("./directiveRoutes");
 const employeeRoutes = require("./employeeRoutes");
-const encumenRoutes = require("./encumenRoutes");
-const encumenMemberRoutes = require("./encumenMemberRoutes");
 const eventRoutes = require("./eventRoutes");
 const eventGalleryRoutes = require("./eventGalleryRoutes");
 const facilityRoutes = require("./facilityRoutes");
@@ -36,6 +34,7 @@ const gatheringAreaRoutes = require("./gatheringAreaRoutes");
 const freeWifiPointRoutes = require("./freeWifiPointRoutes");
 const wastePointRoutes = require("./wastePointRoutes");
 const marketplaceRoutes = require("./marketplaceRoutes");
+const editorImageRoutes = require("./editorImageRoutes");
 
 // Rotaları ana router'a bağlıyoruz
 router.use("/admin", adminRoutes);
@@ -44,8 +43,6 @@ router.use("/council-members", councilMemberRoutes);
 router.use("/departments", departmentRoutes);
 router.use("/directives", directiveRoutes);
 router.use("/employees", employeeRoutes);
-router.use("/encumens", encumenRoutes);
-router.use("/encumen-members", encumenMemberRoutes);
 router.use("/events", eventRoutes);
 router.use("/event-galleries", eventGalleryRoutes);
 router.use("/facilities", facilityRoutes);
@@ -72,5 +69,6 @@ router.use("/gathering-areas", gatheringAreaRoutes);
 router.use("/free-wifi-points", freeWifiPointRoutes);
 router.use("/waste-points", wastePointRoutes);
 router.use("/marketplaces", marketplaceRoutes);
+router.use("/editor-images", editorImageRoutes);
 
 module.exports = router;

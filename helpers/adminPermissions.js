@@ -18,7 +18,6 @@ const PERMISSION_MODULES = [
   "events",
   "facilities",
   "suggestions",
-  "encumen",
   "directives",
   "pressMaterials",
   "activityReports",

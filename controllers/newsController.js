@@ -47,7 +47,6 @@ exports.getAllNews = async (req, res, next) => {
         {
           model: NewsGallery,
           as: "gallery",
-          where: { is_main: true },
           required: false,
         },
       ],

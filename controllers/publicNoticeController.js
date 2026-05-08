@@ -3,6 +3,12 @@ const { getPaginationParams, getPagingData } = require("../helpers/pagination");
 const fs = require("fs");
 const { Op } = require("sequelize");
 
+const getUploadedFiles = (req) => {
+  if (Array.isArray(req.files) && req.files.length > 0) return req.files;
+  if (req.file) return [req.file];
+  return [];
+};
+
 const normalizeFiles = (existingFiles, bodyFiles, uploadedFile) => {
   const files = Array.isArray(existingFiles) ? [...existingFiles] : [];
 
@@ -20,8 +26,16 @@ const normalizeFiles = (existingFiles, bodyFiles, uploadedFile) => {
     }
   }
 
-  if (uploadedFile) {
-    files.push(uploadedFile.path.replace(/\\/g, "/").replace(/^.*?(\/uploads\/)/, "/uploads/"));
+  if (Array.isArray(uploadedFile)) {
+    uploadedFile.forEach((file) => {
+      files.push(
+        file.path.replace(/\\/g, "/").replace(/^.*?(\/uploads\/)/, "/uploads/"),
+      );
+    });
+  } else if (uploadedFile) {
+    files.push(
+      uploadedFile.path.replace(/\\/g, "/").replace(/^.*?(\/uploads\/)/, "/uploads/"),
+    );
   }
 
   return files;
@@ -104,15 +118,14 @@ exports.createNotice = async (req, res, next) => {
         message: "title zorunludur.",
       });
     }
-    const uploadedFile =
-      req.file || (req.files && Object.values(req.files).flat()[0]);
+    const uploadedFiles = getUploadedFiles(req);
 
     const newNotice = await PublicNotice.create({
       title,
       description: description || null,
       publish_date: publish_date || null,
       is_active: is_active ?? true,
-      files: normalizeFiles([], files, uploadedFile),
+      files: normalizeFiles([], files, uploadedFiles),
     });
 
     res.status(201).json({
@@ -121,11 +134,10 @@ exports.createNotice = async (req, res, next) => {
       message: "Duyuru baÅŸarÄ±yla oluÅŸturuldu.",
     });
   } catch (err) {
-    const fileToClean =
-      req.file || (req.files && Object.values(req.files).flat()[0]);
-    if (fileToClean && fs.existsSync(fileToClean.path)) {
-      fs.unlinkSync(fileToClean.path);
-    }
+    const filesToClean = getUploadedFiles(req);
+    filesToClean.forEach((file) => {
+      if (file?.path && fs.existsSync(file.path)) fs.unlinkSync(file.path);
+    });
     next(err);
   }
 };
@@ -144,21 +156,22 @@ exports.updateNotice = async (req, res, next) => {
     } = req.body;
 
     if (!notice) {
-      if (req.file) fs.unlinkSync(req.file.path);
+      getUploadedFiles(req).forEach((file) => {
+        if (file?.path && fs.existsSync(file.path)) fs.unlinkSync(file.path);
+      });
       return res
         .status(404)
         .json({ success: 0, data: null, message: "Ä°lan bulunamadÄ±." });
     }
 
-    const uploadedFile =
-      req.file || (req.files && Object.values(req.files).flat()[0]);
+    const uploadedFiles = getUploadedFiles(req);
 
     await notice.update({
       title: title ?? notice.title,
       description: description ?? notice.description,
       publish_date: publish_date ?? notice.publish_date,
       is_active: is_active ?? notice.is_active,
-      files: normalizeFiles(notice.files, files, uploadedFile),
+      files: normalizeFiles(notice.files, files, uploadedFiles),
     });
 
     return res.json({
@@ -167,7 +180,9 @@ exports.updateNotice = async (req, res, next) => {
       message: "Ä°lan bilgisi gÃ¼ncellendi.",
     });
   } catch (err) {
-    if (req.file) fs.unlinkSync(req.file.path);
+    getUploadedFiles(req).forEach((file) => {
+      if (file?.path && fs.existsSync(file.path)) fs.unlinkSync(file.path);
+    });
     next(err);
   }
 };

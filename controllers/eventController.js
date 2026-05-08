@@ -35,7 +35,7 @@ exports.getAllEvents = async (req, res, next) => {
         {
           model: EventGallery,
           as: "gallery",
-          where: { is_main: true },
+          required: false,
         },
       ],
       limit,

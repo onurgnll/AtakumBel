@@ -11,7 +11,7 @@ router.post(
   "/",
   protect,
   authorize("publicNotices"),
-  uploder.single("file"),
+  uploder.array("files", 10),
   publicNoticeController.createNotice,
 );
 router.put(
@@ -19,7 +19,7 @@ router.put(
   protect,
   authorize("publicNotices"),
   idParam(),
-  uploder.single("file"),
+  uploder.array("files", 10),
   publicNoticeController.updateNotice,
 );
 router.delete(
