@@ -46,7 +46,7 @@ const requestGuard = (req, res, next) => {
     }
     if (
       per_page !== undefined &&
-      (!isPositiveInteger(String(per_page)) || Number(per_page) < 1 || Number(per_page) > 100)
+      (!isPositiveInteger(String(per_page)) || Number(per_page) < 1 || Number(per_page) > 500)
     ) {
       return res.status(400).json({
         success: 0,

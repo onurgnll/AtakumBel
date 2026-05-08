@@ -1,4 +1,4 @@
-const { Employee, Department, sequelize } = require("../models");
+﻿const { Employee, Department, sequelize } = require("../models");
 const { getPaginationParams, getPagingData } = require("../helpers/pagination");
 const fs = require("fs");
 const { Op } = require("sequelize");
@@ -34,7 +34,7 @@ exports.getAllEmployees = async (req, res, next) => {
         employees,
         pagination: getPagingData(count, req.query.page, limit),
       },
-      message: "Çalışanlar listelendi.",
+      message: "Ã‡alÄ±ÅŸanlar listelendi.",
     });
   } catch (err) {
     next(err);
@@ -57,7 +57,7 @@ exports.createEmployee = async (req, res, next) => {
       is_active,
     } = req.body;
 
-    const image_path = req.file ? req.file.path.replace(/\\/g, "/") : null;
+    const image_path = req.file ? req.file.path.replace(/\\/g, "/").replace(/^.*?(\/uploads\/)/, "/uploads/") : null;
 
     const existingEmployee = await Employee.findOne({
       where: { first_name, last_name },
@@ -67,7 +67,7 @@ exports.createEmployee = async (req, res, next) => {
       return res.status(409).json({
         success: 0,
         data: existingEmployee,
-        message: "Bu isimde bir çalışan zaten kayıtlı.",
+        message: "Bu isimde bir Ã§alÄ±ÅŸan zaten kayÄ±tlÄ±.",
       });
     }
     const newEmployee = await Employee.create({
@@ -85,7 +85,7 @@ exports.createEmployee = async (req, res, next) => {
     return res.status(201).json({
       success: 1,
       data: newEmployee,
-      message: "Personel başarıyla kaydedildi.",
+      message: "Personel baÅŸarÄ±yla kaydedildi.",
     });
   } catch (err) {
     if (req.file) fs.unlinkSync(req.file.path);
@@ -112,7 +112,7 @@ exports.updateEmployee = async (req, res, next) => {
     if (!employee) {
       return res
         .status(404)
-        .json({ success: 0, data: null, message: "Çalışan bulunamadı" });
+        .json({ success: 0, data: null, message: "Ã‡alÄ±ÅŸan bulunamadÄ±" });
     }
 
     let image_path = employee.image_url;
@@ -121,7 +121,7 @@ exports.updateEmployee = async (req, res, next) => {
       if (employee.image_url && fs.existsSync(employee.image_url)) {
         fs.unlinkSync(employee.image_url);
       }
-      image_path = req.file.path.replace(/\\/g, "/");
+      image_path = req.file.path.replace(/\\/g, "/").replace(/^.*?(\/uploads\/)/, "/uploads/");
     }
     await employee.update({
       first_name: first_name ?? employee.first_name,
@@ -143,7 +143,7 @@ exports.updateEmployee = async (req, res, next) => {
     return res.json({
       success: 1,
       data: employee,
-      message: "Çalışan bilgisi güncellendi.",
+      message: "Ã‡alÄ±ÅŸan bilgisi gÃ¼ncellendi.",
     });
   } catch (err) {
     if (req.file) fs.unlinkSync(req.file.path);
@@ -159,7 +159,7 @@ exports.deleteEmployee = async (req, res, next) => {
     if (!employee) {
       return res
         .status(404)
-        .json({ success: 0, data: null, message: "Çalışan bulunamadı" });
+        .json({ success: 0, data: null, message: "Ã‡alÄ±ÅŸan bulunamadÄ±" });
     }
     if (employee.image_url && fs.existsSync(employee.image_url)) {
       fs.unlinkSync(employee.image_url);
@@ -168,9 +168,10 @@ exports.deleteEmployee = async (req, res, next) => {
     return res.json({
       success: 1,
       data: null,
-      message: "Çalışan başarıyla silindi.",
+      message: "Ã‡alÄ±ÅŸan baÅŸarÄ±yla silindi.",
     });
   } catch (err) {
     next(err);
   }
 };
+

@@ -1,4 +1,4 @@
-const {
+﻿const {
   VicePresident,
   Department,
   VicePresidentDepartment,
@@ -47,7 +47,7 @@ exports.getAllVicePresidents = async (req, res, next) => {
           vice_presidents: [],
           pagination: getPagingData(count, req.query.page, limit),
         },
-        message: "Görüntülenecek başkan yadımcısı bulunamadı.",
+        message: "GÃ¶rÃ¼ntÃ¼lenecek baÅŸkan yadÄ±mcÄ±sÄ± bulunamadÄ±.",
       });
     }
     return res.json({
@@ -56,7 +56,7 @@ exports.getAllVicePresidents = async (req, res, next) => {
         vice_presidents,
         pagination: getPagingData(count, req.query.page, limit),
       },
-      message: "Başkan yardımcıları listelendi.",
+      message: "BaÅŸkan yardÄ±mcÄ±larÄ± listelendi.",
     });
   } catch (err) {
     next(err);
@@ -80,11 +80,11 @@ exports.createVicePresident = async (req, res, next) => {
       return res.status(409).json({
         success: 0,
         data: existingVicePresident,
-        message: "Bu başkan yardımcısı zaten kayıtlı.",
+        message: "Bu baÅŸkan yardÄ±mcÄ±sÄ± zaten kayÄ±tlÄ±.",
       });
     }
 
-    const image_path = req.file ? req.file.path.replace(/\\/g, "/") : null;
+    const image_path = req.file ? req.file.path.replace(/\\/g, "/").replace(/^.*?(\/uploads\/)/, "/uploads/") : null;
 
     const newVicePresident = await VicePresident.create({
       first_name,
@@ -117,7 +117,7 @@ exports.createVicePresident = async (req, res, next) => {
     res.status(201).json({
       success: 1,
       data: newVicePresident,
-      message: "Başkan yardımcısı eklendi.",
+      message: "BaÅŸkan yardÄ±mcÄ±sÄ± eklendi.",
     });
   } catch (err) {
     await t.rollback();
@@ -133,7 +133,7 @@ exports.updateVicePresident = async (req, res, next) => {
     const vice_president = await VicePresident.findByPk(id);
 
     if (!vice_president) {
-      return res.status(404).json({ success: 0, message: "Kayıt bulunamadı." });
+      return res.status(404).json({ success: 0, message: "KayÄ±t bulunamadÄ±." });
     }
 
     const { first_name, last_name, biography, department_ids, department_id } =
@@ -144,7 +144,7 @@ exports.updateVicePresident = async (req, res, next) => {
       if (vice_president.image_url && fs.existsSync(vice_president.image_url)) {
         fs.unlinkSync(vice_president.image_url);
       }
-      image_path = req.file.path.replace(/\\/g, "/");
+      image_path = req.file.path.replace(/\\/g, "/").replace(/^.*?(\/uploads\/)/, "/uploads/");
     }
 
     await vice_president.update(
@@ -186,7 +186,7 @@ exports.updateVicePresident = async (req, res, next) => {
     res.json({
       success: 1,
       data: vice_president,
-      message: "Başkan Yardımcısı bilgileri güncellendi.",
+      message: "BaÅŸkan YardÄ±mcÄ±sÄ± bilgileri gÃ¼ncellendi.",
     });
   } catch (err) {
     await t.rollback();
@@ -203,7 +203,7 @@ exports.deleteVicePresident = async (req, res, next) => {
       return res.status(404).json({
         success: 1,
         data: null,
-        message: "Silinecek başkan yardımcısı bulunamadı.",
+        message: "Silinecek baÅŸkan yardÄ±mcÄ±sÄ± bulunamadÄ±.",
       });
     }
     const imageToDelete = vice_president.image_url;
@@ -211,8 +211,9 @@ exports.deleteVicePresident = async (req, res, next) => {
     if (imageToDelete && fs.existsSync(imageToDelete)) {
       fs.unlinkSync(imageToDelete);
     }
-    res.json({ success: 1, data: null, message: "Başkan yardımcısı silindi." });
+    res.json({ success: 1, data: null, message: "BaÅŸkan yardÄ±mcÄ±sÄ± silindi." });
   } catch (err) {
     next(err);
   }
 };
+

@@ -1,4 +1,4 @@
-const { Service, ServiceForm, sequelize } = require("../models");
+﻿const { Service, ServiceForm, sequelize } = require("../models");
 const { getPaginationParams, getPagingData } = require("../helpers/pagination");
 const fs = require("fs");
 const { Op } = require("sequelize");
@@ -34,7 +34,7 @@ exports.getAllServices = async (req, res, next) => {
           services: [],
           pagination: getPagingData(count, req.query.page, limit),
         },
-        message: "Görüntülenecek hizmet bulunamadı.",
+        message: "GÃ¶rÃ¼ntÃ¼lenecek hizmet bulunamadÄ±.",
       });
     }
     return res.json({
@@ -60,13 +60,13 @@ exports.getServiceById = async (req, res, next) => {
       return res.status(404).json({
         success: 0,
         data: null,
-        message: "Görüntülenecek hizmet bulunamadı.",
+        message: "GÃ¶rÃ¼ntÃ¼lenecek hizmet bulunamadÄ±.",
       });
     }
     return res.json({
       success: 1,
       data: service,
-      message: "Hizmet detayları getirildi.",
+      message: "Hizmet detaylarÄ± getirildi.",
     });
   } catch (err) {
     next(err);
@@ -79,7 +79,7 @@ exports.createService = async (req, res, next) => {
     const { name, content } = req.body;
     const image_url =
       req.files && req.files["image"]
-        ? req.files["image"][0].path.replace(/\\/g, "/")
+        ? req.files["image"][0].path.replace(/\\/g, "/").replace(/^.*?(\/uploads\/)/, "/uploads/")
         : "";
 
     const newService = await Service.create({
@@ -90,7 +90,7 @@ exports.createService = async (req, res, next) => {
     res.status(201).json({
       success: 1,
       data: newService,
-      message: "Hizmet başarıyla oluşturuldu.",
+      message: "Hizmet baÅŸarÄ±yla oluÅŸturuldu.",
     });
   } catch (err) {
     if (req.files) {
@@ -117,14 +117,14 @@ exports.updateService = async (req, res, next) => {
       }
       return res
         .status(404)
-        .json({ success: 0, data: null, message: "Hizmet bulunamadı." });
+        .json({ success: 0, data: null, message: "Hizmet bulunamadÄ±." });
     }
     const { name, content } = req.body;
     let image_url = service.image_url;
     if (req.files && req.files["image"]) {
       if (service.image_url && fs.existsSync(service.image_url))
         fs.unlinkSync(service.image_url);
-      image_url = req.files["image"][0].path.replace(/\\/g, "/");
+      image_url = req.files["image"][0].path.replace(/\\/g, "/").replace(/^.*?(\/uploads\/)/, "/uploads/");
     }
     await service.update({
       name: name ?? service.name,
@@ -134,7 +134,7 @@ exports.updateService = async (req, res, next) => {
     res.json({
       success: 1,
       data: service,
-      message: "Hizmet başarıyla güncellendi.",
+      message: "Hizmet baÅŸarÄ±yla gÃ¼ncellendi.",
     });
   } catch (err) {
     if (req.files) {
@@ -158,7 +158,7 @@ exports.deleteService = async (req, res, next) => {
       return res.status(404).json({
         success: 0,
         data: null,
-        message: "Silinecek hizmet bulunamadı.",
+        message: "Silinecek hizmet bulunamadÄ±.",
       });
     }
     const filesToDelete = [];
@@ -179,9 +179,10 @@ exports.deleteService = async (req, res, next) => {
     return res.json({
       success: 1,
       data: null,
-      message: "Hizmet ve bağlı tüm dosyalar kaldırıldı.",
+      message: "Hizmet ve baÄŸlÄ± tÃ¼m dosyalar kaldÄ±rÄ±ldÄ±.",
     });
   } catch (err) {
     next(err);
   }
 };
+

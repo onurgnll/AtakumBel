@@ -1,4 +1,4 @@
-const { News, NewsGallery, sequelize } = require("../models");
+﻿const { News, NewsGallery, sequelize } = require("../models");
 const { getPaginationParams, getPagingData } = require("../helpers/pagination");
 const fs = require("fs");
 const { Op } = require("sequelize");
@@ -61,7 +61,7 @@ exports.getAllNews = async (req, res, next) => {
         news,
         pagination: getPagingData(count, req.query.page, limit),
       },
-      message: "haberler (özet) listelendi.",
+      message: "haberler (Ã¶zet) listelendi.",
     });
   } catch (err) {
     next(err);
@@ -79,7 +79,7 @@ exports.getNewsById = async (req, res, next) => {
       return res.status(404).json({
         success: 0,
         data: null,
-        message: "Görüntülenecek haber bulunamadı.",
+        message: "GÃ¶rÃ¼ntÃ¼lenecek haber bulunamadÄ±.",
       });
     }
 
@@ -87,7 +87,7 @@ exports.getNewsById = async (req, res, next) => {
     return res.json({
       success: 1,
       data: newsItem,
-      message: "Haber detayı ve tam içeriği getirildi.",
+      message: "Haber detayÄ± ve tam iÃ§eriÄŸi getirildi.",
     });
   } catch (err) {
     next(err);
@@ -108,7 +108,7 @@ exports.createNews = async (req, res, next) => {
       return res.status(400).json({
         success: 0,
         data: null,
-        message: "Bu başlıkta bir haber zaten var.",
+        message: "Bu baÅŸlÄ±kta bir haber zaten var.",
       });
     }
     transaction = await sequelize.transaction();
@@ -127,7 +127,7 @@ exports.createNews = async (req, res, next) => {
           NewsGallery.create(
             {
               news_id: newNews.id,
-              image_url: file.path.replace(/\\/g, "/"),
+              image_url: file.path.replace(/\\/g, "/").replace(/^.*?(\/uploads\/)/, "/uploads/"),
               order: index + 1,
               is_main: index === 0,
             },
@@ -162,7 +162,7 @@ exports.updateNews = async (req, res, next) => {
       return res.status(404).json({
         success: 0,
         data: null,
-        message: "Güncellenecek haber bulunamadı.",
+        message: "GÃ¼ncellenecek haber bulunamadÄ±.",
       });
     }
     await newsItem.update({
@@ -186,7 +186,7 @@ exports.updateNews = async (req, res, next) => {
           NewsGallery.create(
             {
               news_id: newsItem.id,
-              image_url: file.path.replace(/\\/g, "/"),
+              image_url: file.path.replace(/\\/g, "/").replace(/^.*?(\/uploads\/)/, "/uploads/"),
               order: startOrder + index,
               is_main: index === 0,
             },
@@ -200,7 +200,7 @@ exports.updateNews = async (req, res, next) => {
     return res.json({
       success: 1,
       data: newsItem,
-      message: "Haber güncellendi.",
+      message: "Haber gÃ¼ncellendi.",
     });
   } catch (err) {
     if (transaction) await transaction.rollback();
@@ -224,7 +224,7 @@ exports.deleteNews = async (req, res, next) => {
       return res.status(404).json({
         success: 0,
         data: null,
-        message: "Silinecek haber bulunamadı.",
+        message: "Silinecek haber bulunamadÄ±.",
       });
     }
 
@@ -243,9 +243,10 @@ exports.deleteNews = async (req, res, next) => {
     return res.json({
       success: 1,
       data: null,
-      message: "Haber başarıyla silindi.",
+      message: "Haber baÅŸarÄ±yla silindi.",
     });
   } catch (err) {
     next(err);
   }
 };
+

@@ -1,4 +1,4 @@
-const { President, PresidentGallery, sequelize } = require("../models");
+﻿const { President, PresidentGallery, sequelize } = require("../models");
 const fs = require("fs");
 
 //Read
@@ -9,13 +9,13 @@ exports.getPresident = async (req, res, next) => {
       return res.status(404).json({
         success: 0,
         data: null,
-        message: "Başkan bilgisi bulunamadı.",
+        message: "BaÅŸkan bilgisi bulunamadÄ±.",
       });
     }
     res.json({
       success: 1,
       data: president,
-      message: "Başkan bilgileri getirildi.",
+      message: "BaÅŸkan bilgileri getirildi.",
     });
   } catch (err) {
     next(err);
@@ -39,14 +39,14 @@ exports.getPresidentMessage = async (req, res, next) => {
       return res.status(404).json({
         success: 0,
         data: null,
-        message: "Kayıtlı başkan mesajı bulunamadı.",
+        message: "KayÄ±tlÄ± baÅŸkan mesajÄ± bulunamadÄ±.",
       });
     }
 
     return res.json({
       success: 1,
       data: president,
-      message: "Güncel başkan mesajı getirildi.",
+      message: "GÃ¼ncel baÅŸkan mesajÄ± getirildi.",
     });
   } catch (err) {
     next(err);
@@ -72,7 +72,7 @@ exports.upsertPresident = async (req, res, next) => {
       ) {
         fs.unlinkSync(president.president_image_url);
       }
-      finalProfileImage = uploadedFile.path.replace(/\\/g, "/");
+      finalProfileImage = uploadedFile.path.replace(/\\/g, "/").replace(/^.*?(\/uploads\/)/, "/uploads/");
     }
 
     let parsedSocialMedia = president?.social_media_accounts || [];
@@ -82,7 +82,7 @@ exports.upsertPresident = async (req, res, next) => {
           ? JSON.parse(social_media_accounts)
           : social_media_accounts;
       if (!Array.isArray(parsedSocialMedia)) {
-        throw new Error("social_media_accounts bir dizi olmalıdır.");
+        throw new Error("social_media_accounts bir dizi olmalÄ±dÄ±r.");
       }
     }
 
@@ -105,7 +105,7 @@ exports.upsertPresident = async (req, res, next) => {
     res.json({
       success: 1,
       data: president,
-      message: "Başkan bilgileri başarıyla güncellendi.",
+      message: "BaÅŸkan bilgileri baÅŸarÄ±yla gÃ¼ncellendi.",
     });
   } catch (err) {
     const fileToCleanup =
@@ -118,3 +118,4 @@ exports.upsertPresident = async (req, res, next) => {
     next(err);
   }
 };
+

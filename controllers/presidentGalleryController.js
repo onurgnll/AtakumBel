@@ -1,4 +1,4 @@
-const { PresidentGallery, sequelize } = require("../models");
+﻿const { PresidentGallery, sequelize } = require("../models");
 const fs = require("fs");
 
 //Read
@@ -13,7 +13,7 @@ exports.getPresidentGallery = async (req, res, next) => {
     res.json({
       success: 1,
       data: gallery,
-      message: "Başkan galeri görüntüleri getirildi.",
+      message: "BaÅŸkan galeri gÃ¶rÃ¼ntÃ¼leri getirildi.",
     });
   } catch (err) {
     next(err);
@@ -35,7 +35,7 @@ exports.addImagesToPresidentGallery = async (req, res, next) => {
     if (files.length === 0) {
       return res.status(400).json({
         success: 0,
-        message: "Dosya yüklenmedi. Lütfen görselleri seçtiğinizden emin olun.",
+        message: "Dosya yÃ¼klenmedi. LÃ¼tfen gÃ¶rselleri seÃ§tiÄŸinizden emin olun.",
       });
     }
     await PresidentGallery.update(
@@ -53,7 +53,7 @@ exports.addImagesToPresidentGallery = async (req, res, next) => {
 
     const galleryData = files.map((file, index) => ({
       president_id,
-      image_url: file.path.replace(/\\/g, "/"),
+      image_url: file.path.replace(/\\/g, "/").replace(/^.*?(\/uploads\/)/, "/uploads/"),
       order: currentOrder + index + 1,
       is_main: index === 0,
     }));
@@ -66,7 +66,7 @@ exports.addImagesToPresidentGallery = async (req, res, next) => {
     res.json({
       success: 1,
       data: newImages,
-      message: "Görseller başarıyla eklendi.",
+      message: "GÃ¶rseller baÅŸarÄ±yla eklendi.",
     });
   } catch (err) {
     if (req.files) {
@@ -103,7 +103,7 @@ exports.setMainImage = async (req, res, next) => {
     res.json({
       success: 1,
       data: PresidentGallery,
-      message: "Ana görsel güncellendi.",
+      message: "Ana gÃ¶rsel gÃ¼ncellendi.",
     });
   } catch (err) {
     await t.rollback();
@@ -121,7 +121,7 @@ exports.deletePresidentGalleryImage = async (req, res, next) => {
     if (!image) {
       return res
         .status(404)
-        .json({ success: 0, data: null, message: "Resim bulunamadı." });
+        .json({ success: 0, data: null, message: "Resim bulunamadÄ±." });
     }
 
     if (fs.existsSync(image.image_url)) {
@@ -138,3 +138,4 @@ exports.deletePresidentGalleryImage = async (req, res, next) => {
     next(err);
   }
 };
+

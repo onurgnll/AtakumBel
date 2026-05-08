@@ -1,4 +1,4 @@
-const { PublicNotice } = require("../models");
+﻿const { PublicNotice } = require("../models");
 const { getPaginationParams, getPagingData } = require("../helpers/pagination");
 const fs = require("fs");
 const { Op } = require("sequelize");
@@ -21,7 +21,7 @@ const normalizeFiles = (existingFiles, bodyFiles, uploadedFile) => {
   }
 
   if (uploadedFile) {
-    files.push(uploadedFile.path.replace(/\\/g, "/"));
+    files.push(uploadedFile.path.replace(/\\/g, "/").replace(/^.*?(\/uploads\/)/, "/uploads/"));
   }
 
   return files;
@@ -74,13 +74,13 @@ exports.getNoticeById = async (req, res, next) => {
     if (!notice) {
       return res
         .status(404)
-        .json({ success: 0, data: null, message: "İlan bulunamadı." });
+        .json({ success: 0, data: null, message: "Ä°lan bulunamadÄ±." });
     }
 
     res.json({
       success: 1,
       data: notice,
-      message: "İlan detayları getirildi.",
+      message: "Ä°lan detaylarÄ± getirildi.",
     });
   } catch (err) {
     next(err);
@@ -118,7 +118,7 @@ exports.createNotice = async (req, res, next) => {
     res.status(201).json({
       success: 1,
       data: newNotice,
-      message: "Duyuru başarıyla oluşturuldu.",
+      message: "Duyuru baÅŸarÄ±yla oluÅŸturuldu.",
     });
   } catch (err) {
     const fileToClean =
@@ -147,7 +147,7 @@ exports.updateNotice = async (req, res, next) => {
       if (req.file) fs.unlinkSync(req.file.path);
       return res
         .status(404)
-        .json({ success: 0, data: null, message: "İlan bulunamadı." });
+        .json({ success: 0, data: null, message: "Ä°lan bulunamadÄ±." });
     }
 
     const uploadedFile =
@@ -164,7 +164,7 @@ exports.updateNotice = async (req, res, next) => {
     return res.json({
       success: 1,
       data: notice,
-      message: "İlan bilgisi güncellendi.",
+      message: "Ä°lan bilgisi gÃ¼ncellendi.",
     });
   } catch (err) {
     if (req.file) fs.unlinkSync(req.file.path);
@@ -180,7 +180,7 @@ exports.deleteNotice = async (req, res, next) => {
     if (!notice) {
       return res
         .status(404)
-        .json({ success: 0, data: null, message: "İlan bulunamadı." });
+        .json({ success: 0, data: null, message: "Ä°lan bulunamadÄ±." });
     }
     const filesToDelete = Array.isArray(notice.files) ? notice.files : [];
 
@@ -193,9 +193,10 @@ exports.deleteNotice = async (req, res, next) => {
     res.json({
       success: 1,
       data: null,
-      message: "İlan ve bağlı dosyası silindi.",
+      message: "Ä°lan ve baÄŸlÄ± dosyasÄ± silindi.",
     });
   } catch (err) {
     next(err);
   }
 };
+

@@ -1,4 +1,4 @@
-const { Event, EventGallery, sequelize } = require("../models");
+﻿const { Event, EventGallery, sequelize } = require("../models");
 const { getPaginationParams, getPagingData } = require("../helpers/pagination");
 const fs = require("fs");
 const { Op } = require("sequelize");
@@ -49,7 +49,7 @@ exports.getAllEvents = async (req, res, next) => {
         events,
         pagination: getPagingData(count, req.query.page, limit),
       },
-      message: "Etkinlikler başarıyla listelendi.",
+      message: "Etkinlikler baÅŸarÄ±yla listelendi.",
     });
   } catch (err) {
     next(err);
@@ -67,12 +67,12 @@ exports.getEventById = async (req, res, next) => {
     if (!event) {
       res
         .status(404)
-        .json({ success: 0, data: null, message: "Etkinlik bulunamadı." });
+        .json({ success: 0, data: null, message: "Etkinlik bulunamadÄ±." });
     }
     res.json({
       success: 1,
       data: event,
-      message: "Etkinlik detayları getirildi.",
+      message: "Etkinlik detaylarÄ± getirildi.",
     });
   } catch (err) {
     next(err);
@@ -102,7 +102,7 @@ exports.updateEvent = async (req, res, next) => {
     if (!event) {
       return res
         .status(404)
-        .json({ success: 0, data: null, message: "Etkinlik bulunamadı." });
+        .json({ success: 0, data: null, message: "Etkinlik bulunamadÄ±." });
     }
     await event.update({
       title: title ?? event.title,
@@ -128,7 +128,7 @@ exports.updateEvent = async (req, res, next) => {
           EventGallery.create(
             {
               event_id: event.id,
-              image_url: file.path.replace(/\\/g, "/"),
+              image_url: file.path.replace(/\\/g, "/").replace(/^.*?(\/uploads\/)/, "/uploads/"),
               order: startOrder + index,
               is_main: index === 0,
             },
@@ -142,7 +142,7 @@ exports.updateEvent = async (req, res, next) => {
     res.json({
       success: 1,
       data: event,
-      message: "Etkinlik başarıyla güncellendi.",
+      message: "Etkinlik baÅŸarÄ±yla gÃ¼ncellendi.",
     });
   } catch (err) {
     if (transaction) await transaction.rollback();
@@ -185,7 +185,7 @@ exports.createEvent = async (req, res, next) => {
         .json({
           success: 0,
           data: null,
-          message: "Bu başlıkta bir etkinlik zaten var.",
+          message: "Bu baÅŸlÄ±kta bir etkinlik zaten var.",
         });
     }
 
@@ -206,7 +206,7 @@ exports.createEvent = async (req, res, next) => {
           EventGallery.create(
             {
               event_id: newEvent.id,
-              image_url: file.path.replace(/\\/g, "/"),
+              image_url: file.path.replace(/\\/g, "/").replace(/^.*?(\/uploads\/)/, "/uploads/"),
               order: index + 1,
               is_main: index === 0,
             },
@@ -219,7 +219,7 @@ exports.createEvent = async (req, res, next) => {
 
     res
       .status(201)
-      .json({ success: 1, data: newEvent, message: "Etkinlik oluşturuldu." });
+      .json({ success: 1, data: newEvent, message: "Etkinlik oluÅŸturuldu." });
   } catch (err) {
     if (transaction) await transaction.rollback();
     const uploadedFiles = getUploadedFiles(req);
@@ -240,7 +240,7 @@ exports.deleteEvent = async (req, res, next) => {
     if (!event) {
       return res
         .status(404)
-        .json({ success: 0, data: null, message: "Etkinlik bulunamadı." });
+        .json({ success: 0, data: null, message: "Etkinlik bulunamadÄ±." });
     }
     const imagesToDelete = event.gallery
       ? event.gallery.map((img) => img.image_url)
@@ -256,9 +256,10 @@ exports.deleteEvent = async (req, res, next) => {
     res.json({
       success: 1,
       data: null,
-      message: "Etkinlik ve galerisi başarıyla silindi.",
+      message: "Etkinlik ve galerisi baÅŸarÄ±yla silindi.",
     });
   } catch (err) {
     next(err);
   }
 };
+

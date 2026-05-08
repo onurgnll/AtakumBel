@@ -32,7 +32,7 @@ const paginationQuery = [
     .withMessage("page değeri 1 veya daha büyük bir sayı olmalıdır."),
   query("per_page")
     .optional()
-    .isInt({ min: 1, max: 100 })
+    .isInt({ min: 1, max: 500 })
     .withMessage("per_page değeri 1-100 aralığında olmalıdır."),
   handleValidation,
 ];

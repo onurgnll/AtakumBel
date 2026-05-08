@@ -1,4 +1,4 @@
-const { RealEstateListing } = require("../models");
+﻿const { RealEstateListing } = require("../models");
 const { getPaginationParams, getPagingData } = require("../helpers/pagination");
 const fs = require("fs");
 const { Op } = require("sequelize");
@@ -21,7 +21,7 @@ const normalizeFiles = (existingFiles, bodyFiles, uploadedFile) => {
   }
 
   if (uploadedFile) {
-    files.push(uploadedFile.path.replace(/\\/g, "/"));
+    files.push(uploadedFile.path.replace(/\\/g, "/").replace(/^.*?(\/uploads\/)/, "/uploads/"));
   }
 
   return files;
@@ -52,7 +52,7 @@ exports.getAllRealEstateListings = async (req, res, next) => {
         listings,
         pagination: getPagingData(count, req.query.page, limit),
       },
-      message: "Emlak ilanları listelendi.",
+      message: "Emlak ilanlarÄ± listelendi.",
     });
   } catch (err) {
     next(err);
@@ -65,9 +65,9 @@ exports.getRealEstateListingById = async (req, res, next) => {
     if (!listing) {
       return res
         .status(404)
-        .json({ success: 0, data: null, message: "Emlak ilanı bulunamadı." });
+        .json({ success: 0, data: null, message: "Emlak ilanÄ± bulunamadÄ±." });
     }
-    return res.json({ success: 1, data: listing, message: "Emlak ilanı getirildi." });
+    return res.json({ success: 1, data: listing, message: "Emlak ilanÄ± getirildi." });
   } catch (err) {
     next(err);
   }
@@ -94,7 +94,7 @@ exports.createRealEstateListing = async (req, res, next) => {
 
     return res
       .status(201)
-      .json({ success: 1, data: listing, message: "Emlak ilanı oluşturuldu." });
+      .json({ success: 1, data: listing, message: "Emlak ilanÄ± oluÅŸturuldu." });
   } catch (err) {
     if (req.file && fs.existsSync(req.file.path)) fs.unlinkSync(req.file.path);
     next(err);
@@ -108,7 +108,7 @@ exports.updateRealEstateListing = async (req, res, next) => {
       if (req.file && fs.existsSync(req.file.path)) fs.unlinkSync(req.file.path);
       return res
         .status(404)
-        .json({ success: 0, data: null, message: "Emlak ilanı bulunamadı." });
+        .json({ success: 0, data: null, message: "Emlak ilanÄ± bulunamadÄ±." });
     }
 
     const { title, description, publish_date, is_active, files } = req.body;
@@ -126,7 +126,7 @@ exports.updateRealEstateListing = async (req, res, next) => {
     return res.json({
       success: 1,
       data: listing,
-      message: "Emlak ilanı güncellendi.",
+      message: "Emlak ilanÄ± gÃ¼ncellendi.",
     });
   } catch (err) {
     if (req.file && fs.existsSync(req.file.path)) fs.unlinkSync(req.file.path);
@@ -140,7 +140,7 @@ exports.deleteRealEstateListing = async (req, res, next) => {
     if (!listing) {
       return res
         .status(404)
-        .json({ success: 0, data: null, message: "Emlak ilanı bulunamadı." });
+        .json({ success: 0, data: null, message: "Emlak ilanÄ± bulunamadÄ±." });
     }
 
     const filesToDelete = Array.isArray(listing.files) ? listing.files : [];
@@ -152,10 +152,11 @@ exports.deleteRealEstateListing = async (req, res, next) => {
     return res.json({
       success: 1,
       data: null,
-      message: "Emlak ilanı silindi.",
+      message: "Emlak ilanÄ± silindi.",
     });
   } catch (err) {
     next(err);
   }
 };
+
 

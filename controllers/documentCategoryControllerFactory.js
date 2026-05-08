@@ -1,4 +1,4 @@
-const fs = require("fs");
+﻿const fs = require("fs");
 const { getPaginationParams, getPagingData } = require("../helpers/pagination");
 const { Op } = require("sequelize");
 
@@ -26,7 +26,7 @@ const normalizeFiles = (existingFiles, uploadedFiles, bodyFiles) => {
   }
 
   uploadedFiles.forEach((uploadedFile) => {
-    files.push(uploadedFile.path.replace(/\\/g, "/"));
+    files.push(uploadedFile.path.replace(/\\/g, "/").replace(/^.*?(\/uploads\/)/, "/uploads/"));
   });
 
   return files;
@@ -149,4 +149,5 @@ module.exports = function buildDocumentCategoryController(Model, labels) {
     },
   };
 };
+
 

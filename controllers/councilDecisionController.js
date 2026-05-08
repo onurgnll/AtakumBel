@@ -1,4 +1,4 @@
-const { CouncilDecision } = require("../models");
+﻿const { CouncilDecision } = require("../models");
 const { getPaginationParams, getPagingData } = require("../helpers/pagination");
 const fs = require("fs");
 const { Op } = require("sequelize");
@@ -21,7 +21,7 @@ const normalizeFiles = (existingFiles, bodyFiles, uploadedFile) => {
   }
 
   if (uploadedFile) {
-    files.push(uploadedFile.path.replace(/\\/g, "/"));
+    files.push(uploadedFile.path.replace(/\\/g, "/").replace(/^.*?(\/uploads\/)/, "/uploads/"));
   }
 
   return files;
@@ -59,7 +59,7 @@ exports.getAllDecisions = async (req, res, next) => {
       data: {
         decisions,
         pagination: getPagingData(count, req.query.page, limit),
-        message: "meclis kararları listelendi",
+        message: "meclis kararlarÄ± listelendi",
       },
     });
   } catch (err) {
@@ -90,7 +90,7 @@ exports.createDecision = async (req, res, next) => {
     res.status(201).json({
       success: 1,
       data: newDecision,
-      message: "Karar başarıyla eklendi.",
+      message: "Karar baÅŸarÄ±yla eklendi.",
     });
   } catch (err) {
     if (req.file && fs.existsSync(req.file.path)) {
@@ -109,7 +109,7 @@ exports.updateDecision = async (req, res, next) => {
     if (!decision) {
       return res
         .status(404)
-        .json({ success: 0, data: null, message: "Karar bulunamadı." });
+        .json({ success: 0, data: null, message: "Karar bulunamadÄ±." });
     }
     const uploadedFile =
       req.file || (req.files && Object.values(req.files).flat()[0]);
@@ -124,7 +124,7 @@ exports.updateDecision = async (req, res, next) => {
     res.json({
       success: 1,
       data: updatedDecision,
-      message: "Karar başarıyla güncellendi.",
+      message: "Karar baÅŸarÄ±yla gÃ¼ncellendi.",
     });
   } catch (err) {
     if (req.file && fs.existsSync(req.file.path)) {
@@ -143,7 +143,7 @@ exports.deleteDecision = async (req, res, next) => {
     if (!decision) {
       return res
         .status(404)
-        .json({ success: 0, data: null, message: "Karar bulunamadı." });
+        .json({ success: 0, data: null, message: "Karar bulunamadÄ±." });
     }
 
     const filesToDelete = Array.isArray(decision.files) ? decision.files : [];
@@ -154,9 +154,10 @@ exports.deleteDecision = async (req, res, next) => {
     res.json({
       success: 1,
       data: null,
-      message: "Karar başarıyla silindi.",
+      message: "Karar baÅŸarÄ±yla silindi.",
     });
   } catch (err) {
     next(err);
   }
 };
+

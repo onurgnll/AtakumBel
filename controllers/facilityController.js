@@ -1,4 +1,4 @@
-const { FacilityGallery, Facility, sequelize } = require("../models");
+﻿const { FacilityGallery, Facility, sequelize } = require("../models");
 const { getPaginationParams, getPagingData } = require("../helpers/pagination");
 const fs = require("fs");
 const { Op } = require("sequelize");
@@ -58,7 +58,7 @@ exports.getFacilityById = async (req, res, next) => {
       return res.status(404).json({
         success: 0,
         data: null,
-        message: "Görüntülenecek tesis bulunamadı.",
+        message: "GÃ¶rÃ¼ntÃ¼lenecek tesis bulunamadÄ±.",
       });
     }
     return res.json({
@@ -75,7 +75,7 @@ exports.getFacilityById = async (req, res, next) => {
 exports.createFacility = async (req, res, next) => {
   let transaction;
   try {
-    const { name, address } = req.body;
+    const { name, address, latitude, longitude } = req.body;
     const uploadedFiles = getUploadedFiles(req);
     const existing = await Facility.findOne({ where: { name } });
     if (existing) {
@@ -85,18 +85,26 @@ exports.createFacility = async (req, res, next) => {
       return res.status(409).json({
         success: 0,
         data: existing,
-        message: "Bu tesis zaten kayıtlı.",
+        message: "Bu tesis zaten kayÄ±tlÄ±.",
       });
     }
     transaction = await sequelize.transaction();
-    const newFacility = await Facility.create({ name, address }, { transaction });
+    const newFacility = await Facility.create(
+      {
+        name,
+        address,
+        latitude: latitude ?? null,
+        longitude: longitude ?? null,
+      },
+      { transaction },
+    );
 
     if (uploadedFiles.length === 0) {
       await transaction.rollback();
       return res.status(400).json({
         success: 0,
         data: null,
-        message: "Tesis oluştururken en az bir görsel yüklenmelidir.",
+        message: "Tesis oluÅŸtururken en az bir gÃ¶rsel yÃ¼klenmelidir.",
       });
     }
 
@@ -105,7 +113,7 @@ exports.createFacility = async (req, res, next) => {
         FacilityGallery.create(
           {
             facility_id: newFacility.id,
-            image_url: file.path.replace(/\\/g, "/"),
+            image_url: file.path.replace(/\\/g, "/").replace(/^.*?(\/uploads\/)/, "/uploads/"),
             order: index + 1,
             is_main: index === 0,
           },
@@ -118,7 +126,7 @@ exports.createFacility = async (req, res, next) => {
     return res.status(201).json({
       success: 1,
       data: newFacility,
-      message: "Tesis başarıyla eklendi.",
+      message: "Tesis baÅŸarÄ±yla eklendi.",
     });
   } catch (err) {
     if (transaction) await transaction.rollback();
@@ -135,18 +143,20 @@ exports.updateFacility = async (req, res, next) => {
   let transaction;
   try {
     const { id } = req.params;
-    const { name, address } = req.body;
+    const { name, address, latitude, longitude } = req.body;
     const facility = await Facility.findByPk(id);
     if (!facility) {
       return res.status(404).json({
         success: 0,
         data: null,
-        message: "Güncellenecek tesis bulunamadı.",
+        message: "GÃ¼ncellenecek tesis bulunamadÄ±.",
       });
     }
     await facility.update({
       name: name ?? facility.name,
       address: address ?? facility.address,
+      latitude: latitude ?? facility.latitude,
+      longitude: longitude ?? facility.longitude,
     });
 
     const uploadedFiles = getUploadedFiles(req);
@@ -165,7 +175,7 @@ exports.updateFacility = async (req, res, next) => {
           FacilityGallery.create(
             {
               facility_id: facility.id,
-              image_url: file.path.replace(/\\/g, "/"),
+              image_url: file.path.replace(/\\/g, "/").replace(/^.*?(\/uploads\/)/, "/uploads/"),
               order: startOrder + index,
               is_main: index === 0,
             },
@@ -179,7 +189,7 @@ exports.updateFacility = async (req, res, next) => {
     return res.json({
       success: 1,
       data: facility,
-      message: "Tesis bilgileri güncellendi.",
+      message: "Tesis bilgileri gÃ¼ncellendi.",
     });
   } catch (err) {
     if (transaction) await transaction.rollback();
@@ -202,7 +212,7 @@ exports.deleteFacility = async (req, res, next) => {
       return res.status(404).json({
         success: 0,
         data: null,
-        message: "Silinecek tesis bulunamadı",
+        message: "Silinecek tesis bulunamadÄ±",
       });
     }
     const imagesToDelete = facility.gallery
@@ -218,9 +228,10 @@ exports.deleteFacility = async (req, res, next) => {
     return res.json({
       success: 1,
       data: null,
-      message: "Tesis başarıyla silindi.",
+      message: "Tesis baÅŸarÄ±yla silindi.",
     });
   } catch (err) {
     next(err);
   }
 };
+

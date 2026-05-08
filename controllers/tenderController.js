@@ -1,4 +1,4 @@
-const { Tender } = require("../models");
+﻿const { Tender } = require("../models");
 const { getPaginationParams, getPagingData } = require("../helpers/pagination");
 const fs = require("fs");
 const { Op } = require("sequelize");
@@ -21,7 +21,7 @@ const normalizeFiles = (existingFiles, bodyFiles, uploadedFile) => {
   }
 
   if (uploadedFile) {
-    files.push(uploadedFile.path.replace(/\\/g, "/"));
+    files.push(uploadedFile.path.replace(/\\/g, "/").replace(/^.*?(\/uploads\/)/, "/uploads/"));
   }
 
   return files;
@@ -56,7 +56,7 @@ exports.getAllTenders = async (req, res, next) => {
       data: {
         tenders,
         pagination: getPagingData(count, req.query.page, limit),
-        message: "İhaleler başarıyla listelendi.",
+        message: "Ä°haleler baÅŸarÄ±yla listelendi.",
       },
     });
   } catch (err) {
@@ -71,9 +71,9 @@ exports.getTenderById = async (req, res, next) => {
     if (!tender) {
       return res
         .status(404)
-        .json({ success: 0, data: null, message: "İhale bulunamadı." });
+        .json({ success: 0, data: null, message: "Ä°hale bulunamadÄ±." });
     }
-    res.json({ success: 1, data: tender, message: "İhale bilgisi getirildi." });
+    res.json({ success: 1, data: tender, message: "Ä°hale bilgisi getirildi." });
   } catch (err) {
     next(err);
   }
@@ -102,7 +102,7 @@ exports.createTender = async (req, res, next) => {
     res.status(201).json({
       success: 1,
       data: newTender,
-      message: "İhale kaydı başarıyla oluşturuldu.",
+      message: "Ä°hale kaydÄ± baÅŸarÄ±yla oluÅŸturuldu.",
     });
   } catch (err) {
     next(err);
@@ -120,7 +120,7 @@ exports.updateTender = async (req, res, next) => {
       return res.status(404).json({
         success: 0,
         data: null,
-        message: "Güncellenecek ihale bulunamadı.",
+        message: "GÃ¼ncellenecek ihale bulunamadÄ±.",
       });
     }
 
@@ -138,7 +138,7 @@ exports.updateTender = async (req, res, next) => {
     res.json({
       success: 1,
       data: tender,
-      message: "İhale bilgileri başarıyla güncellendi.",
+      message: "Ä°hale bilgileri baÅŸarÄ±yla gÃ¼ncellendi.",
     });
   } catch (err) {
     next(err);
@@ -154,7 +154,7 @@ exports.deleteTender = async (req, res, next) => {
     if (!tender) {
       return res
         .status(404)
-        .json({ success: 0, data: null, message: "İhale bulunamadı." });
+        .json({ success: 0, data: null, message: "Ä°hale bulunamadÄ±." });
     }
 
     const filesToDelete = Array.isArray(tender.files) ? tender.files : [];
@@ -162,8 +162,9 @@ exports.deleteTender = async (req, res, next) => {
     filesToDelete.forEach((filePath) => {
       if (filePath && fs.existsSync(filePath)) fs.unlinkSync(filePath);
     });
-    res.json({ success: 1, data: null, message: "İhale kaydı silindi." });
+    res.json({ success: 1, data: null, message: "Ä°hale kaydÄ± silindi." });
   } catch (err) {
     next(err);
   }
 };
+

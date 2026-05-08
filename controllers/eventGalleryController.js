@@ -1,4 +1,4 @@
-const { EventGallery, Event, sequelize } = require("../models");
+﻿const { EventGallery, Event, sequelize } = require("../models");
 const fs = require("fs");
 
 //Read
@@ -24,7 +24,7 @@ exports.addImageToGallery = async (req, res, next) => {
       return res.status(400).json({
         success: 0,
         data: null,
-        message: "Dosya yüklenmedi.",
+        message: "Dosya yÃ¼klenmedi.",
       });
     }
     const currentCount = await EventGallery.count({ where: { event_id } });
@@ -33,7 +33,7 @@ exports.addImageToGallery = async (req, res, next) => {
 
       return {
         event_id,
-        image_url: file.path.replace(/\\/g, "/"),
+        image_url: file.path.replace(/\\/g, "/").replace(/^.*?(\/uploads\/)/, "/uploads/"),
         order: currentCount + index + 1,
         is_main: isFirstImage,
       };
@@ -44,7 +44,7 @@ exports.addImageToGallery = async (req, res, next) => {
     res.json({
       success: 1,
       data: newImages,
-      message: "Görseller başarıyla eklendi.",
+      message: "GÃ¶rseller baÅŸarÄ±yla eklendi.",
     });
   } catch (err) {
     next(err);
@@ -60,14 +60,14 @@ exports.deleteGalleryImage = async (req, res, next) => {
     if (!image) {
       return res
         .status(404)
-        .json({ success: 0, data: null, message: "Görsel bulunamadı." });
+        .json({ success: 0, data: null, message: "GÃ¶rsel bulunamadÄ±." });
     }
     if (fs.existsSync(image.image_url)) {
       fs.unlinkSync(image.image_url);
     }
 
     await image.destroy();
-    res.json({ success: 1, data: null, message: "Görsel başarıyla silindi." });
+    res.json({ success: 1, data: null, message: "GÃ¶rsel baÅŸarÄ±yla silindi." });
   } catch (err) {
     next(err);
   }
@@ -93,10 +93,11 @@ exports.setMainImage = async (req, res, next) => {
     res.json({
       success: 1,
       data: EventGallery,
-      message: "Ana görsel güncellendi.",
+      message: "Ana gÃ¶rsel gÃ¼ncellendi.",
     });
   } catch (err) {
     await t.rollback();
     next(err);
   }
 };
+
