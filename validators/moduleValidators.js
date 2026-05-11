@@ -15,6 +15,23 @@ const loginValidation = [
   handleValidation,
 ];
 
+const totpCodeBody = body("code")
+  .trim()
+  .matches(/^\d{6}$/)
+  .withMessage("Authenticator kodu 6 haneli olmalıdır.");
+
+const completeTotpSetupValidation = [
+  body("setupToken").isString().trim().notEmpty().withMessage("Kurulum belirteci gerekli."),
+  totpCodeBody,
+  handleValidation,
+];
+
+const verifyLoginTotpValidation = [
+  body("challengeToken").isString().trim().notEmpty().withMessage("Doğrulama belirteci gerekli."),
+  totpCodeBody,
+  handleValidation,
+];
+
 const adminRegisterValidation = [
   body("first_name")
     .trim()
@@ -97,6 +114,8 @@ const adminUpdateValidation = [
 
 module.exports = {
   loginValidation,
+  completeTotpSetupValidation,
+  verifyLoginTotpValidation,
   adminRegisterValidation,
   adminUpdateValidation,
   tenderCreateValidation,

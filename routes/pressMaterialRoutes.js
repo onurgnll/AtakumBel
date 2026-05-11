@@ -10,7 +10,7 @@ router.post(
   "/",
   protect,
   authorize("pressMaterials"),
-  upload.array("documents", 10),
+  upload.array("documents", 25),
   pressMaterialController.createPressMaterial,
 );
 router.put(
@@ -18,7 +18,7 @@ router.put(
   protect,
   authorize("pressMaterials"),
   idParam(),
-  upload.array("documents", 10),
+  upload.array("documents", 25),
   pressMaterialController.updatePressMaterial,
 );
 router.delete(

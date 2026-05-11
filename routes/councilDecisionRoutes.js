@@ -9,7 +9,7 @@ router.post(
   "/",
   protect,
   authorize("councilDecisions"),
-  upload.single("file"),
+  upload.array("file", 25),
   councilDecisionController.createDecision,
 );
 router.delete(
@@ -22,7 +22,7 @@ router.put(
   "/:id",
   protect,
   authorize("councilDecisions"),
-  upload.single("file"),
+  upload.array("file", 25),
   councilDecisionController.updateDecision,
 );
 

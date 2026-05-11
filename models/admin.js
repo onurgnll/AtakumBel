@@ -4,7 +4,10 @@ const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Admin extends Model {
     static associate(models) {
-      // Admin için şu an ilişki yok
+      Admin.hasMany(models.AdminAuditLog, {
+        foreignKey: "admin_id",
+        as: "auditLogs",
+      });
     }
   }
 
@@ -50,6 +53,15 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.JSONB,
         allowNull: false,
         defaultValue: {},
+      },
+      totp_secret: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      totp_enabled: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
       },
     },
     {

@@ -305,6 +305,20 @@
           ]
         },
         {
+          "name": "Editor Images",
+          "item": [
+            {
+              "name": "Upload Editor Image",
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "body": { "mode": "formdata", "formdata": [{ "key": "image", "type": "file", "src": "" }] },
+                "url": "{{baseUrl}}/editor-images"
+              }
+            }
+          ]
+        },
+        {
           "name": "Facilities",
           "item": [
             { "name": "List Facilities", "request": { "method": "GET", "url": "{{baseUrl}}/facilities" } },
@@ -314,7 +328,7 @@
               "request": {
                 "method": "POST",
                 "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
-                "body": { "mode": "formdata", "formdata": [{ "key": "name", "value": "Genclik Merkezi", "type": "text" }, { "key": "address", "value": "Denizevleri Mah. No:10", "type": "text" }, { "key": "images", "type": "file", "src": "" }, { "key": "images", "type": "file", "src": "" }] },
+                "body": { "mode": "formdata", "formdata": [{ "key": "name", "value": "Genclik Merkezi", "type": "text" }, { "key": "address", "value": "Denizevleri Mah. No:10", "type": "text" }, { "key": "description", "value": "<p>Tesis aciklamasi</p>", "type": "text" }, { "key": "latitude", "value": "41.334000", "type": "text" }, { "key": "longitude", "value": "36.266000", "type": "text" }, { "key": "images", "type": "file", "src": "" }, { "key": "images", "type": "file", "src": "" }] },
                 "url": "{{baseUrl}}/facilities"
               }
             },
@@ -323,7 +337,7 @@
               "request": {
                 "method": "PUT",
                 "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
-                "body": { "mode": "formdata", "formdata": [{ "key": "address", "value": "Denizevleri Mah. Cumhuriyet Cad. No:10", "type": "text" }, { "key": "images", "type": "file", "src": "" }, { "key": "images", "type": "file", "src": "" }] },
+                "body": { "mode": "formdata", "formdata": [{ "key": "address", "value": "Denizevleri Mah. Cumhuriyet Cad. No:10", "type": "text" }, { "key": "description", "value": "<p>Guncel tesis aciklamasi</p>", "type": "text" }, { "key": "latitude", "value": "41.334500", "type": "text" }, { "key": "longitude", "value": "36.266500", "type": "text" }, { "key": "images", "type": "file", "src": "" }, { "key": "images", "type": "file", "src": "" }] },
                 "url": "{{baseUrl}}/facilities/{{id}}"
               }
             },
@@ -371,6 +385,13 @@
                     { "key": "last_name", "value": "Topaloglu", "type": "text" },
                     { "key": "biography", "value": "Baskan biyografisi", "type": "text" },
                     { "key": "message", "value": "Baskan mesaji", "type": "text" },
+                    { "key": "birth_place", "value": "Almanya", "type": "text" },
+                    { "key": "birth_year", "value": "1983", "type": "text" },
+                    { "key": "grown_place", "value": "Atakum, Samsun", "type": "text" },
+                    { "key": "marital_status", "value": "Evli, 2 cocuk", "type": "text" },
+                    { "key": "education", "value": "[{\"year\":\"2006\",\"title\":\"Lisans — İktisadi ve İdari Bilimler\",\"institution\":\"Ondokuz Mayis Universitesi, Samsun\",\"description\":\"\"}]", "type": "text" },
+                    { "key": "political_career", "value": "[{\"period\":\"2024-...\",\"title\":\"Atakum Belediye Baskani\",\"institution\":\"T.C. Atakum Belediyesi\",\"description\":\"31 Mart 2024 yerel secimlerinde secildi.\"}]", "type": "text" },
+                    { "key": "work_life", "value": "[{\"year\":\"2014\",\"title\":\"Otelcilik & Turizm\",\"location\":\"Samsun\",\"description\":\"Turizm ve konaklama sektorunde faaliyetler.\"}]", "type": "text" },
                     { "key": "social_media_accounts", "value": "[{\"platform\":\"Instagram\",\"url\":\"https://instagram.com/atakumbelediyesi\"},{\"platform\":\"X\",\"url\":\"https://x.com/atakumbelediye\"}]", "type": "text" },
                     { "key": "image", "type": "file", "src": "" }
                   ]
@@ -423,6 +444,22 @@
               }
             },
             { "name": "Delete Press Material", "request": { "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }], "url": "{{baseUrl}}/press-materials/{{id}}" } }
+          ]
+        },
+        {
+          "name": "Photo Gallery",
+          "item": [
+            { "name": "List Photo Gallery", "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }], "url": "{{baseUrl}}/photo-gallery?page=1&per_page=30" } },
+            {
+              "name": "Create Photo Gallery Images",
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "body": { "mode": "formdata", "formdata": [{ "key": "images", "type": "file", "src": "" }, { "key": "images", "type": "file", "src": "" }] },
+                "url": "{{baseUrl}}/photo-gallery"
+              }
+            },
+            { "name": "Delete Photo Gallery Image", "request": { "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }], "url": "{{baseUrl}}/photo-gallery/{{id}}" } }
           ]
         },
         {
@@ -565,47 +602,6 @@
           ]
         },
         {
-          "name": "Encumen",
-          "item": [
-            { "name": "List Encumens", "request": { "method": "GET", "url": "{{baseUrl}}/encumens" } },
-            {
-              "name": "Create Encumen",
-              "request": {
-                "method": "POST",
-                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Content-Type", "value": "application/json" }],
-                "body": { "mode": "raw", "raw": "{\n  \"term_name\": \"2026 Encumen Donemi\",\n  \"is_active\": true\n}" },
-                "url": "{{baseUrl}}/encumens"
-              }
-            },
-            {
-              "name": "Update Encumen",
-              "request": {
-                "method": "PUT",
-                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Content-Type", "value": "application/json" }],
-                "body": { "mode": "raw", "raw": "{\n  \"is_active\": false\n}" },
-                "url": "{{baseUrl}}/encumens/{{id}}"
-              }
-            },
-            { "name": "Delete Encumen", "request": { "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }], "url": "{{baseUrl}}/encumens/{{id}}" } }
-          ]
-        },
-        {
-          "name": "Encumen Memberships",
-          "item": [
-            { "name": "Get Encumen With Members", "request": { "method": "GET", "url": "{{baseUrl}}/encumen-members" } },
-            {
-              "name": "Add Encumen Member",
-              "request": {
-                "method": "POST",
-                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Content-Type", "value": "application/json" }],
-                "body": { "mode": "raw", "raw": "{\n  \"encumen_id\": 1,\n  \"member_type\": \"staff\",\n  \"member_id\": 1\n}" },
-                "url": "{{baseUrl}}/encumen-members"
-              }
-            },
-            { "name": "Delete Encumen Member", "request": { "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }], "url": "{{baseUrl}}/encumen-members/{{id}}" } }
-          ]
-        },
-        {
           "name": "Directives",
           "item": [
             { "name": "List Directives", "request": { "method": "GET", "url": "{{baseUrl}}/directives" } },
@@ -645,7 +641,7 @@
               "request": {
                 "method": "POST",
                 "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
-                "body": { "mode": "formdata", "formdata": [{ "key": "title", "value": "Meclis Karari - Sahil Projesi", "type": "text" }, { "key": "description", "value": "Sahil duzenleme etap-1 karar aciklamasi", "type": "text" }, { "key": "publish_date", "value": "2026-05-15", "type": "text" }, { "key": "is_active", "value": "true", "type": "text" }, { "key": "file", "type": "file", "src": "" }] },
+                "body": { "mode": "formdata", "formdata": [{ "key": "title", "value": "Meclis Karari - Sahil Projesi", "type": "text" }, { "key": "description", "value": "Sahil duzenleme etap-1 karar aciklamasi", "type": "text" }, { "key": "publish_date", "value": "2026-05-15", "type": "text" }, { "key": "decision_no", "value": "2026/59", "type": "text" }, { "key": "summary", "value": "Sahil Duzenleme Projesi Etap-1 Onayi", "type": "text" }, { "key": "full_text", "value": "Projenin 1. etap uygulamalarinin baslatilmasina karar verildi.", "type": "text" }, { "key": "date", "value": "2026-05-15", "type": "text" }, { "key": "is_active", "value": "true", "type": "text" }, { "key": "file", "type": "file", "src": "" }] },
                 "url": "{{baseUrl}}/council-decisions"
               }
             },
@@ -654,7 +650,7 @@
               "request": {
                 "method": "PUT",
                 "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
-                "body": { "mode": "formdata", "formdata": [{ "key": "description", "value": "Sahil duzenleme etap-1 karari (guncel)", "type": "text" }, { "key": "is_active", "value": "true", "type": "text" }, { "key": "file", "type": "file", "src": "" }] },
+                "body": { "mode": "formdata", "formdata": [{ "key": "description", "value": "Sahil duzenleme etap-1 karari (guncel)", "type": "text" }, { "key": "decision_no", "value": "2026/59", "type": "text" }, { "key": "summary", "value": "Guncel ozet", "type": "text" }, { "key": "full_text", "value": "Guncellenmis tam metin", "type": "text" }, { "key": "date", "value": "2026-05-16", "type": "text" }, { "key": "is_active", "value": "true", "type": "text" }, { "key": "file", "type": "file", "src": "" }] },
                 "url": "{{baseUrl}}/council-decisions/{{id}}"
               }
             },
@@ -678,7 +674,8 @@
                     { "key": "description", "value": "Duyuru aciklamasi", "type": "text" },
                     { "key": "publish_date", "value": "2026-05-20", "type": "text" },
                     { "key": "is_active", "value": "true", "type": "text" },
-                    { "key": "file", "type": "file", "src": "" }
+                    { "key": "files", "value": "[]", "type": "text" },
+                    { "key": "files", "type": "file", "src": "" }
                   ]
                 },
                 "url": "{{baseUrl}}/public-notices"
@@ -694,7 +691,8 @@
                   "formdata": [
                     { "key": "description", "value": "Duyuru aciklamasi guncellendi", "type": "text" },
                     { "key": "is_active", "value": "false", "type": "text" },
-                    { "key": "file", "type": "file", "src": "" }
+                    { "key": "files", "value": "[\"/uploads/public-notices/existing-file.jpg\"]", "type": "text" },
+                    { "key": "files", "type": "file", "src": "" }
                   ]
                 },
                 "url": "{{baseUrl}}/public-notices/{{id}}"
@@ -763,8 +761,8 @@
               "name": "Create Service",
               "request": {
                 "method": "POST",
-                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Content-Type", "value": "application/json" }],
-                "body": { "mode": "raw", "raw": "{\n  \"name\": \"Online Imar Belgesi\",\n  \"content\": \"E-belediye uzerinden basvuru\",\n  \"image_url\": \"/uploads/services/imar.jpg\"\n}" },
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "body": { "mode": "formdata", "formdata": [{ "key": "name", "value": "Online Imar Belgesi", "type": "text" }, { "key": "content", "value": "E-belediye uzerinden basvuru", "type": "text" }, { "key": "image", "type": "file", "src": "" }] },
                 "url": "{{baseUrl}}/services"
               }
             },
@@ -772,8 +770,8 @@
               "name": "Update Service",
               "request": {
                 "method": "PUT",
-                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Content-Type", "value": "application/json" }],
-                "body": { "mode": "raw", "raw": "{\n  \"content\": \"E-belediye ve mobil uygulama uzerinden basvuru\"\n}" },
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "body": { "mode": "formdata", "formdata": [{ "key": "content", "value": "E-belediye ve mobil uygulama uzerinden basvuru", "type": "text" }, { "key": "image", "type": "file", "src": "" }] },
                 "url": "{{baseUrl}}/services/{{id}}"
               }
             },
@@ -788,6 +786,7 @@
               "name": "Add Service Forms",
               "request": {
                 "method": "POST",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
                 "body": {
                   "mode": "formdata",
                   "formdata": [
@@ -802,6 +801,7 @@
               "name": "Update Service Form",
               "request": {
                 "method": "PUT",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
                 "body": {
                   "mode": "formdata",
                   "formdata": [
@@ -811,7 +811,7 @@
                 "url": "{{baseUrl}}/service-forms/{{id}}"
               }
             },
-            { "name": "Delete Service Form", "request": { "method": "DELETE", "url": "{{baseUrl}}/service-forms/{{id}}" } }
+            { "name": "Delete Service Form", "request": { "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }], "url": "{{baseUrl}}/service-forms/{{id}}" } }
           ]
         }
       ]

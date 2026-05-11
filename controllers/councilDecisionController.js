@@ -2,30 +2,11 @@
 const { getPaginationParams, getPagingData } = require("../helpers/pagination");
 const fs = require("fs");
 const { Op } = require("sequelize");
-
-const normalizeFiles = (existingFiles, bodyFiles, uploadedFile) => {
-  const files = Array.isArray(existingFiles) ? [...existingFiles] : [];
-
-  if (bodyFiles) {
-    if (Array.isArray(bodyFiles)) {
-      files.push(...bodyFiles);
-    } else if (typeof bodyFiles === "string") {
-      try {
-        const parsed = JSON.parse(bodyFiles);
-        if (Array.isArray(parsed)) files.push(...parsed);
-        else files.push(bodyFiles);
-      } catch {
-        files.push(bodyFiles);
-      }
-    }
-  }
-
-  if (uploadedFile) {
-    files.push(uploadedFile.path.replace(/\\/g, "/").replace(/^.*?(\/uploads\/)/, "/uploads/"));
-  }
-
-  return files;
-};
+const {
+  normalizeFiles,
+  collectUploadedFiles,
+  unlinkUploadedFiles,
+} = require("../helpers/normalizeUploadFiles");
 
 //Read
 exports.getAllDecisions = async (req, res, next) => {
@@ -76,15 +57,14 @@ exports.createDecision = async (req, res, next) => {
         .status(400)
         .json({ success: 0, data: null, message: "title zorunludur." });
     }
-    const uploadedFile =
-      req.file || (req.files && Object.values(req.files).flat()[0]);
+    const uploadedList = collectUploadedFiles(req);
 
     const newDecision = await CouncilDecision.create({
       title,
       description: description || null,
       publish_date: publish_date || null,
       is_active: is_active ?? true,
-      files: normalizeFiles([], files, uploadedFile),
+      files: normalizeFiles([], files, uploadedList),
     });
 
     res.status(201).json({
@@ -93,9 +73,7 @@ exports.createDecision = async (req, res, next) => {
       message: "Karar baÅŸarÄ±yla eklendi.",
     });
   } catch (err) {
-    if (req.file && fs.existsSync(req.file.path)) {
-      fs.unlinkSync(req.file.path);
-    }
+    unlinkUploadedFiles(req);
     next(err);
   }
 };
@@ -111,15 +89,14 @@ exports.updateDecision = async (req, res, next) => {
         .status(404)
         .json({ success: 0, data: null, message: "Karar bulunamadÄ±." });
     }
-    const uploadedFile =
-      req.file || (req.files && Object.values(req.files).flat()[0]);
+    const uploadedList = collectUploadedFiles(req);
 
     const updatedDecision = await decision.update({
       title: title ?? decision.title,
       description: description ?? decision.description,
       publish_date: publish_date ?? decision.publish_date,
       is_active: is_active ?? decision.is_active,
-      files: normalizeFiles(decision.files, files, uploadedFile),
+      files: normalizeFiles(decision.files, files, uploadedList),
     });
     res.json({
       success: 1,
@@ -127,9 +104,7 @@ exports.updateDecision = async (req, res, next) => {
       message: "Karar baÅŸarÄ±yla gÃ¼ncellendi.",
     });
   } catch (err) {
-    if (req.file && fs.existsSync(req.file.path)) {
-      fs.unlinkSync(req.file.path);
-    }
+    unlinkUploadedFiles(req);
     next(err);
   }
 };

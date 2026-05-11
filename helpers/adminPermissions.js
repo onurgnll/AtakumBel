@@ -27,6 +27,7 @@ const PERMISSION_MODULES = [
   "auditReports",
   "strategicPlans",
   "kvkkDocuments",
+  "adminAuditLogs",
 ];
 
 const createCrudPermissions = (value = false) => ({

@@ -15,7 +15,7 @@ router.post(
   "/",
   protect,
   authorize("tenders"),
-  upload.single("file"),
+  upload.array("file", 25),
   tenderCreateValidation,
   tenderController.createTender,
 );
@@ -24,7 +24,7 @@ router.put(
   protect,
   authorize("tenders"),
   idParam(),
-  upload.single("file"),
+  upload.array("file", 25),
   tenderUpdateValidation,
   tenderController.updateTender,
 );

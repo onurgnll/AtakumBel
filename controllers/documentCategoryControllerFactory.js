@@ -1,4 +1,5 @@
 ﻿const fs = require("fs");
+const path = require("path");
 const { getPaginationParams, getPagingData } = require("../helpers/pagination");
 const { Op } = require("sequelize");
 
@@ -8,8 +9,23 @@ const getUploadedFiles = (req) => {
   return [];
 };
 
+const toPublicAbsolutePath = (rawPath) => {
+  if (!rawPath || typeof rawPath !== "string") return null;
+  const normalized = rawPath.replace(/\\/g, "/");
+  const relative = normalized.startsWith("/uploads/")
+    ? `public${normalized}`
+    : normalized.replace(/^\/+/, "");
+  return path.resolve(process.cwd(), relative);
+};
+
+const deleteFileIfExists = (rawPath) => {
+  const absPath = toPublicAbsolutePath(rawPath);
+  if (absPath && fs.existsSync(absPath)) fs.unlinkSync(absPath);
+};
+
 const normalizeFiles = (existingFiles, uploadedFiles, bodyFiles) => {
-  const files = Array.isArray(existingFiles) ? [...existingFiles] : [];
+  const hasBodyFiles = bodyFiles !== undefined && bodyFiles !== null;
+  const files = hasBodyFiles ? [] : Array.isArray(existingFiles) ? [...existingFiles] : [];
 
   if (bodyFiles) {
     if (Array.isArray(bodyFiles)) {
@@ -109,13 +125,20 @@ module.exports = function buildDocumentCategoryController(Model, labels) {
         const { title, description, publish_date, is_active, files } = req.body;
         const uploadedFiles = getUploadedFiles(req);
 
+        const prevFiles = Array.isArray(item.files) ? item.files : [];
+        const nextFiles = normalizeFiles(prevFiles, uploadedFiles, files);
+
         await item.update({
           title: title ?? item.title,
           description: description ?? item.description,
           publish_date: publish_date ?? item.publish_date,
           is_active: is_active ?? item.is_active,
-          files: normalizeFiles(item.files, uploadedFiles, files),
+          files: nextFiles,
         });
+
+        prevFiles
+          .filter((existingPath) => !nextFiles.includes(existingPath))
+          .forEach(deleteFileIfExists);
 
         return res.json({ success: 1, data: item, message: updateMessage });
       } catch (err) {
@@ -138,9 +161,7 @@ module.exports = function buildDocumentCategoryController(Model, labels) {
 
         const filesToDelete = Array.isArray(item.files) ? item.files : [];
         await item.destroy();
-        filesToDelete.forEach((filePath) => {
-          if (filePath && fs.existsSync(filePath)) fs.unlinkSync(filePath);
-        });
+        filesToDelete.forEach(deleteFileIfExists);
 
         return res.json({ success: 1, data: null, message: deleteMessage });
       } catch (err) {

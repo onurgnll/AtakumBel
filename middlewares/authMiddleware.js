@@ -1,4 +1,12 @@
 const jwt = require("jsonwebtoken");
+const {
+  serializeResponsePayload,
+  attachJsonResponseCapture,
+} = require("../helpers/adminAuditPayload");
+const {
+  buildAuditRequestBodyWithDiff,
+  loadAuditMutationSnapshot,
+} = require("../helpers/auditUpdateSnapshot");
 
 const getActionFromRequest = (req) => {
   if (req.method === "POST") return "create";
@@ -25,7 +33,7 @@ const hasModulePermission = (permissions, moduleName, action) => {
   return false;
 };
 
-const protect = (req, res, next) => {
+const protect = async (req, res, next) => {
   let token;
   if (
     req.headers.authorization &&
@@ -41,7 +49,59 @@ const protect = (req, res, next) => {
       token = req.headers.authorization.split(" ")[1];
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
       req.admin = decoded;
-      next();
+
+      if (req.method === "PUT" || req.method === "PATCH" || req.method === "POST") {
+        try {
+          req._auditPreviousRowSnapshot = await loadAuditMutationSnapshot(req);
+        } catch (e) {
+          console.error("[auditMutationSnapshot]", e.message);
+          req._auditPreviousRowSnapshot = null;
+        }
+      } else {
+        req._auditPreviousRowSnapshot = null;
+      }
+
+      if (req.method !== "GET") {
+        const startedAt = Date.now();
+        const pathLogged = String(req.originalUrl || req.url || "")
+          .split("?")[0]
+          .slice(0, 2000);
+        const capture = { responseText: null };
+        attachJsonResponseCapture(res, (payload) => {
+          capture.responseText = serializeResponsePayload(payload);
+        });
+        const logPayload = {
+          adminId: decoded.id,
+          method: req.method,
+          path: pathLogged,
+          ip: req.ip || req.socket?.remoteAddress || null,
+          userAgent: String(req.get("user-agent") || "").slice(0, 500),
+          capture,
+        };
+        res.on("finish", () => {
+          setImmediate(async () => {
+            try {
+              const requestBodyText = await buildAuditRequestBodyWithDiff(req);
+              const { AdminAuditLog } = require("../models");
+              await AdminAuditLog.create({
+                admin_id: logPayload.adminId,
+                method: logPayload.method,
+                path: logPayload.path,
+                status_code: res.statusCode,
+                duration_ms: Date.now() - startedAt,
+                ip: logPayload.ip,
+                user_agent: logPayload.userAgent || null,
+                request_body: requestBodyText,
+                response_body: logPayload.capture.responseText,
+              });
+            } catch (e) {
+              console.error("[AdminAuditLog]", e.message);
+            }
+          });
+        });
+      }
+
+      return next();
     } catch (err) {
       return res.status(401).json({
         success: 0,

@@ -2,30 +2,11 @@
 const { getPaginationParams, getPagingData } = require("../helpers/pagination");
 const fs = require("fs");
 const { Op } = require("sequelize");
-
-const normalizeFiles = (existingFiles, bodyFiles, uploadedFile) => {
-  const files = Array.isArray(existingFiles) ? [...existingFiles] : [];
-
-  if (bodyFiles) {
-    if (Array.isArray(bodyFiles)) {
-      files.push(...bodyFiles);
-    } else if (typeof bodyFiles === "string") {
-      try {
-        const parsed = JSON.parse(bodyFiles);
-        if (Array.isArray(parsed)) files.push(...parsed);
-        else files.push(bodyFiles);
-      } catch {
-        files.push(bodyFiles);
-      }
-    }
-  }
-
-  if (uploadedFile) {
-    files.push(uploadedFile.path.replace(/\\/g, "/").replace(/^.*?(\/uploads\/)/, "/uploads/"));
-  }
-
-  return files;
-};
+const {
+  normalizeFiles,
+  collectUploadedFiles,
+  unlinkUploadedFiles,
+} = require("../helpers/normalizeUploadFiles");
 
 //Read
 exports.getAllTenders = async (req, res, next) => {
@@ -88,15 +69,14 @@ exports.createTender = async (req, res, next) => {
         .status(400)
         .json({ success: 0, data: null, message: "title zorunludur." });
     }
-    const uploadedFile =
-      req.file || (req.files && Object.values(req.files).flat()[0]);
+    const uploadedList = collectUploadedFiles(req);
 
     const newTender = await Tender.create({
       title,
       description: description || null,
       publish_date: publish_date || null,
       is_active: is_active ?? true,
-      files: normalizeFiles([], files, uploadedFile),
+      files: normalizeFiles([], files, uploadedList),
     });
 
     res.status(201).json({
@@ -124,15 +104,14 @@ exports.updateTender = async (req, res, next) => {
       });
     }
 
-    const uploadedFile =
-      req.file || (req.files && Object.values(req.files).flat()[0]);
+    const uploadedList = collectUploadedFiles(req);
 
     await tender.update({
       title: title ?? tender.title,
       description: description ?? tender.description,
       publish_date: publish_date ?? tender.publish_date,
       is_active: is_active ?? tender.is_active,
-      files: normalizeFiles(tender.files, files, uploadedFile),
+      files: normalizeFiles(tender.files, files, uploadedList),
     });
 
     res.json({

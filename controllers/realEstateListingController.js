@@ -2,30 +2,11 @@
 const { getPaginationParams, getPagingData } = require("../helpers/pagination");
 const fs = require("fs");
 const { Op } = require("sequelize");
-
-const normalizeFiles = (existingFiles, bodyFiles, uploadedFile) => {
-  const files = Array.isArray(existingFiles) ? [...existingFiles] : [];
-
-  if (bodyFiles) {
-    if (Array.isArray(bodyFiles)) {
-      files.push(...bodyFiles);
-    } else if (typeof bodyFiles === "string") {
-      try {
-        const parsed = JSON.parse(bodyFiles);
-        if (Array.isArray(parsed)) files.push(...parsed);
-        else files.push(bodyFiles);
-      } catch {
-        files.push(bodyFiles);
-      }
-    }
-  }
-
-  if (uploadedFile) {
-    files.push(uploadedFile.path.replace(/\\/g, "/").replace(/^.*?(\/uploads\/)/, "/uploads/"));
-  }
-
-  return files;
-};
+const {
+  normalizeFiles,
+  collectUploadedFiles,
+  unlinkUploadedFiles,
+} = require("../helpers/normalizeUploadFiles");
 
 exports.getAllRealEstateListings = async (req, res, next) => {
   try {
@@ -81,22 +62,21 @@ exports.createRealEstateListing = async (req, res, next) => {
         .status(400)
         .json({ success: 0, data: null, message: "title zorunludur." });
     }
-    const uploadedFile =
-      req.file || (req.files && Object.values(req.files).flat()[0]);
+    const uploadedList = collectUploadedFiles(req);
 
     const listing = await RealEstateListing.create({
       title,
       description: description || null,
       publish_date: publish_date || null,
       is_active: is_active ?? true,
-      files: normalizeFiles([], files, uploadedFile),
+      files: normalizeFiles([], files, uploadedList),
     });
 
     return res
       .status(201)
       .json({ success: 1, data: listing, message: "Emlak ilanÄ± oluÅŸturuldu." });
   } catch (err) {
-    if (req.file && fs.existsSync(req.file.path)) fs.unlinkSync(req.file.path);
+    unlinkUploadedFiles(req);
     next(err);
   }
 };
@@ -105,22 +85,21 @@ exports.updateRealEstateListing = async (req, res, next) => {
   try {
     const listing = await RealEstateListing.findByPk(req.params.id);
     if (!listing) {
-      if (req.file && fs.existsSync(req.file.path)) fs.unlinkSync(req.file.path);
+      unlinkUploadedFiles(req);
       return res
         .status(404)
         .json({ success: 0, data: null, message: "Emlak ilanÄ± bulunamadÄ±." });
     }
 
     const { title, description, publish_date, is_active, files } = req.body;
-    const uploadedFile =
-      req.file || (req.files && Object.values(req.files).flat()[0]);
+    const uploadedList = collectUploadedFiles(req);
 
     await listing.update({
       title: title ?? listing.title,
       description: description ?? listing.description,
       publish_date: publish_date ?? listing.publish_date,
       is_active: is_active ?? listing.is_active,
-      files: normalizeFiles(listing.files, files, uploadedFile),
+      files: normalizeFiles(listing.files, files, uploadedList),
     });
 
     return res.json({
@@ -129,7 +108,7 @@ exports.updateRealEstateListing = async (req, res, next) => {
       message: "Emlak ilanÄ± gÃ¼ncellendi.",
     });
   } catch (err) {
-    if (req.file && fs.existsSync(req.file.path)) fs.unlinkSync(req.file.path);
+    unlinkUploadedFiles(req);
     next(err);
   }
 };

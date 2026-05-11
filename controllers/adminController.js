@@ -7,7 +7,7 @@ const { normalizePermissions } = require("../helpers/adminPermissions");
 exports.getMe = async (req, res, next) => {
   try {
     const admin = await Admin.findByPk(req.admin.id, {
-      attributes: { exclude: ["password"] },
+      attributes: { exclude: ["password", "totp_secret"] },
     });
     if (!admin) {
       return res.status(404).json({ success: 0, message: "Admin bulunamadı." });
@@ -34,7 +34,7 @@ exports.getAllAdmins = async (req, res, next) => {
       : {};
     const admins = await Admin.findAll({
       where: whereCondition,
-      attributes: { exclude: ["password"] },
+      attributes: { exclude: ["password", "totp_secret"] },
       order: [["id", "ASC"]],
     });
 
@@ -79,6 +79,7 @@ exports.updateAdmin = async (req, res, next) => {
     await admin.update(updateData);
     const updatedAdmin = admin.toJSON();
     delete updatedAdmin.password;
+    delete updatedAdmin.totp_secret;
 
     res.json({
       success: 1,

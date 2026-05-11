@@ -21,7 +21,6 @@ exports.getAllDepartments = async (req, res, next) => {
             { name: { [Op.iLike]: `%${search}%` } },
             { description: { [Op.iLike]: `%${search}%` } },
             { address: { [Op.iLike]: `%${search}%` } },
-            { phone: { [Op.iLike]: `%${search}%` } },
           ],
         }
       : {};
@@ -156,7 +155,7 @@ exports.getDepartmentById = async (req, res, next) => {
 //Create
 exports.createDepartment = async (req, res, next) => {
   try {
-    const { name, description, phone, address, manager_employee_id } = req.body;
+    const { name, description, address, manager_employee_id } = req.body;
     const existing = await Department.findOne({ where: { name } });
     if (existing) {
       return res.status(409).json({
@@ -168,7 +167,6 @@ exports.createDepartment = async (req, res, next) => {
     const newDepartment = await Department.create({
       name,
       description,
-      phone,
       address,
       manager_employee_id: manager_employee_id || null,
     });
@@ -185,7 +183,7 @@ exports.updateDepartment = async (req, res, next) => {
   try {
     const { id } = req.params;
     const department = await Department.findByPk(id);
-    const { name, description, phone, address, manager_employee_id } = req.body;
+    const { name, description, address, manager_employee_id } = req.body;
     if (!department) {
       return res.status(404).json({
         success: 0,
@@ -196,7 +194,6 @@ exports.updateDepartment = async (req, res, next) => {
     await department.update({
       name: name ?? department.name,
       description: description ?? department.description,
-      phone: phone ?? department.phone,
       address: address ?? department.address,
       manager_employee_id:
         manager_employee_id ?? department.manager_employee_id,

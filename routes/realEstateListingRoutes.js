@@ -11,7 +11,7 @@ router.post(
   "/",
   protect,
   authorize("realEstateListings"),
-  upload.single("file"),
+  upload.array("file", 25),
   realEstateListingController.createRealEstateListing,
 );
 router.put(
@@ -19,7 +19,7 @@ router.put(
   protect,
   authorize("realEstateListings"),
   idParam(),
-  upload.single("file"),
+  upload.array("file", 25),
   realEstateListingController.updateRealEstateListing,
 );
 router.delete(
