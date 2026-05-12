@@ -1,5 +1,24 @@
-﻿const { President, PresidentGallery, sequelize } = require("../models");
+﻿const { President, Department, VicePresidentDepartment, sequelize } = require("../models");
+const { Op } = require("sequelize");
 const fs = require("fs");
+
+function parsePresidentDepartmentIds(rawValue) {
+  if (rawValue === undefined || rawValue === null || rawValue === "") {
+    return null;
+  }
+  const parsed =
+    typeof rawValue === "string" ? JSON.parse(rawValue) : rawValue;
+  if (!Array.isArray(parsed)) {
+    throw new Error("president_department_ids bir dizi olmalidir.");
+  }
+  return Array.from(
+    new Set(
+      parsed
+        .map((id) => Number(id))
+        .filter((id) => Number.isInteger(id) && id > 0),
+    ),
+  );
+}
 
 function parseJsonArrayField(rawValue, fallback = []) {
   if (rawValue === undefined || rawValue === null || rawValue === "") {
@@ -24,9 +43,15 @@ exports.getPresident = async (req, res, next) => {
         message: "BaÅŸkan bilgisi bulunamadÄ±.",
       });
     }
+    const departments = await Department.findAll({
+      where: { reports_to_president: true },
+      attributes: ["id", "name"],
+      order: [["name", "ASC"]],
+    });
+    const plain = president.get({ plain: true });
     res.json({
       success: 1,
-      data: president,
+      data: { ...plain, departments },
       message: "BaÅŸkan bilgileri getirildi.",
     });
   } catch (err) {
@@ -82,6 +107,7 @@ exports.upsertPresident = async (req, res, next) => {
       education,
       political_career,
       work_life,
+      president_department_ids,
     } = req.body;
     let president = await President.findOne();
 
@@ -148,10 +174,64 @@ exports.upsertPresident = async (req, res, next) => {
       president = await President.create(presidentData, { transaction: t });
     }
 
+    let departmentSyncError = null;
+    try {
+      const newDeptIds =
+        president_department_ids !== undefined
+          ? parsePresidentDepartmentIds(president_department_ids)
+          : null;
+
+      if (newDeptIds !== null) {
+        if (newDeptIds.length === 0) {
+          await Department.update(
+            { reports_to_president: false },
+            { where: { reports_to_president: true }, transaction: t },
+          );
+        } else {
+          await Department.update(
+            { reports_to_president: false },
+            {
+              where: {
+                reports_to_president: true,
+                id: { [Op.notIn]: newDeptIds },
+              },
+              transaction: t,
+            },
+          );
+          await VicePresidentDepartment.destroy({
+            where: { department_id: { [Op.in]: newDeptIds } },
+            transaction: t,
+          });
+          await Department.update(
+            { reports_to_president: true },
+            {
+              where: { id: { [Op.in]: newDeptIds } },
+              transaction: t,
+            },
+          );
+        }
+      }
+    } catch (e) {
+      departmentSyncError = e;
+    }
+
+    if (departmentSyncError) {
+      await t.rollback();
+      return next(departmentSyncError);
+    }
+
     await t.commit();
+
+    const departments = await Department.findAll({
+      where: { reports_to_president: true },
+      attributes: ["id", "name"],
+      order: [["name", "ASC"]],
+    });
+    const merged = { ...president.get({ plain: true }), departments };
+
     res.json({
       success: 1,
-      data: president,
+      data: merged,
       message: "BaÅŸkan bilgileri baÅŸarÄ±yla gÃ¼ncellendi.",
     });
   } catch (err) {

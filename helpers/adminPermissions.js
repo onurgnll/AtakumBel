@@ -28,6 +28,7 @@ const PERMISSION_MODULES = [
   "strategicPlans",
   "kvkkDocuments",
   "adminAuditLogs",
+  "contentPopups",
 ];
 
 const createCrudPermissions = (value = false) => ({

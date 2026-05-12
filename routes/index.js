@@ -36,6 +36,7 @@ const wastePointRoutes = require("./wastePointRoutes");
 const marketplaceRoutes = require("./marketplaceRoutes");
 const editorImageRoutes = require("./editorImageRoutes");
 const photoGalleryRoutes = require("./photoGalleryRoutes");
+const contentPopupRoutes = require("./contentPopupRoutes");
 
 // Rotaları ana router'a bağlıyoruz
 router.use("/admin", adminRoutes);
@@ -72,5 +73,6 @@ router.use("/waste-points", wastePointRoutes);
 router.use("/marketplaces", marketplaceRoutes);
 router.use("/editor-images", editorImageRoutes);
 router.use("/photo-gallery", photoGalleryRoutes);
+router.use("/content-popups", contentPopupRoutes);
 
 module.exports = router;

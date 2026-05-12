@@ -3,6 +3,7 @@ const {
   Employee,
   VicePresident,
   PublicNotice,
+  VicePresidentDepartment,
 } = require("../models");
 const { getPaginationParams, getPagingData } = require("../helpers/pagination");
 const { Op } = require("sequelize");
@@ -32,9 +33,16 @@ exports.getAllDepartments = async (req, res, next) => {
       order: [["name", "ASC"]],
       include: [
         {
+          model: VicePresident,
+          as: "vice_presidents",
+          attributes: ["id", "first_name", "last_name"],
+          through: { attributes: [] },
+          required: false,
+        },
+        {
           model: Employee,
           as: "employees",
-          where: { is_active: true },
+          where: { is_active: true, is_unit_manager: false, is_contact_person: true },
           required: false,
           attributes: [
             "id",
@@ -153,9 +161,19 @@ exports.getDepartmentById = async (req, res, next) => {
 };
 
 //Create
+function coerceBool(v, defaultVal = false) {
+  if (v === undefined || v === null || v === "") return defaultVal;
+  if (typeof v === "boolean") return v;
+  const s = String(v).toLowerCase();
+  if (s === "true" || s === "1") return true;
+  if (s === "false" || s === "0") return false;
+  return defaultVal;
+}
+
 exports.createDepartment = async (req, res, next) => {
   try {
-    const { name, description, address, manager_employee_id } = req.body;
+    const { name, description, address, manager_employee_id, reports_to_president } =
+      req.body;
     const existing = await Department.findOne({ where: { name } });
     if (existing) {
       return res.status(409).json({
@@ -164,11 +182,13 @@ exports.createDepartment = async (req, res, next) => {
         message: "Bu isimde bir birim zaten mevcut.",
       });
     }
+    const presidentFlag = coerceBool(reports_to_president, false);
     const newDepartment = await Department.create({
       name,
       description,
       address,
       manager_employee_id: manager_employee_id || null,
+      reports_to_president: presidentFlag,
     });
     return res
       .status(201)
@@ -183,7 +203,13 @@ exports.updateDepartment = async (req, res, next) => {
   try {
     const { id } = req.params;
     const department = await Department.findByPk(id);
-    const { name, description, address, manager_employee_id } = req.body;
+    const {
+      name,
+      description,
+      address,
+      manager_employee_id,
+      reports_to_president,
+    } = req.body;
     if (!department) {
       return res.status(404).json({
         success: 0,
@@ -191,13 +217,24 @@ exports.updateDepartment = async (req, res, next) => {
         message: "Güncellenecek birim bulunamadı.",
       });
     }
-    await department.update({
+    const patch = {
       name: name ?? department.name,
       description: description ?? department.description,
       address: address ?? department.address,
       manager_employee_id:
         manager_employee_id ?? department.manager_employee_id,
-    });
+    };
+    if (reports_to_president !== undefined) {
+      patch.reports_to_president = coerceBool(
+        reports_to_president,
+        department.reports_to_president,
+      );
+    }
+    await department.update(patch);
+    if (patch.reports_to_president === true) {
+      await VicePresidentDepartment.destroy({ where: { department_id: id } });
+    }
+    await department.reload();
     res.json({
       success: 1,
       data: department,

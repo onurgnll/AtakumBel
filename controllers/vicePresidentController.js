@@ -27,6 +27,20 @@ function parseDepartmentIds(department_ids, department_id) {
   );
 }
 
+async function ensureNotPresidentDepartments(departmentIds, transaction) {
+  if (!Array.isArray(departmentIds) || departmentIds.length === 0) return null;
+  const rows = await Department.findAll({
+    where: {
+      id: { [Op.in]: departmentIds },
+      reports_to_president: true,
+    },
+    attributes: ["id", "name"],
+    transaction,
+  });
+  if (rows.length === 0) return null;
+  return rows.map((r) => r.name);
+}
+
 async function ensureDepartmentsUnassigned(departmentIds, currentVicePresidentId, transaction) {
   if (!Array.isArray(departmentIds) || departmentIds.length === 0) return null;
 
@@ -134,6 +148,15 @@ exports.createVicePresident = async (req, res, next) => {
     }, { transaction: t });
 
     const parsedDepartmentIds = parseDepartmentIds(department_ids, department_id);
+    const presidentLocked = await ensureNotPresidentDepartments(parsedDepartmentIds, t);
+    if (presidentLocked) {
+      await t.rollback();
+      return res.status(409).json({
+        success: 0,
+        data: null,
+        message: `Bu müdürlükler başkana bağlı: ${presidentLocked.join(", ")}`,
+      });
+    }
     const conflictingDepartments = await ensureDepartmentsUnassigned(
       parsedDepartmentIds,
       null,
@@ -154,6 +177,13 @@ exports.createVicePresident = async (req, res, next) => {
         department_id: Number(departmentId),
       }));
       await VicePresidentDepartment.bulkCreate(relationRows, { transaction: t });
+      await Department.update(
+        { reports_to_president: false },
+        {
+          where: { id: { [Op.in]: parsedDepartmentIds } },
+          transaction: t,
+        },
+      );
     }
 
     await t.commit();
@@ -202,6 +232,15 @@ exports.updateVicePresident = async (req, res, next) => {
 
     if (department_ids !== undefined || department_id !== undefined) {
       const finalDepartmentIds = parseDepartmentIds(department_ids, department_id);
+      const presidentLocked = await ensureNotPresidentDepartments(finalDepartmentIds, t);
+      if (presidentLocked) {
+        await t.rollback();
+        return res.status(409).json({
+          success: 0,
+          data: null,
+          message: `Bu müdürlükler başkana bağlı: ${presidentLocked.join(", ")}`,
+        });
+      }
       const conflictingDepartments = await ensureDepartmentsUnassigned(
         finalDepartmentIds,
         id,
@@ -227,6 +266,13 @@ exports.updateVicePresident = async (req, res, next) => {
             department_id: Number(departmentId),
           })),
           { transaction: t },
+        );
+        await Department.update(
+          { reports_to_president: false },
+          {
+            where: { id: { [Op.in]: finalDepartmentIds } },
+            transaction: t,
+          },
         );
       }
     }
