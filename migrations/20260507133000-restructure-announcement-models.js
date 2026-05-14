@@ -42,10 +42,6 @@ module.exports = {
       type: Sequelize.DATEONLY,
       allowNull: true,
     });
-    await queryInterface.changeColumn("Council_Decisions", "council_id", {
-      type: Sequelize.INTEGER,
-      allowNull: true,
-    });
 
     await queryInterface.addColumn("Public_Notices", "description", {
       type: Sequelize.TEXT,

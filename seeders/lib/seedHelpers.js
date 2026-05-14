@@ -45,16 +45,6 @@ async function councilDecisionIdByNo(queryInterface, decisionNo) {
   return id;
 }
 
-async function encumenIdByTermName(queryInterface, termName) {
-  const id = await firstId(
-    queryInterface.sequelize,
-    `SELECT id FROM "Encumens" WHERE term_name = :term ORDER BY id DESC LIMIT 1`,
-    { term: termName },
-  );
-  if (id == null) throw new Error(`Encümen bulunamadı: ${termName}`);
-  return id;
-}
-
 async function presidentIdByName(queryInterface, firstName, lastName) {
   const id = await firstId(
     queryInterface.sequelize,
@@ -100,7 +90,6 @@ module.exports = {
   vicePresidentIdByName,
   serviceIdByName,
   councilDecisionIdByNo,
-  encumenIdByTermName,
   presidentIdByName,
   newsIdByTitle,
   eventIdByTitle,

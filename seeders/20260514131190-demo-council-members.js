@@ -9,7 +9,7 @@ module.exports = {
       first_name: m.first_name,
       last_name: m.last_name,
       political_party: m.political_party,
-      image_url: `/uploads/council-members/atakum-meclis-${String(i + 1).padStart(3, "0")}.jpg`,
+      image_url: `/uploads/council-members/${i + 1}.jpg`,
     }));
     await queryInterface.bulkInsert("Council_Members", rows);
   },

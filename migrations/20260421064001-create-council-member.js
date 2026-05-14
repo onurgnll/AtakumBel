@@ -21,16 +21,6 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      council_id: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: "Councils",
-          key: "id",
-        },
-        onUpdate: "CASCADE",
-        onDelete: "CASCADE",
-      },
     });
   },
 

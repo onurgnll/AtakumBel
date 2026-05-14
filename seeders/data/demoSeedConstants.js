@@ -8,12 +8,13 @@ module.exports = {
   DEPT_NAME_KULTUR: "Kültür Sanat ve Sosyal İşler Müdürlüğü",
   DEPT_NAME_SOSYAL: "Sosyal Hizmetler Müdürlüğü",
 
-  ENCUMEN_TERM_NAME: "2026 Yili Encumen Donemi",
 
-  VP_SELIM_FIRST: "Selim",
-  VP_SELIM_LAST: "Demir",
-  VP_AYLIN_FIRST: "Aylin",
-  VP_AYLIN_LAST: "Cetin",
+  VP_1_FIRST: "Ali",
+  VP_1_LAST: "ALTUNSOY",
+  VP_2_FIRST: "Suat",
+  VP_2_LAST: "YILDIZ",
+  VP_3_FIRST: "Ahmet",
+  VP_3_LAST: "Yapıcı",
 
   PRESIDENT_FIRST: "Serhat",
   PRESIDENT_LAST: "Türkel",

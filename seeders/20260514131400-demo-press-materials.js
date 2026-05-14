@@ -1,27 +1,28 @@
 "use strict";
 
 const { Sequelize } = require("sequelize");
+const IMG = require("./data/demoSeedImageUrls");
 
-const TITLES = ["Kurumsal Logo Paketi", "Basin Kiti 2026"];
+const TITLES = ["Kurumsal Logo Paketi", "Basın Kiti 2026"];
 
 module.exports = {
   async up(queryInterface) {
     await queryInterface.bulkInsert("Press_Materials", [
       {
         title: TITLES[0],
-        description: "Basin ve medya kullanimina uygun logo dosyalari.",
+        description: "Basın ve medya kullanımına uygun logo dosyaları.",
         publish_date: "2026-01-05",
         is_active: true,
-        files: JSON.stringify(["/uploads/press/atakum-kurumsal-logo.png"]),
-        file_url: "/uploads/press/atakum-kurumsal-logo.png",
+        files: JSON.stringify([IMG.PRESS_LOGO]),
+        file_url: IMG.PRESS_LOGO,
       },
       {
         title: TITLES[1],
-        description: "Kurumsal basin materyali arsivi.",
+        description: "Kurumsal basın materyali arşivi.",
         publish_date: "2026-02-15",
         is_active: true,
-        files: JSON.stringify(["/uploads/press/basin-kiti-2026.zip"]),
-        file_url: "/uploads/press/basin-kiti-2026.zip",
+        files: JSON.stringify([IMG.HERO_2, "/uploads/press/basin-kiti-2026.zip"]),
+        file_url: IMG.HERO_2,
       },
     ]);
   },

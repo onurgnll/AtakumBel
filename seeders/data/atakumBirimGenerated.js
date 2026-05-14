@@ -269,7 +269,7 @@ module.exports = {
     "title": "Şube Müdürü",
     "department_id": 1001,
     "dahili_no": "151",
-    "image_url": "/uploads/employees/birim-afet-isleri-ve-risk-yonetim-mudurlugu-2001.jpg",
+    "image_url": "/uploads/employees/1.jpg",
     "is_unit_manager": true,
     "is_contact_person": false,
     "is_active": true
@@ -281,7 +281,6 @@ module.exports = {
     "title": "Ofis Personeli",
     "department_id": 1001,
     "dahili_no": "620",
-    "image_url": "/uploads/employees/birim-afet-isleri-ve-risk-yonetim-mudurlugu-2002.jpg",
     "is_unit_manager": false,
     "is_contact_person": true,
     "is_active": true
@@ -293,7 +292,6 @@ module.exports = {
     "title": "Ofis Personeli",
     "department_id": 1001,
     "dahili_no": "466",
-    "image_url": "/uploads/employees/birim-afet-isleri-ve-risk-yonetim-mudurlugu-2003.jpg",
     "is_unit_manager": false,
     "is_contact_person": true,
     "is_active": true
@@ -305,7 +303,7 @@ module.exports = {
     "title": "Şube Müdürü",
     "department_id": 1002,
     "dahili_no": "306",
-    "image_url": "/uploads/employees/birim-basin-yayin-ve-halkla-iliskiler-mudurlugu-2004.jpg",
+    "image_url": "/uploads/employees/2.jpg",
     "is_unit_manager": true,
     "is_contact_person": false,
     "is_active": true
@@ -317,7 +315,6 @@ module.exports = {
     "title": "Ofis Personeli",
     "department_id": 1002,
     "dahili_no": "950",
-    "image_url": "/uploads/employees/birim-basin-yayin-ve-halkla-iliskiler-mudurlugu-2005.jpg",
     "is_unit_manager": false,
     "is_contact_person": true,
     "is_active": true
@@ -329,7 +326,6 @@ module.exports = {
     "title": "Ofis Personeli",
     "department_id": 1002,
     "dahili_no": "725",
-    "image_url": "/uploads/employees/birim-basin-yayin-ve-halkla-iliskiler-mudurlugu-2006.jpg",
     "is_unit_manager": false,
     "is_contact_person": true,
     "is_active": true
@@ -341,7 +337,7 @@ module.exports = {
     "title": "Şube Müdürü",
     "department_id": 1003,
     "dahili_no": "500",
-    "image_url": "/uploads/employees/birim-bilgi-islem-mudurlugu-2007.jpg",
+    "image_url": "/uploads/employees/3.jpg",
     "is_unit_manager": true,
     "is_contact_person": false,
     "is_active": true
@@ -353,7 +349,6 @@ module.exports = {
     "title": "Ofis Personeli",
     "department_id": 1003,
     "dahili_no": "155",
-    "image_url": "/uploads/employees/birim-bilgi-islem-mudurlugu-2008.jpg",
     "is_unit_manager": false,
     "is_contact_person": true,
     "is_active": true
@@ -365,7 +360,6 @@ module.exports = {
     "title": "Ofis Personeli",
     "department_id": 1003,
     "dahili_no": "855",
-    "image_url": "/uploads/employees/birim-bilgi-islem-mudurlugu-2009.jpg",
     "is_unit_manager": false,
     "is_contact_person": true,
     "is_active": true
@@ -377,7 +371,7 @@ module.exports = {
     "title": "Şube Müdürü",
     "department_id": 1004,
     "dahili_no": "784",
-    "image_url": "/uploads/employees/birim-cevre-koruma-mudurlugu-2010.jpg",
+    "image_url": "/uploads/employees/4.jpg",
     "is_unit_manager": true,
     "is_contact_person": false,
     "is_active": true
@@ -389,7 +383,6 @@ module.exports = {
     "title": "Ofis Personeli",
     "department_id": 1004,
     "dahili_no": "485",
-    "image_url": "/uploads/employees/birim-cevre-koruma-mudurlugu-2011.jpg",
     "is_unit_manager": false,
     "is_contact_person": true,
     "is_active": true
@@ -401,7 +394,6 @@ module.exports = {
     "title": "Ofis Personeli",
     "department_id": 1004,
     "dahili_no": "717",
-    "image_url": "/uploads/employees/birim-cevre-koruma-mudurlugu-2012.jpg",
     "is_unit_manager": false,
     "is_contact_person": true,
     "is_active": true
@@ -413,7 +405,7 @@ module.exports = {
     "title": "Şube Müdürü",
     "department_id": 1005,
     "dahili_no": "500",
-    "image_url": "/uploads/employees/birim-destek-hizmetleri-mudurlugu-2013.jpg",
+    "image_url": "/uploads/employees/3.jpg",
     "is_unit_manager": true,
     "is_contact_person": false,
     "is_active": true
@@ -425,7 +417,6 @@ module.exports = {
     "title": "Ofis Personeli",
     "department_id": 1005,
     "dahili_no": "163",
-    "image_url": "/uploads/employees/birim-destek-hizmetleri-mudurlugu-2014.jpg",
     "is_unit_manager": false,
     "is_contact_person": true,
     "is_active": true
@@ -437,7 +428,6 @@ module.exports = {
     "title": "Ofis Personeli",
     "department_id": 1005,
     "dahili_no": "801",
-    "image_url": "/uploads/employees/birim-destek-hizmetleri-mudurlugu-2015.jpg",
     "is_unit_manager": false,
     "is_contact_person": true,
     "is_active": true
@@ -449,7 +439,7 @@ module.exports = {
     "title": "Şube Müdürü",
     "department_id": 1006,
     "dahili_no": "791",
-    "image_url": "/uploads/employees/birim-emlak-ve-istimlak-mudurlugu-2016.jpg",
+    "image_url": "/uploads/employees/5.jpg",
     "is_unit_manager": true,
     "is_contact_person": false,
     "is_active": true
@@ -461,7 +451,6 @@ module.exports = {
     "title": "Ofis Personeli",
     "department_id": 1006,
     "dahili_no": "778",
-    "image_url": "/uploads/employees/birim-emlak-ve-istimlak-mudurlugu-2017.jpg",
     "is_unit_manager": false,
     "is_contact_person": true,
     "is_active": true
@@ -473,7 +462,7 @@ module.exports = {
     "title": "Şube Müdürü",
     "department_id": 1007,
     "dahili_no": "229",
-    "image_url": "/uploads/employees/birim-etud-mudurlugu-2018.jpg",
+    "image_url": "/uploads/employees/6.jpg",
     "is_unit_manager": true,
     "is_contact_person": false,
     "is_active": true
@@ -485,7 +474,6 @@ module.exports = {
     "title": "Ofis Personeli",
     "department_id": 1007,
     "dahili_no": "640",
-    "image_url": "/uploads/employees/birim-etud-mudurlugu-2019.jpg",
     "is_unit_manager": false,
     "is_contact_person": true,
     "is_active": true
@@ -497,7 +485,7 @@ module.exports = {
     "title": "Şube Müdürü",
     "department_id": 1008,
     "dahili_no": "106",
-    "image_url": "/uploads/employees/birim-fen-isleri-mudurlugu-2020.jpg",
+    "image_url": "/uploads/employees/7.jpg",
     "is_unit_manager": true,
     "is_contact_person": false,
     "is_active": true
@@ -509,7 +497,6 @@ module.exports = {
     "title": "Ofis Personeli",
     "department_id": 1008,
     "dahili_no": "521",
-    "image_url": "/uploads/employees/birim-fen-isleri-mudurlugu-2021.jpg",
     "is_unit_manager": false,
     "is_contact_person": true,
     "is_active": true
@@ -521,7 +508,6 @@ module.exports = {
     "title": "Ofis Personeli",
     "department_id": 1008,
     "dahili_no": "257",
-    "image_url": "/uploads/employees/birim-fen-isleri-mudurlugu-2022.jpg",
     "is_unit_manager": false,
     "is_contact_person": true,
     "is_active": true
@@ -533,7 +519,7 @@ module.exports = {
     "title": "Şube Müdürü",
     "department_id": 1009,
     "dahili_no": "605",
-    "image_url": "/uploads/employees/birim-gelirler-mudurlugu-2023.jpg",
+    "image_url": "/uploads/employees/8.jpg",
     "is_unit_manager": true,
     "is_contact_person": false,
     "is_active": true
@@ -545,7 +531,6 @@ module.exports = {
     "title": "Ofis Personeli",
     "department_id": 1009,
     "dahili_no": "124",
-    "image_url": "/uploads/employees/birim-gelirler-mudurlugu-2024.jpg",
     "is_unit_manager": false,
     "is_contact_person": true,
     "is_active": true
@@ -557,7 +542,6 @@ module.exports = {
     "title": "Ofis Personeli",
     "department_id": 1009,
     "dahili_no": "137",
-    "image_url": "/uploads/employees/birim-gelirler-mudurlugu-2025.jpg",
     "is_unit_manager": false,
     "is_contact_person": true,
     "is_active": true
@@ -569,7 +553,7 @@ module.exports = {
     "title": "Şube Müdürü",
     "department_id": 1010,
     "dahili_no": "449",
-    "image_url": "/uploads/employees/birim-genclik-ve-spor-hizmetleri-mudurlugu-2026.jpg",
+    "image_url": "/uploads/employees/9.jpg",
     "is_unit_manager": true,
     "is_contact_person": false,
     "is_active": true
@@ -581,7 +565,6 @@ module.exports = {
     "title": "Ofis Personeli",
     "department_id": 1010,
     "dahili_no": "448",
-    "image_url": "/uploads/employees/birim-genclik-ve-spor-hizmetleri-mudurlugu-2027.jpg",
     "is_unit_manager": false,
     "is_contact_person": true,
     "is_active": true
@@ -593,7 +576,7 @@ module.exports = {
     "title": "Şube Müdürü",
     "department_id": 1011,
     "dahili_no": "519",
-    "image_url": "/uploads/employees/birim-hukuk-isleri-mudurlugu-2028.jpg",
+    "image_url": "/uploads/employees/10.jpg",
     "is_unit_manager": true,
     "is_contact_person": false,
     "is_active": true
@@ -605,7 +588,7 @@ module.exports = {
     "title": "Şube Müdürü",
     "department_id": 1012,
     "dahili_no": "159",
-    "image_url": "/uploads/employees/birim-iklim-mudurlugu-2029.jpg",
+    "image_url": "/uploads/employees/11.jpg",
     "is_unit_manager": true,
     "is_contact_person": false,
     "is_active": true
@@ -617,7 +600,6 @@ module.exports = {
     "title": "Ofis Personeli",
     "department_id": 1012,
     "dahili_no": "608",
-    "image_url": "/uploads/employees/birim-iklim-mudurlugu-2030.jpg",
     "is_unit_manager": false,
     "is_contact_person": true,
     "is_active": true
@@ -629,7 +611,6 @@ module.exports = {
     "title": "Ofis Personeli",
     "department_id": 1012,
     "dahili_no": "489",
-    "image_url": "/uploads/employees/birim-iklim-mudurlugu-2031.jpg",
     "is_unit_manager": false,
     "is_contact_person": true,
     "is_active": true
@@ -641,7 +622,7 @@ module.exports = {
     "title": "Şube Müdürü",
     "department_id": 1013,
     "dahili_no": "272",
-    "image_url": "/uploads/employees/birim-imar-ve-sehircilik-mudurlugu-2032.jpg",
+    "image_url": "/uploads/employees/12.jpg",
     "is_unit_manager": true,
     "is_contact_person": false,
     "is_active": true
@@ -653,7 +634,6 @@ module.exports = {
     "title": "Ofis Personeli",
     "department_id": 1013,
     "dahili_no": "205",
-    "image_url": "/uploads/employees/birim-imar-ve-sehircilik-mudurlugu-2033.jpg",
     "is_unit_manager": false,
     "is_contact_person": true,
     "is_active": true
@@ -665,7 +645,6 @@ module.exports = {
     "title": "Ofis Personeli",
     "department_id": 1013,
     "dahili_no": "411",
-    "image_url": "/uploads/employees/birim-imar-ve-sehircilik-mudurlugu-2034.jpg",
     "is_unit_manager": false,
     "is_contact_person": true,
     "is_active": true
@@ -677,7 +656,7 @@ module.exports = {
     "title": "Şube Müdürü",
     "department_id": 1014,
     "dahili_no": "480",
-    "image_url": "/uploads/employees/birim-insan-kaynaklari-mudurlugu-2035.jpg",
+    "image_url": "/uploads/employees/13.jpg",
     "is_unit_manager": true,
     "is_contact_person": false,
     "is_active": true
@@ -689,7 +668,6 @@ module.exports = {
     "title": "Ofis Personeli",
     "department_id": 1014,
     "dahili_no": "413",
-    "image_url": "/uploads/employees/birim-insan-kaynaklari-mudurlugu-2036.jpg",
     "is_unit_manager": false,
     "is_contact_person": true,
     "is_active": true
@@ -701,7 +679,6 @@ module.exports = {
     "title": "Ofis Personeli",
     "department_id": 1014,
     "dahili_no": "118",
-    "image_url": "/uploads/employees/birim-insan-kaynaklari-mudurlugu-2037.jpg",
     "is_unit_manager": false,
     "is_contact_person": true,
     "is_active": true
@@ -713,7 +690,7 @@ module.exports = {
     "title": "Şube Müdürü",
     "department_id": 1015,
     "dahili_no": "170",
-    "image_url": "/uploads/employees/birim-isletme-ve-istiraklar-mudurlugu-2038.jpg",
+    "image_url": "/uploads/employees/14.jpg",
     "is_unit_manager": true,
     "is_contact_person": false,
     "is_active": true
@@ -725,7 +702,6 @@ module.exports = {
     "title": "Ofis Personeli",
     "department_id": 1015,
     "dahili_no": "104",
-    "image_url": "/uploads/employees/birim-isletme-ve-istiraklar-mudurlugu-2039.jpg",
     "is_unit_manager": false,
     "is_contact_person": true,
     "is_active": true
@@ -737,7 +713,6 @@ module.exports = {
     "title": "Ofis Personeli",
     "department_id": 1015,
     "dahili_no": "406",
-    "image_url": "/uploads/employees/birim-isletme-ve-istiraklar-mudurlugu-2040.jpg",
     "is_unit_manager": false,
     "is_contact_person": true,
     "is_active": true
@@ -749,7 +724,6 @@ module.exports = {
     "title": "",
     "department_id": 1016,
     "dahili_no": "444",
-    "image_url": "/uploads/employees/birim-kadin-ve-aile-hizmetleri-mudurugu-2041.jpg",
     "is_unit_manager": false,
     "is_contact_person": false,
     "is_active": true
@@ -761,7 +735,7 @@ module.exports = {
     "title": "Şube Müdürü",
     "department_id": 1017,
     "dahili_no": "793",
-    "image_url": "/uploads/employees/birim-kirsal-hizmetler-mudurlugu-2042.jpg",
+    "image_url": "/uploads/employees/16.jpg",
     "is_unit_manager": true,
     "is_contact_person": false,
     "is_active": true
@@ -773,7 +747,6 @@ module.exports = {
     "title": "Ofis Personeli",
     "department_id": 1017,
     "dahili_no": "427",
-    "image_url": "/uploads/employees/birim-kirsal-hizmetler-mudurlugu-2043.jpg",
     "is_unit_manager": false,
     "is_contact_person": true,
     "is_active": true
@@ -785,7 +758,7 @@ module.exports = {
     "title": "Şube Müdürü",
     "department_id": 1018,
     "dahili_no": "780",
-    "image_url": "/uploads/employees/birim-kultur-sanat-ve-sosyal-isler-mudurlugu-2044.jpg",
+    "image_url": "/uploads/employees/17.jpg",
     "is_unit_manager": true,
     "is_contact_person": false,
     "is_active": true
@@ -797,7 +770,6 @@ module.exports = {
     "title": "Ofis Personeli",
     "department_id": 1018,
     "dahili_no": "493",
-    "image_url": "/uploads/employees/birim-kultur-sanat-ve-sosyal-isler-mudurlugu-2045.jpg",
     "is_unit_manager": false,
     "is_contact_person": true,
     "is_active": true
@@ -809,7 +781,6 @@ module.exports = {
     "title": "Ofis Personeli",
     "department_id": 1018,
     "dahili_no": "425",
-    "image_url": "/uploads/employees/birim-kultur-sanat-ve-sosyal-isler-mudurlugu-2046.jpg",
     "is_unit_manager": false,
     "is_contact_person": true,
     "is_active": true
@@ -821,7 +792,7 @@ module.exports = {
     "title": "Şube Müdürü",
     "department_id": 1019,
     "dahili_no": "479",
-    "image_url": "/uploads/employees/birim-makine-ikmal-bakim-ve-onarim-mudurlugu-2047.jpg",
+    "image_url": "/uploads/employees/18.jpg",
     "is_unit_manager": true,
     "is_contact_person": false,
     "is_active": true
@@ -833,7 +804,6 @@ module.exports = {
     "title": "Ofis Personeli",
     "department_id": 1019,
     "dahili_no": "490",
-    "image_url": "/uploads/employees/birim-makine-ikmal-bakim-ve-onarim-mudurlugu-2048.jpg",
     "is_unit_manager": false,
     "is_contact_person": true,
     "is_active": true
@@ -845,7 +815,6 @@ module.exports = {
     "title": "Ofis Personeli",
     "department_id": 1019,
     "dahili_no": "194",
-    "image_url": "/uploads/employees/birim-makine-ikmal-bakim-ve-onarim-mudurlugu-2049.jpg",
     "is_unit_manager": false,
     "is_contact_person": true,
     "is_active": true
@@ -857,7 +826,7 @@ module.exports = {
     "title": "Şube Müdürü",
     "department_id": 1020,
     "dahili_no": "605",
-    "image_url": "/uploads/employees/birim-mali-hizmetler-mudurlugu-2050.jpg",
+    "image_url": "/uploads/employees/19.jpg",
     "is_unit_manager": true,
     "is_contact_person": false,
     "is_active": true
@@ -869,7 +838,6 @@ module.exports = {
     "title": "Ofis Personeli",
     "department_id": 1020,
     "dahili_no": "434",
-    "image_url": "/uploads/employees/birim-mali-hizmetler-mudurlugu-2051.jpg",
     "is_unit_manager": false,
     "is_contact_person": true,
     "is_active": true
@@ -881,7 +849,6 @@ module.exports = {
     "title": "Ofis Personeli",
     "department_id": 1020,
     "dahili_no": "121",
-    "image_url": "/uploads/employees/birim-mali-hizmetler-mudurlugu-2052.jpg",
     "is_unit_manager": false,
     "is_contact_person": true,
     "is_active": true
@@ -893,7 +860,7 @@ module.exports = {
     "title": "Şube Müdürü",
     "department_id": 1021,
     "dahili_no": "302",
-    "image_url": "/uploads/employees/birim-ozel-kalem-mudurlugu-2053.jpg",
+    "image_url": "/uploads/employees/20.jpg",
     "is_unit_manager": true,
     "is_contact_person": false,
     "is_active": true
@@ -905,7 +872,6 @@ module.exports = {
     "title": "Ofis Personeli",
     "department_id": 1021,
     "dahili_no": "856",
-    "image_url": "/uploads/employees/birim-ozel-kalem-mudurlugu-2054.jpg",
     "is_unit_manager": false,
     "is_contact_person": true,
     "is_active": true
@@ -917,7 +883,6 @@ module.exports = {
     "title": "Ofis Personeli",
     "department_id": 1021,
     "dahili_no": "799",
-    "image_url": "/uploads/employees/birim-ozel-kalem-mudurlugu-2055.jpg",
     "is_unit_manager": false,
     "is_contact_person": true,
     "is_active": true
@@ -929,7 +894,7 @@ module.exports = {
     "title": "Şube Müdürü",
     "department_id": 1022,
     "dahili_no": "106",
-    "image_url": "/uploads/employees/birim-park-ve-bahceler-mudurlugu-2056.jpg",
+    "image_url": "/uploads/employees/21.jpg",
     "is_unit_manager": true,
     "is_contact_person": false,
     "is_active": true
@@ -941,7 +906,6 @@ module.exports = {
     "title": "Ofis Personeli",
     "department_id": 1022,
     "dahili_no": "712",
-    "image_url": "/uploads/employees/birim-park-ve-bahceler-mudurlugu-2057.jpg",
     "is_unit_manager": false,
     "is_contact_person": true,
     "is_active": true
@@ -953,7 +917,6 @@ module.exports = {
     "title": "Ofis Personeli",
     "department_id": 1022,
     "dahili_no": "257",
-    "image_url": "/uploads/employees/birim-park-ve-bahceler-mudurlugu-2058.jpg",
     "is_unit_manager": false,
     "is_contact_person": true,
     "is_active": true
@@ -965,7 +928,7 @@ module.exports = {
     "title": "Şube Müdürü",
     "department_id": 1023,
     "dahili_no": "201",
-    "image_url": "/uploads/employees/birim-plan-ve-proje-mudurlugu-2059.jpg",
+    "image_url": "/uploads/employees/22.jpg",
     "is_unit_manager": true,
     "is_contact_person": false,
     "is_active": true
@@ -977,7 +940,6 @@ module.exports = {
     "title": "Harita Mühendisi",
     "department_id": 1023,
     "dahili_no": "242",
-    "image_url": "/uploads/employees/birim-plan-ve-proje-mudurlugu-2060.jpg",
     "is_unit_manager": false,
     "is_contact_person": false,
     "is_active": true
@@ -989,7 +951,6 @@ module.exports = {
     "title": "Şehir Plancısı",
     "department_id": 1023,
     "dahili_no": "188",
-    "image_url": "/uploads/employees/birim-plan-ve-proje-mudurlugu-2061.jpg",
     "is_unit_manager": false,
     "is_contact_person": false,
     "is_active": true
@@ -1001,7 +962,7 @@ module.exports = {
     "title": "Şube Müdürü",
     "department_id": 1024,
     "dahili_no": "265",
-    "image_url": "/uploads/employees/birim-rehberlik-ve-teftis-kurulu-mudurlugu-2062.jpg",
+    "image_url": "/uploads/employees/23.jpg",
     "is_unit_manager": true,
     "is_contact_person": false,
     "is_active": true
@@ -1013,7 +974,6 @@ module.exports = {
     "title": "Müfettiş",
     "department_id": 1024,
     "dahili_no": "455",
-    "image_url": "/uploads/employees/birim-rehberlik-ve-teftis-kurulu-mudurlugu-2063.jpg",
     "is_unit_manager": false,
     "is_contact_person": false,
     "is_active": true
@@ -1025,7 +985,7 @@ module.exports = {
     "title": "Şube Müdürü",
     "department_id": 1025,
     "dahili_no": "543",
-    "image_url": "/uploads/employees/birim-ruhsat-denetim-mudurlugu-2064.jpg",
+    "image_url": "/uploads/employees/24.jpg",
     "is_unit_manager": true,
     "is_contact_person": false,
     "is_active": true
@@ -1037,7 +997,6 @@ module.exports = {
     "title": "Ofis Personeli",
     "department_id": 1025,
     "dahili_no": "795",
-    "image_url": "/uploads/employees/birim-ruhsat-denetim-mudurlugu-2065.jpg",
     "is_unit_manager": false,
     "is_contact_person": true,
     "is_active": true
@@ -1049,7 +1008,6 @@ module.exports = {
     "title": "Ofis Personeli",
     "department_id": 1025,
     "dahili_no": "144",
-    "image_url": "/uploads/employees/birim-ruhsat-denetim-mudurlugu-2066.jpg",
     "is_unit_manager": false,
     "is_contact_person": true,
     "is_active": true
@@ -1061,7 +1019,7 @@ module.exports = {
     "title": "Şube Müdürü",
     "department_id": 1026,
     "dahili_no": "483",
-    "image_url": "/uploads/employees/birim-saglik-isler-mudurlugu-2067.jpg",
+    "image_url": "/uploads/employees/25.jpg",
     "is_unit_manager": true,
     "is_contact_person": false,
     "is_active": true
@@ -1073,7 +1031,6 @@ module.exports = {
     "title": "Ofis Personeli",
     "department_id": 1026,
     "dahili_no": "426",
-    "image_url": "/uploads/employees/birim-saglik-isler-mudurlugu-2068.jpg",
     "is_unit_manager": false,
     "is_contact_person": true,
     "is_active": true
@@ -1085,7 +1042,7 @@ module.exports = {
     "title": "Şube Müdürü",
     "department_id": 1027,
     "dahili_no": "368",
-    "image_url": "/uploads/employees/birim-sosyal-hizmetler-mudurlugu-2069.jpg",
+    "image_url": "/uploads/employees/26.jpg",
     "is_unit_manager": true,
     "is_contact_person": false,
     "is_active": true
@@ -1097,7 +1054,6 @@ module.exports = {
     "title": "Ofis Personeli",
     "department_id": 1027,
     "dahili_no": "297",
-    "image_url": "/uploads/employees/birim-sosyal-hizmetler-mudurlugu-2070.jpg",
     "is_unit_manager": false,
     "is_contact_person": true,
     "is_active": true
@@ -1109,7 +1065,6 @@ module.exports = {
     "title": "Ofis Personeli",
     "department_id": 1027,
     "dahili_no": "796",
-    "image_url": "/uploads/employees/birim-sosyal-hizmetler-mudurlugu-2071.jpg",
     "is_unit_manager": false,
     "is_contact_person": true,
     "is_active": true
@@ -1121,7 +1076,7 @@ module.exports = {
     "title": "Şube Müdürü",
     "department_id": 1028,
     "dahili_no": "479",
-    "image_url": "/uploads/employees/birim-temizlik-isleri-mudurlugu-2072.jpg",
+    "image_url": "/uploads/employees/27.jpg",
     "is_unit_manager": true,
     "is_contact_person": false,
     "is_active": true
@@ -1133,7 +1088,6 @@ module.exports = {
     "title": "Ofis Personeli",
     "department_id": 1028,
     "dahili_no": "197",
-    "image_url": "/uploads/employees/birim-temizlik-isleri-mudurlugu-2073.jpg",
     "is_unit_manager": false,
     "is_contact_person": true,
     "is_active": true
@@ -1145,7 +1099,6 @@ module.exports = {
     "title": "Ofis Personeli",
     "department_id": 1028,
     "dahili_no": "667",
-    "image_url": "/uploads/employees/birim-temizlik-isleri-mudurlugu-2074.jpg",
     "is_unit_manager": false,
     "is_contact_person": true,
     "is_active": true
@@ -1157,9 +1110,9 @@ module.exports = {
     "title": "Ofis Personeli",
     "department_id": 1029,
     "dahili_no": "148",
-    "image_url": "/uploads/employees/birim-veteriner-isleri-mudurlugu-2075.jpg",
-    "is_unit_manager": false,
-    "is_contact_person": true,
+    "image_url": "/uploads/employees/28.jpg",
+    "is_unit_manager": true,
+    "is_contact_person": false,
     "is_active": true
   },
   {
@@ -1169,7 +1122,6 @@ module.exports = {
     "title": "Ofis Personeli",
     "department_id": 1029,
     "dahili_no": "792",
-    "image_url": "/uploads/employees/birim-veteriner-isleri-mudurlugu-2076.jpg",
     "is_unit_manager": false,
     "is_contact_person": true,
     "is_active": true
@@ -1181,7 +1133,7 @@ module.exports = {
     "title": "Şube Müdürü",
     "department_id": 1030,
     "dahili_no": "561",
-    "image_url": "/uploads/employees/birim-yapi-kontrol-mudurlugu-2077.jpg",
+    "image_url": "/uploads/employees/29.jpg",
     "is_unit_manager": true,
     "is_contact_person": false,
     "is_active": true
@@ -1193,7 +1145,6 @@ module.exports = {
     "title": "Ofis Personeli",
     "department_id": 1030,
     "dahili_no": "237",
-    "image_url": "/uploads/employees/birim-yapi-kontrol-mudurlugu-2078.jpg",
     "is_unit_manager": false,
     "is_contact_person": true,
     "is_active": true
@@ -1205,7 +1156,6 @@ module.exports = {
     "title": "Ofis Personeli",
     "department_id": 1030,
     "dahili_no": "108",
-    "image_url": "/uploads/employees/birim-yapi-kontrol-mudurlugu-2079.jpg",
     "is_unit_manager": false,
     "is_contact_person": true,
     "is_active": true
@@ -1217,7 +1167,7 @@ module.exports = {
     "title": "Şube Müdürü",
     "department_id": 1031,
     "dahili_no": "433",
-    "image_url": "/uploads/employees/birim-yazi-isleri-mudurlugu-2080.jpg",
+    "image_url": "/uploads/employees/30.jpg",
     "is_unit_manager": true,
     "is_contact_person": false,
     "is_active": true
@@ -1229,7 +1179,6 @@ module.exports = {
     "title": "Ofis Personeli",
     "department_id": 1031,
     "dahili_no": "726",
-    "image_url": "/uploads/employees/birim-yazi-isleri-mudurlugu-2081.jpg",
     "is_unit_manager": false,
     "is_contact_person": true,
     "is_active": true
@@ -1241,7 +1190,6 @@ module.exports = {
     "title": "Ofis Personeli",
     "department_id": 1031,
     "dahili_no": "110",
-    "image_url": "/uploads/employees/birim-yazi-isleri-mudurlugu-2082.jpg",
     "is_unit_manager": false,
     "is_contact_person": true,
     "is_active": true
@@ -1253,7 +1201,7 @@ module.exports = {
     "title": "Şube Müdürü",
     "department_id": 1032,
     "dahili_no": "781",
-    "image_url": "/uploads/employees/birim-zabita-mudurlugu-2083.jpg",
+    "image_url": "/uploads/employees/31.jpg",
     "is_unit_manager": true,
     "is_contact_person": false,
     "is_active": true
@@ -1265,7 +1213,6 @@ module.exports = {
     "title": "Ofis Personeli",
     "department_id": 1032,
     "dahili_no": "198",
-    "image_url": "/uploads/employees/birim-zabita-mudurlugu-2084.jpg",
     "is_unit_manager": false,
     "is_contact_person": true,
     "is_active": true
@@ -1277,7 +1224,6 @@ module.exports = {
     "title": "Ofis Personeli",
     "department_id": 1032,
     "dahili_no": "125",
-    "image_url": "/uploads/employees/birim-zabita-mudurlugu-2085.jpg",
     "is_unit_manager": false,
     "is_contact_person": true,
     "is_active": true
