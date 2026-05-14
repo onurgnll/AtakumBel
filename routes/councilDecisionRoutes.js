@@ -5,6 +5,7 @@ const { protect, authorize } = require("../middlewares/authMiddleware");
 const upload = require("../middlewares/upload");
 
 router.get("/", councilDecisionController.getAllDecisions);
+router.get("/:id", councilDecisionController.getDecisionById);
 router.post(
   "/",
   protect,

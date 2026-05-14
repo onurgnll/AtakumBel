@@ -88,13 +88,13 @@ exports.getNoticeById = async (req, res, next) => {
     if (!notice) {
       return res
         .status(404)
-        .json({ success: 0, data: null, message: "Ä°lan bulunamadÄ±." });
+        .json({ success: 0, data: null, message: "İlan bulunamadı." });
     }
 
     res.json({
       success: 1,
       data: notice,
-      message: "Ä°lan detaylarÄ± getirildi.",
+      message: "İlan detayları getirildi.",
     });
   } catch (err) {
     next(err);
@@ -131,7 +131,7 @@ exports.createNotice = async (req, res, next) => {
     res.status(201).json({
       success: 1,
       data: newNotice,
-      message: "Duyuru baÅŸarÄ±yla oluÅŸturuldu.",
+      message: "Duyuru başarıyla oluşturuldu.",
     });
   } catch (err) {
     const filesToClean = getUploadedFiles(req);
@@ -161,7 +161,7 @@ exports.updateNotice = async (req, res, next) => {
       });
       return res
         .status(404)
-        .json({ success: 0, data: null, message: "Ä°lan bulunamadÄ±." });
+        .json({ success: 0, data: null, message: "İlan bulunamadı." });
     }
 
     const uploadedFiles = getUploadedFiles(req);
@@ -191,7 +191,7 @@ exports.updateNotice = async (req, res, next) => {
     return res.json({
       success: 1,
       data: notice,
-      message: "Ä°lan bilgisi gÃ¼ncellendi.",
+      message: "İlan bilgisi güncellendi.",
     });
   } catch (err) {
     getUploadedFiles(req).forEach((file) => {
@@ -209,7 +209,7 @@ exports.deleteNotice = async (req, res, next) => {
     if (!notice) {
       return res
         .status(404)
-        .json({ success: 0, data: null, message: "Ä°lan bulunamadÄ±." });
+        .json({ success: 0, data: null, message: "İlan bulunamadı." });
     }
     const filesToDelete = Array.isArray(notice.files) ? notice.files : [];
 
@@ -222,7 +222,7 @@ exports.deleteNotice = async (req, res, next) => {
     res.json({
       success: 1,
       data: null,
-      message: "Ä°lan ve baÄŸlÄ± dosyasÄ± silindi.",
+      message: "İlan ve bağlı dosyası silindi.",
     });
   } catch (err) {
     next(err);

@@ -1,0 +1,1170 @@
+/* eslint-disable max-len */
+"use strict";
+
+/** Kaynak: https://atakum.bel.tr birim detay sayfalari; slug yalnizca seeder eslemesi icin. */
+
+module.exports = {
+  departments: [
+  {
+    "name": "Afet İşleri ve Risk Yönetimi Müdürlüğü",
+    "slug": "afet-isleri-ve-risk-yonetim-mudurlugu",
+    "description": "Afet İşleri Müdürlüğü, doğal afetler ve acil durumlara yönelik hazırlık, müdahale ve iyileştirme süreçlerini yönetmekle sorumlu bir belediye birimidir. Ana görev ve sorumlulukları şunlardır: Afet Öncesi Hazırlık ve Planlama: Afet risklerini azaltmaya yönelik stratejik planlar geliştirmek. Deprem, sel, yangın gibi afetlere karşı şehrin hazırlık seviyesini artırmak. Acil durumlarda kullanılmak üzere ekipman ve malzeme temini sağlamak. Afetle ilgili bilgilendirme ve bilinçlendirme çalışmaları yapmak. Risk Yönetimi ve Analizi: Afetlere açık alanları ve riskli bölgeleri tespit ederek gerekli önlemleri almak. Afetlerin etkisini en aza indirmek için zemin etütleri ve yapısal güvenlik analizleri yapmak. Acil Müdahale ve Koordinasyon: Afet anında ilk müdahaleyi gerçekleştirmek ve koordinasyonu sağlamak. Arama, kurtarma ve tahliye çalışmalarını organize etmek. İlgili kamu kurumları, sivil toplum kuruluşları ve gönüllülerle iş birliği yapmak. Afet Sonrası İyileştirme Çalışmaları: Afet mağdurlarına geçici barınma, gıda ve sağlık yardımı sağlamak. Hasar tespit çalışmalarını yürüterek gerekli iyileştirme projelerini hayata geçirmek. Altyapı ve üstyapı onarımlarını koordine etmek. Eğitim ve Farkındalık: Vatandaşlara afet öncesi ve sırasında yapılması gerekenler konusunda eğitimler vermek. Okullarda, kamu kurumlarında ve topluluklarda tatbikatlar düzenlemek. Afet İşleri Müdürlüğü, afet ve acil durum yönetiminde etkin rol oynayarak vatandaşların güvenliğini sağlamayı ve şehirde yaşamı en kısa sürede normale döndürmeyi amaçlar.",
+    "address": "Alanlı mah. Kıbrıs cad. No:91 Atakum Belediyesi",
+    "reports_to_president": false
+  },
+  {
+    "name": "Basın Yayın ve Halkla İlişkiler Müdürlüğü",
+    "slug": "basin-yayin-ve-halkla-iliskiler-mudurlugu",
+    "description": "Atakum Belediyesi Basın Yayın ve Halkla İlişkiler Müdürlüğü, belediyenin halkla olan iletişimini sağlamak, belediye hizmetlerinin etkin bir şekilde duyurulmasını temin etmek ve vatandaşların belediye ile ilgili taleplerini en hızlı ve doğru şekilde karşılamak amacıyla faaliyet gösteren bir birimdir. Bu müdürlük, belediyenin kamuoyuyla ilişkilerini güçlü ve sağlıklı bir şekilde yönetmeyi, toplumsal bilinci artırmayı ve halkla etkileşimi en verimli hale getirmeyi hedefler.",
+    "address": "Mimarsinan Mah. İsmet İnönü Blv. No:114 Atakum/Samsun",
+    "reports_to_president": false
+  },
+  {
+    "name": "Bilgi İşlem Müdürlüğü",
+    "slug": "bilgi-islem-mudurlugu",
+    "description": "Atakum Belediyesi Bilgi İşlem Müdürlüğü, dijital dönüşüm çağında belediyenin teknolojik altyapısını güçlendirerek hizmet kalitesini artırmak ve vatandaşlara daha hızlı, şeffaf ve erişilebilir çözümler sunmak amacıyla çalışmalarını sürdüren birimdir. Belediye hizmetlerinin tüm dijital platformlarda kesintisiz ve güvenli bir şekilde sunulması için bilgi işlem altyapısını modern teknolojilerle yenileyen müdürlük, aynı zamanda belediyenin tüm dijital projelerine destek vermektedir. Müdürlüğümüz, Atakumlu vatandaşların belediyeye olan işlemlerini kolaylaştırmak adına çevrim içi işlemler, dijital başvuru formları, e-belediye çözümleri gibi birçok alanda projeler geliştirmektedir. Geliştirilen yazılım ve sistemlerle vatandaşlarımız, belediyeye dair işlemlerini internet üzerinden hızlı ve kolay bir şekilde yapabilmektedir. Ayrıca, mobil uyumlu hizmetlerle dijital belediyeciliği vatandaşlarımızın cebine kadar taşımaktayız. Atakum Belediyesi Bilgi İşlem Müdürlüğü’nün öncelikli hedefleri arasında veri güvenliğini sağlamak, kesintisiz hizmet sunmak ve vatandaşlarımızın her daim yanında olmak yer almaktadır. Sürekli yenilikleri takip eden ve kendini geliştiren müdürlüğümüz, belediyenin tüm birimlerine teknoloji desteği sağlayarak hizmet süreçlerinin hızlanmasına katkıda bulunmaktadır. Özellikle siber güvenlik alanında aldığımız önlemlerle, vatandaşlarımızın kişisel verilerini güvence altına alıyor ve güvenli bir hizmet sunuyoruz. Atakum’un dijital belediyecilik alanında öncü bir konuma gelmesi için çalışan Bilgi İşlem Müdürlüğü, halkımızın ihtiyaçlarına odaklı yenilikçi projelerle geleceğe emin adımlarla yürümektedir. Teknolojiyi her zaman toplum yararına kullanan müdürlüğümüz, Atakum’un daha modern ve yaşanabilir bir kent olmasına katkı sağlamaya devam edecektir.",
+    "address": "Mimarsinan Mah. İsmet İnönü Blv. No:114 Atakum/Samsun",
+    "reports_to_president": false
+  },
+  {
+    "name": "Çevre Koruma ve Kontrol Müdürlüğü",
+    "slug": "cevre-koruma-mudurlugu",
+    "description": "Atakum Belediyesi Çevre Koruma ve Kontrol Müdürlüğü, Atakum ilçesinin çevresel sürdürülebilirliğini sağlamak ve doğal kaynakların korunmasına yönelik çeşitli projeler geliştirmek amacıyla faaliyet gösteren birimdir. Bu müdürlük, çevre bilincini artırmak, çevresel etkileri en aza indirgemek ve ilçede sağlıklı bir yaşam alanı oluşturmak için çeşitli düzenlemeler yaparak, Atakum'un doğal zenginliklerini ve ekosistemini koruma hedefini gütmektedir.",
+    "address": "Mimarsinan Mah. İsmet İnönü Blv. No:114 Atakum/Samsun",
+    "reports_to_president": false
+  },
+  {
+    "name": "Destek Hizmetleri Müdürlüğü",
+    "slug": "destek-hizmetleri-mudurlugu",
+    "description": "Atakum Belediyesi Destek Hizmetleri Müdürlüğü, belediyenin çeşitli birimlerinin etkin bir şekilde çalışabilmesi için gereken lojistik ve idari destek hizmetlerini sağlayan, belediye yönetiminin arka planda işleyen önemli birimlerinden biridir. Bu müdürlük, belediyenin operasyonel faaliyetlerinin düzenli ve verimli bir şekilde yürütülmesini temin eder ve farklı departmanların ihtiyaçlarını karşılamak için gerekli altyapıyı sunar. Belediyenin hizmetlerinin daha hızlı, etkili ve kaliteli bir şekilde vatandaşlara ulaşabilmesi için çeşitli hizmetler sunar.",
+    "address": "Mimarsinan Mah. İsmet İnönü Blv. No:114 Atakum/Samsun",
+    "reports_to_president": false
+  },
+  {
+    "name": "Emlak ve İstimlak Müdürlüğü",
+    "slug": "emlak-ve-istimlak-mudurlugu",
+    "description": "Atakum Belediyesi Emlak ve İstimlak Müdürlüğü, belediyenin gayrimenkul ve mülkiyet hakları ile ilgili işlemleri yönetmek, kamulaştırma ve istimlak süreçlerini düzenlemek, belediye mülklerini etkin bir şekilde kullanmak ve ilçenin gelişimine katkı sağlamak amacıyla faaliyet gösteren önemli bir birimdir. Bu müdürlük, belediyenin mülkiyet hakları, arsa ve arazilerle ilgili işlemlerinin yanı sıra, kamusal projelerin gerçekleştirilmesinde önemli rol oynar. Aynı zamanda, belediyenin sahip olduğu taşınmazların en verimli şekilde değerlendirilmesini sağlar.",
+    "address": "Mimarsinan Mah. İsmet İnönü Blv. No:114 Atakum/Samsun",
+    "reports_to_president": false
+  },
+  {
+    "name": "Etüd Proje Müdürlüğü",
+    "slug": "etud-mudurlugu",
+    "description": "Atakum Belediyesi Etüd Proje Müdürlüğü, belediyenin uzun vadeli kalkınma hedeflerine uygun projelerin geliştirilmesi, mevcut projelerin etüd çalışmalarının yapılması ve bu projelerin uygulamaya geçirilmeden önce gerekli analizlerinin, planlamalarının yapılması görevini üstlenen önemli bir birimdir. Bu müdürlük, Atakum'un altyapı, çevre düzenlemeleri, kentsel dönüşüm, yeşil alanlar ve diğer belediye hizmetleri gibi pek çok alanda ihtiyaç duyulan projelerin hayata geçmesini sağlamak amacıyla tasarım, araştırma ve proje geliştirme süreçlerini yönetir. Etüd Proje Müdürlüğü, belediyenin vizyon ve misyonuna uygun projelerin başarılı bir şekilde uygulanabilmesi için gereken bütün hazırlıkları yapar.",
+    "address": "Mimarsinan Mah. İsmet İnönü Blv. No:114 Atakum/Samsun",
+    "reports_to_president": false
+  },
+  {
+    "name": "Fen İşleri Müdürlüğü",
+    "slug": "fen-isleri-mudurlugu",
+    "description": "Atakum Belediyesi Fen İşleri Müdürlüğü, ilçenin altyapı ve üstyapı hizmetlerinin planlanması, inşası, bakım ve onarımından sorumlu olan, belediyenin en kritik birimlerinden biridir. Fen İşleri Müdürlüğü, Atakum’un gelişen ihtiyaçlarına paralel olarak, vatandaşların yaşam kalitesini artırmaya yönelik projeler üretirken, aynı zamanda ilçenin altyapısal gereksinimlerini karşılamak için kapsamlı ve sürdürülebilir çözümler geliştirir. Bu birim, şehri modernize etme, altyapıyı güçlendirme ve Atakum’u daha yaşanabilir bir şehir haline getirme hedefiyle faaliyet gösterir.",
+    "address": "Alanlı mah. Kıbrıs cad. No:91 Atakum Belediyesi Fen İşleri Ek Hizmet Binası",
+    "reports_to_president": false
+  },
+  {
+    "name": "Gelirler Müdürlüğü",
+    "slug": "gelirler-mudurlugu",
+    "description": "Atakum Belediyesi Gelirler Müdürlüğü, belediyenin mali yönetimini sağlayan, bütçe planlaması, gelir ve gider takibi, mali raporlama ve mali denetim gibi kritik görevleri yürüten stratejik bir birimdir. Bu müdürlük, belediyenin mali kaynaklarını verimli bir şekilde kullanmasını sağlamak, ekonomik sürdürülebilirliği temin etmek ve kamu kaynaklarının etkin bir şekilde yönetilmesine katkıda bulunmak amacıyla faaliyet göstermektedir. Mali Hizmetler Müdürlüğü, belediyenin mali sağlığını korumak ve şeffaf bir yönetim anlayışıyla kamu hizmetlerinin sürdürülebilirliğini sağlamak için bir dizi önemli işlevi yerine getirir. Belediyenin tüm finansal süreçlerinin düzenli ve düzgün bir şekilde işleyebilmesi için finansal planlama, bütçeleme, raporlama, tahsilat ve ödeme işlemleri gibi kritik sorumlulukları üstlenir. Bu birim, yerel yönetimin mali politikalarını şekillendirirken, aynı zamanda vatandaşlara karşı mali hesap verebilirliği sağlamak adına şeffaflık ilkesine de büyük önem verir.",
+    "address": "Mimarsinan Mah. İsmet İnönü Blv. No:114, 55200 Atakum/Samsun",
+    "reports_to_president": false
+  },
+  {
+    "name": "Gençlik ve Spor Hizmetleri Müdürlüğü",
+    "slug": "genclik-ve-spor-hizmetleri-mudurlugu",
+    "description": "Atakum Belediyesi Gençlik ve Spor Hizmetleri Müdürlüğü, gençlerin fiziksel, sosyal ve kültürel gelişimlerini desteklemek amacıyla çeşitli spor etkinlikleri, gençlik projeleri ve sosyal hizmetler sunan önemli bir birimdir. Bu müdürlük, Atakum’un genç nüfusunun potansiyelini en iyi şekilde değerlendirerek, gençlerin sağlıklı bir şekilde yetişmelerine katkı sağlar. Ayrıca, sporun birleştirici gücünden faydalanarak, Atakum'u aktif bir yaşam tarzını benimsemiş, sağlıklı ve mutlu bir topluluk haline getirmeyi hedefler. Gençlik ve Spor Hizmetleri Müdürlüğü, belediyenin gençlere yönelik sunduğu imkanları çeşitlendirirken, ilçenin spor altyapısını güçlendirmek, gençlere spor yapma fırsatları sunmak ve toplumda sporu yaygınlaştırmak için çeşitli projeler geliştirir. Aynı zamanda, gençlerin sosyal hayatlarına katılımını artırmak, kültürel aktivitelerle desteklemek ve onları geleceğe hazırlamak adına birçok farklı etkinlik düzenler.",
+    "address": "Mimarsinan Mah. İsmet İnönü Blv. No:114 Atakum/Samsun",
+    "reports_to_president": false
+  },
+  {
+    "name": "Hukuk İşleri Müdürlüğü",
+    "slug": "hukuk-isleri-mudurlugu",
+    "description": "Atakum Belediyesi Hukuk İşleri Müdürlüğü, belediyenin tüm hukuki işlemlerini yürüten, yasal süreçleri takip eden ve belediyenin haklarını savunan önemli bir birimdir. Bu müdürlük, Atakum Belediye Başkanlığı ve bağlı birimlerinin hukuki denetimini sağlayarak, belediye faaliyetlerinin yasal çerçevede gerçekleştirilmesini temin eder. Hukuk İşleri Müdürlüğü, aynı zamanda, belediyenin tüm yasal haklarını korur, sözleşmeleri denetler ve belediyenin karşılaşabileceği olası hukuki problemleri çözüme kavuşturur. Belediye hizmetlerinin etkili, verimli ve yasalara uygun bir şekilde sunulması amacıyla, hukuki süreçlerin her aşamasını yönetir.",
+    "address": "Mimarsinan Mah. İsmet İnönü Blv. No:114 Atakum/Samsun",
+    "reports_to_president": false
+  },
+  {
+    "name": "İklim Değişikliği ve Sıfır Atık Müdürlüğü",
+    "slug": "iklim-mudurlugu",
+    "description": "Atakum Belediyesi İklim Değişikliği ve Sıfır Atık Müdürlüğü, çevresel sürdürülebilirliği sağlamak, doğayı korumak ve kaynakları verimli kullanmak adına önemli bir rol üstlenmektedir. Bu birim, iklim değişikliğiyle mücadele etmek ve atık yönetimini etkin bir şekilde gerçekleştirmek amacıyla çeşitli projeler geliştirir ve uygular. Atakum ilçesinin çevre dostu bir şehir haline gelmesi için önemli adımlar atan bu müdürlük, hem çevreyi koruma hem de halkın çevre bilincini artırma konularında aktif çalışmalar yapmaktadır. İklim değişikliğiyle mücadele etmek, doğal kaynakları korumak ve sıfır atık anlayışını yaygınlaştırmak, bu birimin temel sorumlulukları arasında yer alır. Atakum Belediyesi İklim Değişikliği ve Sıfır Atık Müdürlüğü, yerel düzeyde çevresel etkileri azaltmayı amaçlarken, aynı zamanda ulusal ve uluslararası çevre hedeflerine katkıda bulunmayı hedefler.",
+    "address": "Mimarsinan Mah. İsmet İnönü Blv. No:114 Atakum/Samsun",
+    "reports_to_president": false
+  },
+  {
+    "name": "İmar ve Şehircilik Müdürlüğü",
+    "slug": "imar-ve-sehircilik-mudurlugu",
+    "description": "Atakum Belediyesi İmar ve Şehircilik Müdürlüğü, ilçenin fiziksel yapısının planlanması, düzenlenmesi ve geliştirilmesi süreçlerinde önemli bir rol oynamaktadır. Bu birim, Atakum’un sürdürülebilir ve sağlıklı bir şekilde büyümesini sağlamak, mevcut altyapı ve yapılaşma düzenlemelerini denetlemek, kentsel dönüşüm süreçlerini yönetmek ve şehri geleceğe taşımak adına çeşitli projeler geliştirir. İmar ve Şehircilik Müdürlüğü, sadece yapısal gelişimi değil, aynı zamanda Atakum’un çevresel ve kültürel değerlerini koruyarak, estetik ve işlevsel bir şehir yapısının oluşturulmasını hedefler. Müdürlük, Atakum’un tüm imar planlarını hazırlayarak, bölgenin ihtiyacı doğrultusunda yapıları ve yerleşim alanlarını düzenlerken; aynı zamanda şehircilik ilkelerine uygun, yaşam kalitesini artıran projeler üretir. Belediye sınırları içinde imar planları, ruhsat işlemleri, yapı denetimi ve kentsel dönüşüm gibi önemli görevleri yerine getiren bu birim, Atakum halkının güvenli, sağlıklı ve estetik bir yaşam alanına sahip olmasını sağlamayı amaçlar.",
+    "address": "Mimarsinan Mah. İsmet İnönü Blv. No:114 Atakum/Samsun",
+    "reports_to_president": false
+  },
+  {
+    "name": "İnsan Kaynakları ve Eğitim Müdürlüğü",
+    "slug": "insan-kaynaklari-mudurlugu",
+    "description": "Atakum Belediyesi İnsan Kaynakları ve Eğitim Müdürlüğü, belediyenin en önemli değerlerinden biri olan insan kaynağının etkin ve verimli bir şekilde yönetilmesini sağlayan, aynı zamanda personel eğitimi ve gelişimini destekleyen kritik bir birimdir. Bu müdürlük, belediyenin insan gücü yönetimini stratejik bir şekilde planlar, belediye çalışanlarının kişisel ve mesleki gelişimlerine katkı sağlar, kurum içindeki iş gücü verimliliğini artırmaya yönelik çalışmalar yürütür. Ayrıca, belediyenin tüm birimlerinde kaliteli hizmet sunabilmesi için gerekli olan nitelikli personeli istihdam eder, çalışanların haklarını korur ve motivasyonlarını yüksek tutar. İnsan Kaynakları ve Eğitim Müdürlüğü, hem belediye çalışanlarının profesyonel gelişimini destekleyerek, hem de çalışan memnuniyetini arttırarak, Atakum Belediyesi’nin daha verimli, etkili ve dinamik bir kurum olmasına katkı sağlar. Bu birim, personel alımı, işe alım süreçlerinden, performans değerlendirmelerine, eğitim ihtiyaçlarının belirlenmesinden kariyer planlamasına kadar geniş bir yelpazede hizmet verir.",
+    "address": "Mimarsinan Mah. İsmet İnönü Blv. No:114 Atakum/Samsun",
+    "reports_to_president": false
+  },
+  {
+    "name": "İşletme ve İştirakler Müdürlüğü",
+    "slug": "isletme-ve-istiraklar-mudurlugu",
+    "description": "Atakum Belediyesi İşletme ve İştirakler Müdürlüğü, belediyeye ait ticari işletmelerin yönetimi, belediye iştiraklerinin denetimi ve yönlendirilmesi, ayrıca bu işletmelerin sürdürülebilirliğini sağlamak amacıyla stratejik planlamalar yapan birimdir. Belediyenin ticari faaliyetlerini profesyonel bir şekilde yönetmek ve ilçeye ekonomik katkı sağlamak, bu müdürlüğün temel görevlerinden biridir. Belediyeye ait sosyal tesisler, restoranlar, parklar, pazaryerleri gibi ticari işletmelerin yönetilmesinden, belediyeye bağlı iştiraklerin finansal, operasyonel ve hukuki süreçlerinin düzenlenmesine kadar geniş bir sorumluluk yelpazesinde çalışır. İşletme ve İştirakler Müdürlüğü, belediye bütçesine katkı sağlamak, kamusal hizmetlerin etkinliğini artırmak ve ekonomik kalkınmayı desteklemek amacıyla, tüm ticari faaliyetlerin belediye vizyonuna uygun bir şekilde işlemesini sağlar. Bu müdürlük, belediye iştiraklerinin yönetiminden, yeni projelerin geliştirilmesine, pazarlama stratejilerinden, personel yönetimine kadar birçok önemli görevi yerine getirir.",
+    "address": "Mimarsinan Mah. İsmet İnönü Blv. No:114 Atakum/Samsun",
+    "reports_to_president": false
+  },
+  {
+    "name": "Kadın ve Aile Hizmetleri Müdürlüğü",
+    "slug": "kadin-ve-aile-hizmetleri-mudurugu",
+    "description": "Atakum Belediyesi Kadın ve Aile Hizmetleri Müdürlüğü, toplumun en önemli yapı taşlarını oluşturan kadınlar ve ailelerin sosyal, kültürel, ekonomik ve psikolojik iyilik hallerini desteklemeyi amaçlayan bir birimdir. Belediye bünyesinde kadınların güçlendirilmesi, aile içi huzurun sağlanması ve toplumsal cinsiyet eşitliğinin teşvik edilmesi amacıyla çeşitli projeler geliştirilir. Kadın ve Aile Hizmetleri Müdürlüğü, Atakum’daki kadınların yaşam kalitesini artırmak, aile içindeki bireylerin haklarını savunmak ve toplumsal sorunlara karşı bilinçlendirme çalışmaları yapmak için önemli bir rol üstlenmektedir. Bu müdürlük, kadınların ekonomik bağımsızlıklarını kazanmasını sağlamak, şiddet, ayrımcılık ve diğer toplumsal zorluklarla mücadele etmek için çeşitli hizmetler sunar. Aynı zamanda aile içi iletişim, ebeveynlik eğitimi ve çocukların sağlıklı bir şekilde büyümesi için ihtiyaç duyulan eğitim ve rehberlik hizmetlerini sağlar. Kadınların iş gücüne katılımını artırmak ve onlara fırsatlar sunmak, ailelerin daha güçlü bir şekilde toplumsal yaşama katılabilmesi için çalışmak, bu müdürlüğün temel hedeflerindendir.",
+    "address": "Mimarsinan Mah. İsmet İnönü Blv. No:114 Atakum/Samsun",
+    "reports_to_president": false
+  },
+  {
+    "name": "Kırsal Hizmetler Müdürlüğü",
+    "slug": "kirsal-hizmetler-mudurlugu",
+    "description": "Atakum Belediyesi Kırsal Hizmetler Müdürlüğü, ilçedeki kırsal alanların kalkınması, yaşam standartlarının iyileştirilmesi ve sürdürülebilir bir çevre yaratılması amacıyla çeşitli hizmet ve projeler yürüten önemli bir birimdir. Atakum’un yerleşim alanları dışında kalan kırsal bölgelerde yaşayan vatandaşların, daha kaliteli bir yaşam sürmesi ve tarımsal faaliyetlerin geliştirilmesi için birçok faaliyet ve destek programı sunmaktadır. Bu müdürlük, kırsal alanların ihtiyaçlarını belirleyerek, doğal kaynakların korunması, altyapı hizmetlerinin geliştirilmesi ve sosyal hizmetlerin sunulması konularında önemli adımlar atmaktadır. Kırsal Hizmetler Müdürlüğü, kırsal kalkınma projeleri, tarım alanlarında destekleyici faaliyetler, kırsal altyapı hizmetleri ve doğal çevrenin korunmasına yönelik çalışmalar yaparak, kırsal bölgedeki insanların yaşam kalitesini artırmayı hedefler. Aynı zamanda kırsal alanlarda sürdürülebilir tarım ve hayvancılık faaliyetlerini teşvik ederek, yerel halkın ekonomik kalkınmasına katkı sağlar. Bu birim, kırsal alanda yaşayanların günlük yaşamlarını kolaylaştırmak ve onlara çeşitli sosyal hizmetler sunmak için de kapsamlı projeler gerçekleştirir.",
+    "address": "Mimarsinan, 141. Sk. No:30 Atakum/Samsun",
+    "reports_to_president": false
+  },
+  {
+    "name": "Kültür Sanat ve Sosyal İşler Müdürlüğü",
+    "slug": "kultur-sanat-ve-sosyal-isler-mudurlugu",
+    "description": "Atakum Belediyesi Kültür ve Sosyal İşler Müdürlüğü, ilçenin kültürel zenginliklerini koruyarak, halkın sosyal, kültürel ve sanatsal gelişimini desteklemeyi amaçlayan önemli bir birimdir. Kültürel mirası yaşatmak, sosyal dayanışmayı artırmak ve bireylerin yaşam kalitesini iyileştirmek için çeşitli etkinlikler, projeler ve hizmetler sunmaktadır. Atakum’un toplumsal yapısına katkı sağlamak, bireylerin sosyal yaşamını desteklemek ve kültürel bilinci artırmak amacıyla birçok kapsamlı faaliyet yürütülmektedir. Müdürlük, Atakum’un kültürel çeşitliliğini ve sosyal dokusunu güçlendirecek projeler geliştirirken, aynı zamanda her yaştan, her kesimden insanın katılımını teşvik eden sosyal etkinlikler düzenler. Bu birim, yerel sanatçılar, kültürel organizasyonlar ve toplumsal gruplarla işbirliği yaparak, şehrin sosyal ve kültürel hayatını zenginleştirmeyi hedefler.",
+    "address": "Mimarsinan Mah. İsmet İnönü Blv. No:114 Atakum/Samsun",
+    "reports_to_president": false
+  },
+  {
+    "name": "Makine İkmal Bakım ve Onarım Müdürlüğü",
+    "slug": "makine-ikmal-bakim-ve-onarim-mudurlugu",
+    "description": "Atakum Belediyesi Makine İkmal Bakım ve Onarım Müdürlüğü, belediyenin hizmet birimlerinin etkili ve verimli bir şekilde çalışabilmesi için gerekli olan tüm araç ve makinelerin bakım, onarım, ikmal ve işlevsel performanslarını sağlamakla sorumlu olan önemli bir birimdir. Bu müdürlük, belediyenin çeşitli hizmet alanlarında kullanılan araç, iş makinesi ve ekipmanların sürekliliğini ve işlevselliğini sağlamak amacıyla birçok teknik işlevi yerine getirir. Belediyenin hizmet verdiği tüm alanlarda kesintisiz ve güvenli bir çalışma ortamı yaratmayı amaçlar. Makine İkmal Bakım ve Onarım Müdürlüğü, belediyenin araç parkının yönetimi, bakımı ve onarımı ile ilgili çalışmalar yürüterek, hem hizmetlerin aksamasını engeller hem de bütçe dostu çözümler üretir. Bu müdürlük, Atakum’daki tüm belediye araçlarının, iş makinelerinin ve diğer teknik ekipmanların düzgün çalışmasını sağlamak için gerekli periyodik bakımları yapmak, onarımlarını gerçekleştirmek ve gerektiğinde ikmal yapmak gibi görevler üstlenir.",
+    "address": "Alanlı mah. Kıbrıs cad. No:91 Atakum Belediyesi",
+    "reports_to_president": false
+  },
+  {
+    "name": "Mali Hizmetler Müdürlüğü",
+    "slug": "mali-hizmetler-mudurlugu",
+    "description": "Atakum Belediyesi Mali Hizmetler Müdürlüğü, belediyenin mali yönetimini sağlayan, bütçe planlaması, gelir ve gider takibi, mali raporlama ve mali denetim gibi kritik görevleri yürüten stratejik bir birimdir. Bu müdürlük, belediyenin mali kaynaklarını verimli bir şekilde kullanmasını sağlamak, ekonomik sürdürülebilirliği temin etmek ve kamu kaynaklarının etkin bir şekilde yönetilmesine katkıda bulunmak amacıyla faaliyet göstermektedir. Mali Hizmetler Müdürlüğü, belediyenin mali sağlığını korumak ve şeffaf bir yönetim anlayışıyla kamu hizmetlerinin sürdürülebilirliğini sağlamak için bir dizi önemli işlevi yerine getirir. Belediyenin tüm finansal süreçlerinin düzenli ve düzgün bir şekilde işleyebilmesi için finansal planlama, bütçeleme, raporlama, tahsilat ve ödeme işlemleri gibi kritik sorumlulukları üstlenir. Bu birim, yerel yönetimin mali politikalarını şekillendirirken, aynı zamanda vatandaşlara karşı mali hesap verebilirliği sağlamak adına şeffaflık ilkesine de büyük önem verir.",
+    "address": "Mimarsinan Mah. İsmet İnönü Blv. No:114 Atakum/Samsun",
+    "reports_to_president": false
+  },
+  {
+    "name": "Özel Kalem Müdürlüğü",
+    "slug": "ozel-kalem-mudurlugu",
+    "description": "Atakum Belediyesi Özel Kalem Müdürlüğü, belediyenin üst düzey yöneticilerinin ve Belediye Başkanının çalışma düzenini sağlamak, idari süreçlerin koordinasyonunu yapmak ve yöneticilere bürokratik destek sunmak amacıyla önemli bir rol üstlenmektedir. Bu müdürlük, belediyenin iç yönetim sisteminin düzenli ve verimli bir şekilde işlemesini temin ederken, aynı zamanda kamu yönetiminin etkinliğini ve şeffaflığını artırmaya yönelik bir dizi kritik görevi yerine getirir. Özel Kalem Müdürlüğü, belediye başkanına ve diğer üst düzey yöneticilere gerekli idari, organizasyonel ve iletişim desteğini sağlayarak, karar süreçlerinin hızlı ve etkili bir şekilde yürütülmesine katkıda bulunur. Ayrıca, belediyenin iç ve dış yazışmalarını düzenleyerek, kamu kurumları, vatandaşlar ve diğer paydaşlarla olan ilişkileri koordine eder. Bu birim, Atakum Belediyesi’nin hizmetlerini etkin bir şekilde sunabilmesi için kritik iletişim ve organizasyonel işlevleri yerine getirir.",
+    "address": "Mimarsinan Mah. İsmet İnönü Blv. No:114 Atakum/Samsun",
+    "reports_to_president": false
+  },
+  {
+    "name": "Park ve Bahçeler Müdürlüğü",
+    "slug": "park-ve-bahceler-mudurlugu",
+    "description": "Atakum Belediyesi Park ve Bahçeler Müdürlüğü, ilçenin estetik ve çevresel değerlerini artırmak, halkın yaşam kalitesini iyileştirmek amacıyla önemli bir rol üstlenen birimlerden biridir. Belediyenin yeşil alanlarının, parklarının, bahçelerinin ve peyzaj düzenlemelerinin bakım, onarım, geliştirme ve yenileme işlemleri bu müdürlük tarafından yapılmaktadır. Ayrıca, sürdürülebilir çevre anlayışı ile doğal zenginliklerin korunması ve halkın doğa ile iç içe bir yaşam sürmesi sağlanır. Park ve Bahçeler Müdürlüğü, Atakum’un tüm yeşil alanlarının planlaması, bakımı ve düzenlenmesi konusunda faaliyet göstererek, ilçenin estetik görünümünü artırmayı ve vatandaşların daha sağlıklı bir yaşam alanına sahip olmasını sağlamayı hedefler. Bu müdürlük, şehrin her köşesine doğal güzellikler katmak için peyzaj projeleri geliştirirken, aynı zamanda halkın doğaya olan ilgisini arttıracak çeşitli etkinlikler ve eğitimler düzenler. Atakum’un doğa dostu, yeşil alanları zenginleştiren bir yapıya kavuşması için önemli bir katkı sunar.",
+    "address": "Alanlı mah. Kıbrıs cad. No:91 Atakum Belediyesi",
+    "reports_to_president": false
+  },
+  {
+    "name": "Plan ve Proje Müdürlüğü",
+    "slug": "plan-ve-proje-mudurlugu",
+    "description": "Atakum Belediyesi Plan Proje Müdürlüğü, ilçenin fiziksel, ekonomik ve sosyal gelişimini planlayan, düzenleyen ve projelendiren kritik bir birimdir. Bu müdürlük, Atakum’un altyapı, ulaşım, imar, çevre düzenlemeleri ve sosyal donatı ihtiyaçlarını karşılamak için çeşitli planlar ve projeler geliştirir. Belediyenin vizyonunu gerçekleştirmek amacıyla, kentsel planlama ve projelendirme süreçlerini yönetir ve ilçedeki yaşam kalitesini artıracak projeleri hayata geçirir. Plan Proje Müdürlüğü, Atakum’un hızlı ve sürdürülebilir bir şekilde gelişmesini sağlamak için stratejik planlar oluşturur, mevcut potansiyelleri değerlendirir ve bu doğrultuda çeşitli projeler geliştirir. Belediyenin geleceğe dönük hedeflerine ulaşabilmesi için yapılan çalışmalar, yerel yönetimlerin en önemli stratejik faaliyetlerinden biridir. Bu müdürlük, kamu altyapısı ve sosyal hizmet alanlarında yapılacak projelere dair planlama, raporlama, uygulama ve denetim süreçlerini yönetir.",
+    "address": "Mimarsinan Mah. İsmet İnönü Blv. No:114 Atakum/Samsun",
+    "reports_to_president": false
+  },
+  {
+    "name": "Rehberlik ve Teftiş Kurulu Müdürlüğü",
+    "slug": "rehberlik-ve-teftis-kurulu-mudurlugu",
+    "description": "Atakum Belediyesi Teftiş Kurulu Müdürlüğü, belediyenin işleyişini denetlemek, iç kontrol sistemlerini sağlamak, yasal ve etik standartlara uygun çalışmasını temin etmek amacıyla görev yapan önemli bir birimdir. Bu müdürlük, belediye faaliyetlerinin şeffaf, etkin ve hukuka uygun bir şekilde yürütülmesini sağlamak için faaliyet gösterir. Teftiş Kurulu, belediye yönetimi, çalışanları ve tüm birimlerinin faaliyetlerini izleyerek, yanlış uygulamalar veya usulsüzlüklerin önüne geçilmesini sağlar. Teftiş Kurulu Müdürlüğü’nün en önemli görevlerinden biri, belediyenin mali işlemlerini denetleyerek kamu kaynaklarının etkin ve doğru şekilde kullanılmasını sağlamaktır. Ayrıca, çalışanlar arasında disiplinli bir çalışma ortamı oluşturarak, etik değerlerin ve belediye politikalarının uygulanmasına katkı sunar. Belediyenin bütçesinin, hizmetlerinin ve projelerinin yasalara uygun olarak gerçekleştirilmesi adına denetim ve inceleme faaliyetlerini yürütür.",
+    "address": "Mimarsinan Mah. İsmet İnönü Blv. No:114 Atakum/Samsun",
+    "reports_to_president": false
+  },
+  {
+    "name": "Ruhsat ve Denetim Müdürlüğü",
+    "slug": "ruhsat-denetim-mudurlugu",
+    "description": "Atakum Belediyesi Ruhsat ve Denetim Müdürlüğü, ilçedeki yapılaşma süreçlerini düzenleyen, denetleyen ve yasalara uygunluk sağlamak amacıyla faaliyet gösteren kritik bir birimdir. Bu müdürlük, yerel yönetimlerin önemli bir sorumluluğu olan imar düzenlemeleri, inşaat ruhsatı ve denetimi gibi süreçleri etkin bir şekilde yönetir. Hem kamusal alanda hem de özel sektördeki yapılaşma faaliyetlerinin sağlıklı, güvenli ve yasal çerçevede gerçekleştirilmesi için gerekli prosedürleri belirler ve uygular. Ruhsat ve Denetim Müdürlüğü, ilçenin estetik ve yapısal bütünlüğünü korurken, aynı zamanda halkın güvenliğini ve yaşam kalitesini artırmak amacıyla çeşitli denetim ve izin süreçlerini yönetir. Atakum’da yapılan her türlü inşaat ve imar faaliyetinin yasalara uygunluğunu denetlemek, çevreye duyarlı ve sürdürülebilir projelerin hayata geçirilmesini sağlamak bu müdürlüğün öncelikli görevlerindendir. Ayrıca, vatandaşların taleplerine hızlı ve etkin bir şekilde çözüm bulma adına ruhsat işlemleri, denetimler ve mevzuatla ilgili rehberlik sağlar.",
+    "address": "Mimarsinan Mah. İsmet İnönü Blv. No:114 Atakum/Samsun",
+    "reports_to_president": false
+  },
+  {
+    "name": "Sağlık İşleri Müdürlüğü",
+    "slug": "saglik-isler-mudurlugu",
+    "description": "Atakum Belediyesi Sağlık İşleri Müdürlüğü, ilçede halk sağlığını korumak, sağlık hizmetlerine erişimi artırmak ve sağlıklı bir yaşam ortamı yaratmak amacıyla önemli bir rol üstlenen bir birimdir. Sağlık hizmetlerinin etkin bir şekilde sunulmasını sağlamak, çevresel sağlık standartlarını denetlemek ve sağlıkla ilgili toplumsal farkındalık oluşturmak gibi çok geniş bir görev yelpazesinde hizmet verir. Atakum’un sağlıklı ve güvenli bir yaşam alanı olabilmesi için çeşitli sağlık hizmetleri sunan, sağlık eğitimleri düzenleyen ve halkın sağlık ihtiyaçlarına cevap veren bu müdürlük, belediyenin en önemli sosyal hizmet birimlerinden biridir. Sağlık İşleri Müdürlüğü, sadece bireysel sağlık hizmetlerini değil, aynı zamanda toplumsal sağlığı da gözeten projeler geliştirir. Bu projeler, halkın çeşitli sağlık risklerine karşı korunmasını sağlamak, sağlık alanında bilinçlendirici çalışmalar yapmak ve çevre sağlığı ile ilgili önlemleri almayı hedefler. Ayrıca, belediyenin yürüttüğü sosyal hizmet projeleri çerçevesinde, vatandaşların sağlıklı bir yaşam sürmesi adına birçok önemli çalışmayı koordine eder.",
+    "address": "Mimarsinan Mah. İsmet İnönü Blv. No:114 Atakum/Samsun",
+    "reports_to_president": false
+  },
+  {
+    "name": "Sosyal Hizmetler Müdürlüğü",
+    "slug": "sosyal-hizmetler-mudurlugu",
+    "description": "Atakum Belediyesi Sosyal Yardım İşleri Müdürlüğü, ilçedeki sosyal ihtiyaçları karşılamak, dezavantajlı grupların yaşam kalitesini artırmak ve toplumun tüm bireylerine eşit fırsatlar sunmak amacıyla faaliyet gösteren birimlerden biridir. Bu müdürlük, Atakum’daki toplumun en temel ihtiyaçlarına yanıt verirken, dayanışma kültürünü güçlendirmeyi ve sosyal adaleti sağlamayı hedefler. Sosyal yardımlar, ihtiyaç sahiplerinin hayata daha güçlü tutunabilmeleri için önemli bir destek sunar ve bu desteklerin etkin bir şekilde dağıtılmasını sağlamak, müdürlüğün en önemli görevlerinden biridir. Sosyal Yardım İşleri Müdürlüğü, yalnızca maddi yardımlar yapmakla kalmaz, aynı zamanda sosyal hizmetler, eğitim, sağlık ve istihdam gibi birçok farklı alanda da hizmet sunar. Ailelerin, yaşlıların, engellilerin, çocukların ve diğer dezavantajlı grupların toplumsal hayata katılımını destekler. Yardım çalışmalarının yanı sıra, toplumsal bilincin artırılması, gönüllülük kültürünün yaygınlaştırılması ve dayanışma ağlarının güçlendirilmesi için de çeşitli projeler geliştirir.",
+    "address": "Mimarsinan Mah. İsmet İnönü Blv. No:114 Atakum/Samsun",
+    "reports_to_president": false
+  },
+  {
+    "name": "Temizlik İşleri Müdürlüğü",
+    "slug": "temizlik-isleri-mudurlugu",
+    "description": "Atakum Belediyesi Temizlik İşleri Müdürlüğü, ilçede yaşam kalitesini artırmayı ve çevre sağlığını korumayı hedefleyen önemli bir belediye birimidir. Müdürlüğün temel amacı, Atakum halkına temiz, sağlıklı ve güvenli bir yaşam alanı sunmak, çevre kirliliğini önlemek ve ilçenin estetik görünümünü iyileştirmektir. Temizlik İşleri Müdürlüğü, Atakum’un genel temizlik hizmetlerinin yönetilmesinden sorumlu olup, sokaklardan parklara, plajlardan iş merkezlerine kadar geniş bir alanda hizmet sunar. Temizlik İşleri Müdürlüğü, sadece çevresel hijyenin sağlanmasından ibaret değil; aynı zamanda çevre bilincinin artırılması, geri dönüşüm ve sıfır atık gibi sürdürülebilir projelerin hayata geçirilmesi konusunda da aktif bir rol üstlenir. Çevre sağlığına ve estetiğine duyarlı bir belediye yaklaşımıyla, belediye sınırları içinde tüm temizlik hizmetlerinin etkin bir şekilde yürütülmesi sağlanır.",
+    "address": "Alanlı mah. Kıbrıs cad. No:91 Atakum Belediyesi Temizlik İşleri Müdürlüğü",
+    "reports_to_president": false
+  },
+  {
+    "name": "Veteriner İşleri Müdürlüğü",
+    "slug": "veteriner-isleri-mudurlugu",
+    "description": "Atakum Belediyesi veteriner işleri müdürlüğü hayvan ve çevre sağlığının koruma ve kontrolünü sağlarken, hayvan popülasyonun refah koşullarının iyileştirilmeside göz önünde tutar.Veteriner işleri müdürlüğü aynı zamanda sahipsiz güçten düşmüş hayvanlar için tedavi ve rehabilitasyon süreçlerini etkin bir şekilde yürütürken kırsal alanlarda hayvancılığın gelişimine de katkı verip, halkın güvenli gıdaya ulaşması hususunda çalışmalar yaparak halk sağlığını korunmasına destek verir.",
+    "address": "Mimarsinan, 141. Sk. No:30 Atakum/Samsun",
+    "reports_to_president": false
+  },
+  {
+    "name": "Yapı Kontrol Müdürlüğü",
+    "slug": "yapi-kontrol-mudurlugu",
+    "description": "Atakum Belediyesi Yapı Kontrol Müdürlüğü, ilçedeki inşaat faaliyetlerinin düzenli ve güvenli bir şekilde yürütülmesini sağlayan, belediyenin en önemli birimlerinden biridir. Bu müdürlük, yapıların yasalara, yönetmeliklere ve güvenlik standartlarına uygun inşa edilmesini denetler, vatandaşların yaşam alanlarının güvenli ve sağlıklı olmasına katkı sağlar. Yapı Kontrol Müdürlüğü, inşaat sürecinin her aşamasında kalite kontrolü yaparak, olası riskleri ve sorunları önceden tespit etmeyi amaçlar. Yapı Kontrol Müdürlüğü, yapıların inşaat ruhsatı, denetimi ve tamamlanması süreçlerini takip ederken, aynı zamanda çevreye duyarlı, estetik ve sürdürülebilir projelerin hayata geçirilmesine de katkı sağlar. Belediye sınırları içindeki tüm yeni yapılaşmaların ve mevcut yapıların, imar planına uygun olarak yapılmasını denetler ve inşaat faaliyetlerinin yasal çerçevede gerçekleşmesini sağlar.",
+    "address": "Mimarsinan Mah. İsmet İnönü Blv. No:114 Atakum/Samsun",
+    "reports_to_president": false
+  },
+  {
+    "name": "Yazı İşleri Müdürlüğü",
+    "slug": "yazi-isleri-mudurlugu",
+    "description": "Atakum Belediyesi Yazı İşleri Müdürlüğü, belediyenin idari işleyişinin ve iç iletişiminin sağlıklı bir şekilde yürütülmesinde kritik bir rol üstlenen önemli bir birimdir. Bu müdürlük, belediyenin resmi yazışmalarının düzenlenmesi, arşivlenmesi ve takip edilmesi, iç ve dış yazışmaların zamanında ve doğru şekilde yapılması, yasal süreçlerin yönetilmesi gibi bir dizi önemli görevi yerine getirir. Ayrıca, belediye başkanına ve diğer yöneticilere resmi yazılar ve raporlar hazırlamak, düzenli bilgi akışını sağlamak gibi temel fonksiyonları da üstlenir. Yazı İşleri Müdürlüğü, belediyenin tüm yazılı belgelerinin düzenli bir şekilde muhafaza edilmesi, veri güvenliğinin sağlanması ve kamusal şeffaflığın korunması adına etkin bir şekilde çalışır. Belediye faaliyetlerinin kamuoyuna duyurulması ve belediye birimleri arasındaki iletişimin etkin bir biçimde yürütülmesi, bu müdürlüğün sorumluluğundadır.",
+    "address": "Mimarsinan Mah. İsmet İnönü Blv. No:114 Atakum/Samsun",
+    "reports_to_president": false
+  },
+  {
+    "name": "Zabıta Müdürlüğü",
+    "slug": "zabita-mudurlugu",
+    "description": "Atakum Belediyesi Zabıta Müdürlüğü, ilçe sınırları içerisindeki kamu düzenini sağlamak, vatandaşların can ve mal güvenliğini korumak ve genel huzuru temin etmek amacıyla önemli bir görev üstlenir. Belediye zabıtası, halk sağlığını korumak, ticari faaliyetlerin düzenli ve yasal çerçevede gerçekleşmesini sağlamak, çevre kirliliğini önlemek ve ilçe genelindeki kamu düzenini sağlamak için çeşitli denetim ve denetim faaliyetlerini yürütür. Zabıta Müdürlüğü, yalnızca denetim değil, aynı zamanda eğitim, bilgilendirme ve önleyici faaliyetlerle de halkı bilinçlendirir. Belediye tarafından yapılan düzenlemeler, yönetmelikler ve yasalar doğrultusunda halkın haklarını ve sorumluluklarını hatırlatır, usulsüzlüklerin ve kanun ihlallerinin önüne geçilmesi için aktif olarak çalışır.",
+    "address": "Mimarsinan Mah. İsmet İnönü Blv. No:114 Atakum/Samsun",
+    "reports_to_president": false
+  }
+],
+  websiteEmployees: [
+  {
+    "first_name": "Neslihan",
+    "last_name": "Tiryaki",
+    "title": "Şube Müdürü",
+    "dahili_no": "151",
+    "image_url": "/uploads/employees/birim-afet-isleri-ve-risk-yonetim-mudurlugu-2001.jpg",
+    "is_unit_manager": true,
+    "is_contact_person": false,
+    "is_active": true,
+    "department_slug": "afet-isleri-ve-risk-yonetim-mudurlugu"
+  },
+  {
+    "first_name": "Sabri",
+    "last_name": "Keskinoğlu",
+    "title": "Ofis Personeli",
+    "dahili_no": "620",
+    "image_url": "/uploads/employees/birim-afet-isleri-ve-risk-yonetim-mudurlugu-2002.jpg",
+    "is_unit_manager": false,
+    "is_contact_person": true,
+    "is_active": true,
+    "department_slug": "afet-isleri-ve-risk-yonetim-mudurlugu"
+  },
+  {
+    "first_name": "Kemal",
+    "last_name": "Vural",
+    "title": "Ofis Personeli",
+    "dahili_no": "466",
+    "image_url": "/uploads/employees/birim-afet-isleri-ve-risk-yonetim-mudurlugu-2003.jpg",
+    "is_unit_manager": false,
+    "is_contact_person": true,
+    "is_active": true,
+    "department_slug": "afet-isleri-ve-risk-yonetim-mudurlugu"
+  },
+  {
+    "first_name": "Suat",
+    "last_name": "Yıldız",
+    "title": "Şube Müdürü",
+    "dahili_no": "306",
+    "image_url": "/uploads/employees/birim-basin-yayin-ve-halkla-iliskiler-mudurlugu-2004.jpg",
+    "is_unit_manager": true,
+    "is_contact_person": false,
+    "is_active": true,
+    "department_slug": "basin-yayin-ve-halkla-iliskiler-mudurlugu"
+  },
+  {
+    "first_name": "Çağatay",
+    "last_name": "Taş",
+    "title": "Ofis Personeli",
+    "dahili_no": "950",
+    "image_url": "/uploads/employees/birim-basin-yayin-ve-halkla-iliskiler-mudurlugu-2005.jpg",
+    "is_unit_manager": false,
+    "is_contact_person": true,
+    "is_active": true,
+    "department_slug": "basin-yayin-ve-halkla-iliskiler-mudurlugu"
+  },
+  {
+    "first_name": "Gökhan",
+    "last_name": "Sarıyer",
+    "title": "Ofis Personeli",
+    "dahili_no": "725",
+    "image_url": "/uploads/employees/birim-basin-yayin-ve-halkla-iliskiler-mudurlugu-2006.jpg",
+    "is_unit_manager": false,
+    "is_contact_person": true,
+    "is_active": true,
+    "department_slug": "basin-yayin-ve-halkla-iliskiler-mudurlugu"
+  },
+  {
+    "first_name": "Faruk",
+    "last_name": "Temiz",
+    "title": "Şube Müdürü",
+    "dahili_no": "500",
+    "image_url": "/uploads/employees/birim-bilgi-islem-mudurlugu-2007.jpg",
+    "is_unit_manager": true,
+    "is_contact_person": false,
+    "is_active": true,
+    "department_slug": "bilgi-islem-mudurlugu"
+  },
+  {
+    "first_name": "Özge",
+    "last_name": "Yıldız",
+    "title": "Ofis Personeli",
+    "dahili_no": "155",
+    "image_url": "/uploads/employees/birim-bilgi-islem-mudurlugu-2008.jpg",
+    "is_unit_manager": false,
+    "is_contact_person": true,
+    "is_active": true,
+    "department_slug": "bilgi-islem-mudurlugu"
+  },
+  {
+    "first_name": "Zehranur",
+    "last_name": "Karan",
+    "title": "Ofis Personeli",
+    "dahili_no": "855",
+    "image_url": "/uploads/employees/birim-bilgi-islem-mudurlugu-2009.jpg",
+    "is_unit_manager": false,
+    "is_contact_person": true,
+    "is_active": true,
+    "department_slug": "bilgi-islem-mudurlugu"
+  },
+  {
+    "first_name": "Nadir",
+    "last_name": "Mazlum",
+    "title": "Şube Müdürü",
+    "dahili_no": "784",
+    "image_url": "/uploads/employees/birim-cevre-koruma-mudurlugu-2010.jpg",
+    "is_unit_manager": true,
+    "is_contact_person": false,
+    "is_active": true,
+    "department_slug": "cevre-koruma-mudurlugu"
+  },
+  {
+    "first_name": "Ayten",
+    "last_name": "Kılıç",
+    "title": "Ofis Personeli",
+    "dahili_no": "485",
+    "image_url": "/uploads/employees/birim-cevre-koruma-mudurlugu-2011.jpg",
+    "is_unit_manager": false,
+    "is_contact_person": true,
+    "is_active": true,
+    "department_slug": "cevre-koruma-mudurlugu"
+  },
+  {
+    "first_name": "Özlem",
+    "last_name": "Arslantürk",
+    "title": "Ofis Personeli",
+    "dahili_no": "717",
+    "image_url": "/uploads/employees/birim-cevre-koruma-mudurlugu-2012.jpg",
+    "is_unit_manager": false,
+    "is_contact_person": true,
+    "is_active": true,
+    "department_slug": "cevre-koruma-mudurlugu"
+  },
+  {
+    "first_name": "Faruk",
+    "last_name": "Temiz",
+    "title": "Şube Müdürü",
+    "dahili_no": "500",
+    "image_url": "/uploads/employees/birim-destek-hizmetleri-mudurlugu-2013.jpg",
+    "is_unit_manager": true,
+    "is_contact_person": false,
+    "is_active": true,
+    "department_slug": "destek-hizmetleri-mudurlugu"
+  },
+  {
+    "first_name": "Merve",
+    "last_name": "Narman",
+    "title": "Ofis Personeli",
+    "dahili_no": "163",
+    "image_url": "/uploads/employees/birim-destek-hizmetleri-mudurlugu-2014.jpg",
+    "is_unit_manager": false,
+    "is_contact_person": true,
+    "is_active": true,
+    "department_slug": "destek-hizmetleri-mudurlugu"
+  },
+  {
+    "first_name": "Cansu",
+    "last_name": "Kızkaya",
+    "title": "Ofis Personeli",
+    "dahili_no": "801",
+    "image_url": "/uploads/employees/birim-destek-hizmetleri-mudurlugu-2015.jpg",
+    "is_unit_manager": false,
+    "is_contact_person": true,
+    "is_active": true,
+    "department_slug": "destek-hizmetleri-mudurlugu"
+  },
+  {
+    "first_name": "Mustafa",
+    "last_name": "Muşta",
+    "title": "Şube Müdürü",
+    "dahili_no": "791",
+    "image_url": "/uploads/employees/birim-emlak-ve-istimlak-mudurlugu-2016.jpg",
+    "is_unit_manager": true,
+    "is_contact_person": false,
+    "is_active": true,
+    "department_slug": "emlak-ve-istimlak-mudurlugu"
+  },
+  {
+    "first_name": "Sümeyye",
+    "last_name": "Altunalan",
+    "title": "Ofis Personeli",
+    "dahili_no": "778",
+    "image_url": "/uploads/employees/birim-emlak-ve-istimlak-mudurlugu-2017.jpg",
+    "is_unit_manager": false,
+    "is_contact_person": true,
+    "is_active": true,
+    "department_slug": "emlak-ve-istimlak-mudurlugu"
+  },
+  {
+    "first_name": "Ahmet",
+    "last_name": "Yapıcı",
+    "title": "Şube Müdürü",
+    "dahili_no": "229",
+    "image_url": "/uploads/employees/birim-etud-mudurlugu-2018.jpg",
+    "is_unit_manager": true,
+    "is_contact_person": false,
+    "is_active": true,
+    "department_slug": "etud-mudurlugu"
+  },
+  {
+    "first_name": "Pınar",
+    "last_name": "Zeylan",
+    "title": "Ofis Personeli",
+    "dahili_no": "640",
+    "image_url": "/uploads/employees/birim-etud-mudurlugu-2019.jpg",
+    "is_unit_manager": false,
+    "is_contact_person": true,
+    "is_active": true,
+    "department_slug": "etud-mudurlugu"
+  },
+  {
+    "first_name": "Hüseyin",
+    "last_name": "Yasin Yıldırım",
+    "title": "Şube Müdürü",
+    "dahili_no": "106",
+    "image_url": "/uploads/employees/birim-fen-isleri-mudurlugu-2020.jpg",
+    "is_unit_manager": true,
+    "is_contact_person": false,
+    "is_active": true,
+    "department_slug": "fen-isleri-mudurlugu"
+  },
+  {
+    "first_name": "Merve",
+    "last_name": "Aydın",
+    "title": "Ofis Personeli",
+    "dahili_no": "521",
+    "image_url": "/uploads/employees/birim-fen-isleri-mudurlugu-2021.jpg",
+    "is_unit_manager": false,
+    "is_contact_person": true,
+    "is_active": true,
+    "department_slug": "fen-isleri-mudurlugu"
+  },
+  {
+    "first_name": "Dilek",
+    "last_name": "Meral",
+    "title": "Ofis Personeli",
+    "dahili_no": "257",
+    "image_url": "/uploads/employees/birim-fen-isleri-mudurlugu-2022.jpg",
+    "is_unit_manager": false,
+    "is_contact_person": true,
+    "is_active": true,
+    "department_slug": "fen-isleri-mudurlugu"
+  },
+  {
+    "first_name": "Altan",
+    "last_name": "Atilla Öksüz",
+    "title": "Şube Müdürü",
+    "dahili_no": "605",
+    "image_url": "/uploads/employees/birim-gelirler-mudurlugu-2023.jpg",
+    "is_unit_manager": true,
+    "is_contact_person": false,
+    "is_active": true,
+    "department_slug": "gelirler-mudurlugu"
+  },
+  {
+    "first_name": "Zübeyde",
+    "last_name": "Çalık",
+    "title": "Ofis Personeli",
+    "dahili_no": "124",
+    "image_url": "/uploads/employees/birim-gelirler-mudurlugu-2024.jpg",
+    "is_unit_manager": false,
+    "is_contact_person": true,
+    "is_active": true,
+    "department_slug": "gelirler-mudurlugu"
+  },
+  {
+    "first_name": "Ferhat",
+    "last_name": "Geyik",
+    "title": "Ofis Personeli",
+    "dahili_no": "137",
+    "image_url": "/uploads/employees/birim-gelirler-mudurlugu-2025.jpg",
+    "is_unit_manager": false,
+    "is_contact_person": true,
+    "is_active": true,
+    "department_slug": "gelirler-mudurlugu"
+  },
+  {
+    "first_name": "Ümit",
+    "last_name": "Yasin Başar",
+    "title": "Şube Müdürü",
+    "dahili_no": "449",
+    "image_url": "/uploads/employees/birim-genclik-ve-spor-hizmetleri-mudurlugu-2026.jpg",
+    "is_unit_manager": true,
+    "is_contact_person": false,
+    "is_active": true,
+    "department_slug": "genclik-ve-spor-hizmetleri-mudurlugu"
+  },
+  {
+    "first_name": "Lale",
+    "last_name": "Saraç Genç",
+    "title": "Ofis Personeli",
+    "dahili_no": "448",
+    "image_url": "/uploads/employees/birim-genclik-ve-spor-hizmetleri-mudurlugu-2027.jpg",
+    "is_unit_manager": false,
+    "is_contact_person": true,
+    "is_active": true,
+    "department_slug": "genclik-ve-spor-hizmetleri-mudurlugu"
+  },
+  {
+    "first_name": "Deniz",
+    "last_name": "Aksoy",
+    "title": "Şube Müdürü",
+    "dahili_no": "519",
+    "image_url": "/uploads/employees/birim-hukuk-isleri-mudurlugu-2028.jpg",
+    "is_unit_manager": true,
+    "is_contact_person": false,
+    "is_active": true,
+    "department_slug": "hukuk-isleri-mudurlugu"
+  },
+  {
+    "first_name": "Özcan",
+    "last_name": "Çoluk",
+    "title": "Şube Müdürü",
+    "dahili_no": "159",
+    "image_url": "/uploads/employees/birim-iklim-mudurlugu-2029.jpg",
+    "is_unit_manager": true,
+    "is_contact_person": false,
+    "is_active": true,
+    "department_slug": "iklim-mudurlugu"
+  },
+  {
+    "first_name": "Mehmet",
+    "last_name": "Zengin",
+    "title": "Ofis Personeli",
+    "dahili_no": "608",
+    "image_url": "/uploads/employees/birim-iklim-mudurlugu-2030.jpg",
+    "is_unit_manager": false,
+    "is_contact_person": true,
+    "is_active": true,
+    "department_slug": "iklim-mudurlugu"
+  },
+  {
+    "first_name": "Elif",
+    "last_name": "Ceren Yılmaz",
+    "title": "Ofis Personeli",
+    "dahili_no": "489",
+    "image_url": "/uploads/employees/birim-iklim-mudurlugu-2031.jpg",
+    "is_unit_manager": false,
+    "is_contact_person": true,
+    "is_active": true,
+    "department_slug": "iklim-mudurlugu"
+  },
+  {
+    "first_name": "Emre",
+    "last_name": "Köksal",
+    "title": "Şube Müdürü",
+    "dahili_no": "272",
+    "image_url": "/uploads/employees/birim-imar-ve-sehircilik-mudurlugu-2032.jpg",
+    "is_unit_manager": true,
+    "is_contact_person": false,
+    "is_active": true,
+    "department_slug": "imar-ve-sehircilik-mudurlugu"
+  },
+  {
+    "first_name": "Elif",
+    "last_name": "Üçüncü",
+    "title": "Ofis Personeli",
+    "dahili_no": "205",
+    "image_url": "/uploads/employees/birim-imar-ve-sehircilik-mudurlugu-2033.jpg",
+    "is_unit_manager": false,
+    "is_contact_person": true,
+    "is_active": true,
+    "department_slug": "imar-ve-sehircilik-mudurlugu"
+  },
+  {
+    "first_name": "Yağmur",
+    "last_name": "Reis Gül",
+    "title": "Ofis Personeli",
+    "dahili_no": "411",
+    "image_url": "/uploads/employees/birim-imar-ve-sehircilik-mudurlugu-2034.jpg",
+    "is_unit_manager": false,
+    "is_contact_person": true,
+    "is_active": true,
+    "department_slug": "imar-ve-sehircilik-mudurlugu"
+  },
+  {
+    "first_name": "Demet",
+    "last_name": "Ürer",
+    "title": "Şube Müdürü",
+    "dahili_no": "480",
+    "image_url": "/uploads/employees/birim-insan-kaynaklari-mudurlugu-2035.jpg",
+    "is_unit_manager": true,
+    "is_contact_person": false,
+    "is_active": true,
+    "department_slug": "insan-kaynaklari-mudurlugu"
+  },
+  {
+    "first_name": "Gökmen",
+    "last_name": "Aydın",
+    "title": "Ofis Personeli",
+    "dahili_no": "413",
+    "image_url": "/uploads/employees/birim-insan-kaynaklari-mudurlugu-2036.jpg",
+    "is_unit_manager": false,
+    "is_contact_person": true,
+    "is_active": true,
+    "department_slug": "insan-kaynaklari-mudurlugu"
+  },
+  {
+    "first_name": "Bülent",
+    "last_name": "Çil",
+    "title": "Ofis Personeli",
+    "dahili_no": "118",
+    "image_url": "/uploads/employees/birim-insan-kaynaklari-mudurlugu-2037.jpg",
+    "is_unit_manager": false,
+    "is_contact_person": true,
+    "is_active": true,
+    "department_slug": "insan-kaynaklari-mudurlugu"
+  },
+  {
+    "first_name": "Adem",
+    "last_name": "Şahin",
+    "title": "Şube Müdürü",
+    "dahili_no": "170",
+    "image_url": "/uploads/employees/birim-isletme-ve-istiraklar-mudurlugu-2038.jpg",
+    "is_unit_manager": true,
+    "is_contact_person": false,
+    "is_active": true,
+    "department_slug": "isletme-ve-istiraklar-mudurlugu"
+  },
+  {
+    "first_name": "Esra",
+    "last_name": "Ellidokuzoğlu",
+    "title": "Ofis Personeli",
+    "dahili_no": "104",
+    "image_url": "/uploads/employees/birim-isletme-ve-istiraklar-mudurlugu-2039.jpg",
+    "is_unit_manager": false,
+    "is_contact_person": true,
+    "is_active": true,
+    "department_slug": "isletme-ve-istiraklar-mudurlugu"
+  },
+  {
+    "first_name": "Merve",
+    "last_name": "Sezgin Genç",
+    "title": "Ofis Personeli",
+    "dahili_no": "406",
+    "image_url": "/uploads/employees/birim-isletme-ve-istiraklar-mudurlugu-2040.jpg",
+    "is_unit_manager": false,
+    "is_contact_person": true,
+    "is_active": true,
+    "department_slug": "isletme-ve-istiraklar-mudurlugu"
+  },
+  {
+    "first_name": "Şafak",
+    "last_name": "Ari Emir",
+    "title": "",
+    "dahili_no": "444",
+    "image_url": "/uploads/employees/birim-kadin-ve-aile-hizmetleri-mudurugu-2041.jpg",
+    "is_unit_manager": false,
+    "is_contact_person": false,
+    "is_active": true,
+    "department_slug": "kadin-ve-aile-hizmetleri-mudurugu"
+  },
+  {
+    "first_name": "Eylem",
+    "last_name": "Aktaş",
+    "title": "Şube Müdürü",
+    "dahili_no": "793",
+    "image_url": "/uploads/employees/birim-kirsal-hizmetler-mudurlugu-2042.jpg",
+    "is_unit_manager": true,
+    "is_contact_person": false,
+    "is_active": true,
+    "department_slug": "kirsal-hizmetler-mudurlugu"
+  },
+  {
+    "first_name": "Arife",
+    "last_name": "Ülgen",
+    "title": "Ofis Personeli",
+    "dahili_no": "427",
+    "image_url": "/uploads/employees/birim-kirsal-hizmetler-mudurlugu-2043.jpg",
+    "is_unit_manager": false,
+    "is_contact_person": true,
+    "is_active": true,
+    "department_slug": "kirsal-hizmetler-mudurlugu"
+  },
+  {
+    "first_name": "Deniz",
+    "last_name": "Gömeç",
+    "title": "Şube Müdürü",
+    "dahili_no": "780",
+    "image_url": "/uploads/employees/birim-kultur-sanat-ve-sosyal-isler-mudurlugu-2044.jpg",
+    "is_unit_manager": true,
+    "is_contact_person": false,
+    "is_active": true,
+    "department_slug": "kultur-sanat-ve-sosyal-isler-mudurlugu"
+  },
+  {
+    "first_name": "Dilek",
+    "last_name": "Bağcı",
+    "title": "Ofis Personeli",
+    "dahili_no": "493",
+    "image_url": "/uploads/employees/birim-kultur-sanat-ve-sosyal-isler-mudurlugu-2045.jpg",
+    "is_unit_manager": false,
+    "is_contact_person": true,
+    "is_active": true,
+    "department_slug": "kultur-sanat-ve-sosyal-isler-mudurlugu"
+  },
+  {
+    "first_name": "Fatih",
+    "last_name": "Kılıç",
+    "title": "Ofis Personeli",
+    "dahili_no": "425",
+    "image_url": "/uploads/employees/birim-kultur-sanat-ve-sosyal-isler-mudurlugu-2046.jpg",
+    "is_unit_manager": false,
+    "is_contact_person": true,
+    "is_active": true,
+    "department_slug": "kultur-sanat-ve-sosyal-isler-mudurlugu"
+  },
+  {
+    "first_name": "Davut",
+    "last_name": "Gök",
+    "title": "Şube Müdürü",
+    "dahili_no": "479",
+    "image_url": "/uploads/employees/birim-makine-ikmal-bakim-ve-onarim-mudurlugu-2047.jpg",
+    "is_unit_manager": true,
+    "is_contact_person": false,
+    "is_active": true,
+    "department_slug": "makine-ikmal-bakim-ve-onarim-mudurlugu"
+  },
+  {
+    "first_name": "Arda",
+    "last_name": "Şen",
+    "title": "Ofis Personeli",
+    "dahili_no": "490",
+    "image_url": "/uploads/employees/birim-makine-ikmal-bakim-ve-onarim-mudurlugu-2048.jpg",
+    "is_unit_manager": false,
+    "is_contact_person": true,
+    "is_active": true,
+    "department_slug": "makine-ikmal-bakim-ve-onarim-mudurlugu"
+  },
+  {
+    "first_name": "Muhammed",
+    "last_name": "Yasin Aydın",
+    "title": "Ofis Personeli",
+    "dahili_no": "194",
+    "image_url": "/uploads/employees/birim-makine-ikmal-bakim-ve-onarim-mudurlugu-2049.jpg",
+    "is_unit_manager": false,
+    "is_contact_person": true,
+    "is_active": true,
+    "department_slug": "makine-ikmal-bakim-ve-onarim-mudurlugu"
+  },
+  {
+    "first_name": "Altan",
+    "last_name": "Atilla Öksüz",
+    "title": "Şube Müdürü",
+    "dahili_no": "605",
+    "image_url": "/uploads/employees/birim-mali-hizmetler-mudurlugu-2050.jpg",
+    "is_unit_manager": true,
+    "is_contact_person": false,
+    "is_active": true,
+    "department_slug": "mali-hizmetler-mudurlugu"
+  },
+  {
+    "first_name": "Gökhan",
+    "last_name": "Baştan",
+    "title": "Ofis Personeli",
+    "dahili_no": "434",
+    "image_url": "/uploads/employees/birim-mali-hizmetler-mudurlugu-2051.jpg",
+    "is_unit_manager": false,
+    "is_contact_person": true,
+    "is_active": true,
+    "department_slug": "mali-hizmetler-mudurlugu"
+  },
+  {
+    "first_name": "Fulya",
+    "last_name": "Uzun",
+    "title": "Ofis Personeli",
+    "dahili_no": "121",
+    "image_url": "/uploads/employees/birim-mali-hizmetler-mudurlugu-2052.jpg",
+    "is_unit_manager": false,
+    "is_contact_person": true,
+    "is_active": true,
+    "department_slug": "mali-hizmetler-mudurlugu"
+  },
+  {
+    "first_name": "Gökhan",
+    "last_name": "Çakır",
+    "title": "Şube Müdürü",
+    "dahili_no": "302",
+    "image_url": "/uploads/employees/birim-ozel-kalem-mudurlugu-2053.jpg",
+    "is_unit_manager": true,
+    "is_contact_person": false,
+    "is_active": true,
+    "department_slug": "ozel-kalem-mudurlugu"
+  },
+  {
+    "first_name": "İrem",
+    "last_name": "Bütüner",
+    "title": "Ofis Personeli",
+    "dahili_no": "856",
+    "image_url": "/uploads/employees/birim-ozel-kalem-mudurlugu-2054.jpg",
+    "is_unit_manager": false,
+    "is_contact_person": true,
+    "is_active": true,
+    "department_slug": "ozel-kalem-mudurlugu"
+  },
+  {
+    "first_name": "Sultan",
+    "last_name": "Özge Narman",
+    "title": "Ofis Personeli",
+    "dahili_no": "799",
+    "image_url": "/uploads/employees/birim-ozel-kalem-mudurlugu-2055.jpg",
+    "is_unit_manager": false,
+    "is_contact_person": true,
+    "is_active": true,
+    "department_slug": "ozel-kalem-mudurlugu"
+  },
+  {
+    "first_name": "Hüseyin",
+    "last_name": "Yasin Yıldırım",
+    "title": "Şube Müdürü",
+    "dahili_no": "106",
+    "image_url": "/uploads/employees/birim-park-ve-bahceler-mudurlugu-2056.jpg",
+    "is_unit_manager": true,
+    "is_contact_person": false,
+    "is_active": true,
+    "department_slug": "park-ve-bahceler-mudurlugu"
+  },
+  {
+    "first_name": "Özge",
+    "last_name": "Ayyıldız",
+    "title": "Ofis Personeli",
+    "dahili_no": "712",
+    "image_url": "/uploads/employees/birim-park-ve-bahceler-mudurlugu-2057.jpg",
+    "is_unit_manager": false,
+    "is_contact_person": true,
+    "is_active": true,
+    "department_slug": "park-ve-bahceler-mudurlugu"
+  },
+  {
+    "first_name": "Buse",
+    "last_name": "Filiz Çelik Arslan",
+    "title": "Ofis Personeli",
+    "dahili_no": "257",
+    "image_url": "/uploads/employees/birim-park-ve-bahceler-mudurlugu-2058.jpg",
+    "is_unit_manager": false,
+    "is_contact_person": true,
+    "is_active": true,
+    "department_slug": "park-ve-bahceler-mudurlugu"
+  },
+  {
+    "first_name": "Salih",
+    "last_name": "Öztürk",
+    "title": "Şube Müdürü",
+    "dahili_no": "201",
+    "image_url": "/uploads/employees/birim-plan-ve-proje-mudurlugu-2059.jpg",
+    "is_unit_manager": true,
+    "is_contact_person": false,
+    "is_active": true,
+    "department_slug": "plan-ve-proje-mudurlugu"
+  },
+  {
+    "first_name": "Şura",
+    "last_name": "Geçgel",
+    "title": "Harita Mühendisi",
+    "dahili_no": "242",
+    "image_url": "/uploads/employees/birim-plan-ve-proje-mudurlugu-2060.jpg",
+    "is_unit_manager": false,
+    "is_contact_person": false,
+    "is_active": true,
+    "department_slug": "plan-ve-proje-mudurlugu"
+  },
+  {
+    "first_name": "Hasan",
+    "last_name": "Yücel Ballı",
+    "title": "Şehir Plancısı",
+    "dahili_no": "188",
+    "image_url": "/uploads/employees/birim-plan-ve-proje-mudurlugu-2061.jpg",
+    "is_unit_manager": false,
+    "is_contact_person": false,
+    "is_active": true,
+    "department_slug": "plan-ve-proje-mudurlugu"
+  },
+  {
+    "first_name": "Fatma",
+    "last_name": "Çalıkoğlu",
+    "title": "Şube Müdürü",
+    "dahili_no": "265",
+    "image_url": "/uploads/employees/birim-rehberlik-ve-teftis-kurulu-mudurlugu-2062.jpg",
+    "is_unit_manager": true,
+    "is_contact_person": false,
+    "is_active": true,
+    "department_slug": "rehberlik-ve-teftis-kurulu-mudurlugu"
+  },
+  {
+    "first_name": "Erman",
+    "last_name": "Türköz",
+    "title": "Müfettiş",
+    "dahili_no": "455",
+    "image_url": "/uploads/employees/birim-rehberlik-ve-teftis-kurulu-mudurlugu-2063.jpg",
+    "is_unit_manager": false,
+    "is_contact_person": false,
+    "is_active": true,
+    "department_slug": "rehberlik-ve-teftis-kurulu-mudurlugu"
+  },
+  {
+    "first_name": "Burhan",
+    "last_name": "Dönmez",
+    "title": "Şube Müdürü",
+    "dahili_no": "543",
+    "image_url": "/uploads/employees/birim-ruhsat-denetim-mudurlugu-2064.jpg",
+    "is_unit_manager": true,
+    "is_contact_person": false,
+    "is_active": true,
+    "department_slug": "ruhsat-denetim-mudurlugu"
+  },
+  {
+    "first_name": "Volkan",
+    "last_name": "Ak",
+    "title": "Ofis Personeli",
+    "dahili_no": "795",
+    "image_url": "/uploads/employees/birim-ruhsat-denetim-mudurlugu-2065.jpg",
+    "is_unit_manager": false,
+    "is_contact_person": true,
+    "is_active": true,
+    "department_slug": "ruhsat-denetim-mudurlugu"
+  },
+  {
+    "first_name": "Şaduman",
+    "last_name": "Yılmaz Daştan",
+    "title": "Ofis Personeli",
+    "dahili_no": "144",
+    "image_url": "/uploads/employees/birim-ruhsat-denetim-mudurlugu-2066.jpg",
+    "is_unit_manager": false,
+    "is_contact_person": true,
+    "is_active": true,
+    "department_slug": "ruhsat-denetim-mudurlugu"
+  },
+  {
+    "first_name": "Fatma",
+    "last_name": "Baradaranhosseını",
+    "title": "Şube Müdürü",
+    "dahili_no": "483",
+    "image_url": "/uploads/employees/birim-saglik-isler-mudurlugu-2067.jpg",
+    "is_unit_manager": true,
+    "is_contact_person": false,
+    "is_active": true,
+    "department_slug": "saglik-isler-mudurlugu"
+  },
+  {
+    "first_name": "Buse",
+    "last_name": "Demiral",
+    "title": "Ofis Personeli",
+    "dahili_no": "426",
+    "image_url": "/uploads/employees/birim-saglik-isler-mudurlugu-2068.jpg",
+    "is_unit_manager": false,
+    "is_contact_person": true,
+    "is_active": true,
+    "department_slug": "saglik-isler-mudurlugu"
+  },
+  {
+    "first_name": "Fatma",
+    "last_name": "Tüfek",
+    "title": "Şube Müdürü",
+    "dahili_no": "368",
+    "image_url": "/uploads/employees/birim-sosyal-hizmetler-mudurlugu-2069.jpg",
+    "is_unit_manager": true,
+    "is_contact_person": false,
+    "is_active": true,
+    "department_slug": "sosyal-hizmetler-mudurlugu"
+  },
+  {
+    "first_name": "Öznur",
+    "last_name": "Gül",
+    "title": "Ofis Personeli",
+    "dahili_no": "297",
+    "image_url": "/uploads/employees/birim-sosyal-hizmetler-mudurlugu-2070.jpg",
+    "is_unit_manager": false,
+    "is_contact_person": true,
+    "is_active": true,
+    "department_slug": "sosyal-hizmetler-mudurlugu"
+  },
+  {
+    "first_name": "Esra",
+    "last_name": "Aydın",
+    "title": "Ofis Personeli",
+    "dahili_no": "796",
+    "image_url": "/uploads/employees/birim-sosyal-hizmetler-mudurlugu-2071.jpg",
+    "is_unit_manager": false,
+    "is_contact_person": true,
+    "is_active": true,
+    "department_slug": "sosyal-hizmetler-mudurlugu"
+  },
+  {
+    "first_name": "Davut",
+    "last_name": "Gök",
+    "title": "Şube Müdürü",
+    "dahili_no": "479",
+    "image_url": "/uploads/employees/birim-temizlik-isleri-mudurlugu-2072.jpg",
+    "is_unit_manager": true,
+    "is_contact_person": false,
+    "is_active": true,
+    "department_slug": "temizlik-isleri-mudurlugu"
+  },
+  {
+    "first_name": "Emre",
+    "last_name": "Köse",
+    "title": "Ofis Personeli",
+    "dahili_no": "197",
+    "image_url": "/uploads/employees/birim-temizlik-isleri-mudurlugu-2073.jpg",
+    "is_unit_manager": false,
+    "is_contact_person": true,
+    "is_active": true,
+    "department_slug": "temizlik-isleri-mudurlugu"
+  },
+  {
+    "first_name": "Görkem",
+    "last_name": "Çakır",
+    "title": "Ofis Personeli",
+    "dahili_no": "667",
+    "image_url": "/uploads/employees/birim-temizlik-isleri-mudurlugu-2074.jpg",
+    "is_unit_manager": false,
+    "is_contact_person": true,
+    "is_active": true,
+    "department_slug": "temizlik-isleri-mudurlugu"
+  },
+  {
+    "first_name": "Duhan",
+    "last_name": "Doru",
+    "title": "Ofis Personeli",
+    "dahili_no": "148",
+    "image_url": "/uploads/employees/birim-veteriner-isleri-mudurlugu-2075.jpg",
+    "is_unit_manager": false,
+    "is_contact_person": true,
+    "is_active": true,
+    "department_slug": "veteriner-isleri-mudurlugu"
+  },
+  {
+    "first_name": "Tuğçe",
+    "last_name": "Birgücü",
+    "title": "Ofis Personeli",
+    "dahili_no": "792",
+    "image_url": "/uploads/employees/birim-veteriner-isleri-mudurlugu-2076.jpg",
+    "is_unit_manager": false,
+    "is_contact_person": true,
+    "is_active": true,
+    "department_slug": "veteriner-isleri-mudurlugu"
+  },
+  {
+    "first_name": "Ali",
+    "last_name": "Altunsoy",
+    "title": "Şube Müdürü",
+    "dahili_no": "561",
+    "image_url": "/uploads/employees/birim-yapi-kontrol-mudurlugu-2077.jpg",
+    "is_unit_manager": true,
+    "is_contact_person": false,
+    "is_active": true,
+    "department_slug": "yapi-kontrol-mudurlugu"
+  },
+  {
+    "first_name": "Görkem",
+    "last_name": "Gündüz",
+    "title": "Ofis Personeli",
+    "dahili_no": "237",
+    "image_url": "/uploads/employees/birim-yapi-kontrol-mudurlugu-2078.jpg",
+    "is_unit_manager": false,
+    "is_contact_person": true,
+    "is_active": true,
+    "department_slug": "yapi-kontrol-mudurlugu"
+  },
+  {
+    "first_name": "Hakan",
+    "last_name": "Kuşçu",
+    "title": "Ofis Personeli",
+    "dahili_no": "108",
+    "image_url": "/uploads/employees/birim-yapi-kontrol-mudurlugu-2079.jpg",
+    "is_unit_manager": false,
+    "is_contact_person": true,
+    "is_active": true,
+    "department_slug": "yapi-kontrol-mudurlugu"
+  },
+  {
+    "first_name": "Mustafa",
+    "last_name": "Kara",
+    "title": "Şube Müdürü",
+    "dahili_no": "433",
+    "image_url": "/uploads/employees/birim-yazi-isleri-mudurlugu-2080.jpg",
+    "is_unit_manager": true,
+    "is_contact_person": false,
+    "is_active": true,
+    "department_slug": "yazi-isleri-mudurlugu"
+  },
+  {
+    "first_name": "Seydi",
+    "last_name": "Burak Demir",
+    "title": "Ofis Personeli",
+    "dahili_no": "726",
+    "image_url": "/uploads/employees/birim-yazi-isleri-mudurlugu-2081.jpg",
+    "is_unit_manager": false,
+    "is_contact_person": true,
+    "is_active": true,
+    "department_slug": "yazi-isleri-mudurlugu"
+  },
+  {
+    "first_name": "Yavuz",
+    "last_name": "Karabaş",
+    "title": "Ofis Personeli",
+    "dahili_no": "110",
+    "image_url": "/uploads/employees/birim-yazi-isleri-mudurlugu-2082.jpg",
+    "is_unit_manager": false,
+    "is_contact_person": true,
+    "is_active": true,
+    "department_slug": "yazi-isleri-mudurlugu"
+  },
+  {
+    "first_name": "Hasan",
+    "last_name": "Serhat Uzun",
+    "title": "Şube Müdürü",
+    "dahili_no": "781",
+    "image_url": "/uploads/employees/birim-zabita-mudurlugu-2083.jpg",
+    "is_unit_manager": true,
+    "is_contact_person": false,
+    "is_active": true,
+    "department_slug": "zabita-mudurlugu"
+  },
+  {
+    "first_name": "Emine",
+    "last_name": "Geçer Varol",
+    "title": "Ofis Personeli",
+    "dahili_no": "198",
+    "image_url": "/uploads/employees/birim-zabita-mudurlugu-2084.jpg",
+    "is_unit_manager": false,
+    "is_contact_person": true,
+    "is_active": true,
+    "department_slug": "zabita-mudurlugu"
+  },
+  {
+    "first_name": "Ahmet",
+    "last_name": "Alperen Kaya",
+    "title": "Ofis Personeli",
+    "dahili_no": "125",
+    "image_url": "/uploads/employees/birim-zabita-mudurlugu-2085.jpg",
+    "is_unit_manager": false,
+    "is_contact_person": true,
+    "is_active": true,
+    "department_slug": "zabita-mudurlugu"
+  }
+],
+};

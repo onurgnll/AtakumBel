@@ -34,7 +34,7 @@ exports.getAllEmployees = async (req, res, next) => {
         employees,
         pagination: getPagingData(count, req.query.page, limit),
       },
-      message: "Ã‡alÄ±ÅŸanlar listelendi.",
+      message: "Çalışanlar listelendi.",
     });
   } catch (err) {
     next(err);
@@ -67,7 +67,7 @@ exports.createEmployee = async (req, res, next) => {
       return res.status(409).json({
         success: 0,
         data: existingEmployee,
-        message: "Bu isimde bir Ã§alÄ±ÅŸan zaten kayÄ±tlÄ±.",
+        message: "Bu isimde bir çalışan zaten kayıtlı.",
       });
     }
     const newEmployee = await Employee.create({
@@ -85,7 +85,7 @@ exports.createEmployee = async (req, res, next) => {
     return res.status(201).json({
       success: 1,
       data: newEmployee,
-      message: "Personel baÅŸarÄ±yla kaydedildi.",
+      message: "Personel başarıyla kaydedildi.",
     });
   } catch (err) {
     if (req.file) fs.unlinkSync(req.file.path);
@@ -112,7 +112,7 @@ exports.updateEmployee = async (req, res, next) => {
     if (!employee) {
       return res
         .status(404)
-        .json({ success: 0, data: null, message: "Ã‡alÄ±ÅŸan bulunamadÄ±" });
+        .json({ success: 0, data: null, message: "Çalışan bulunamadı" });
     }
 
     let image_path = employee.image_url;
@@ -143,7 +143,7 @@ exports.updateEmployee = async (req, res, next) => {
     return res.json({
       success: 1,
       data: employee,
-      message: "Ã‡alÄ±ÅŸan bilgisi gÃ¼ncellendi.",
+      message: "Çalışan bilgisi güncellendi.",
     });
   } catch (err) {
     if (req.file) fs.unlinkSync(req.file.path);
@@ -159,7 +159,7 @@ exports.deleteEmployee = async (req, res, next) => {
     if (!employee) {
       return res
         .status(404)
-        .json({ success: 0, data: null, message: "Ã‡alÄ±ÅŸan bulunamadÄ±" });
+        .json({ success: 0, data: null, message: "Çalışan bulunamadı" });
     }
     if (employee.image_url && fs.existsSync(employee.image_url)) {
       fs.unlinkSync(employee.image_url);
@@ -168,7 +168,7 @@ exports.deleteEmployee = async (req, res, next) => {
     return res.json({
       success: 1,
       data: null,
-      message: "Ã‡alÄ±ÅŸan baÅŸarÄ±yla silindi.",
+      message: "Çalışan başarıyla silindi.",
     });
   } catch (err) {
     next(err);

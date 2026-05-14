@@ -59,7 +59,7 @@ exports.getFacilityById = async (req, res, next) => {
       return res.status(404).json({
         success: 0,
         data: null,
-        message: "GÃ¶rÃ¼ntÃ¼lenecek tesis bulunamadÄ±.",
+        message: "Görüntülenecek tesis bulunamadı.",
       });
     }
     return res.json({
@@ -86,7 +86,7 @@ exports.createFacility = async (req, res, next) => {
       return res.status(409).json({
         success: 0,
         data: existing,
-        message: "Bu tesis zaten kayÄ±tlÄ±.",
+        message: "Bu tesis zaten kayıtlı.",
       });
     }
     transaction = await sequelize.transaction();
@@ -106,7 +106,7 @@ exports.createFacility = async (req, res, next) => {
       return res.status(400).json({
         success: 0,
         data: null,
-        message: "Tesis oluÅŸtururken en az bir gÃ¶rsel yÃ¼klenmelidir.",
+        message: "Tesis oluştururken en az bir görsel yüklenmelidir.",
       });
     }
 
@@ -128,7 +128,7 @@ exports.createFacility = async (req, res, next) => {
     return res.status(201).json({
       success: 1,
       data: newFacility,
-      message: "Tesis baÅŸarÄ±yla eklendi.",
+      message: "Tesis başarıyla eklendi.",
     });
   } catch (err) {
     if (transaction) await transaction.rollback();
@@ -151,7 +151,7 @@ exports.updateFacility = async (req, res, next) => {
       return res.status(404).json({
         success: 0,
         data: null,
-        message: "GÃ¼ncellenecek tesis bulunamadÄ±.",
+        message: "Güncellenecek tesis bulunamadı.",
       });
     }
     await facility.update({
@@ -192,7 +192,7 @@ exports.updateFacility = async (req, res, next) => {
     return res.json({
       success: 1,
       data: facility,
-      message: "Tesis bilgileri gÃ¼ncellendi.",
+      message: "Tesis bilgileri güncellendi.",
     });
   } catch (err) {
     if (transaction) await transaction.rollback();
@@ -215,7 +215,7 @@ exports.deleteFacility = async (req, res, next) => {
       return res.status(404).json({
         success: 0,
         data: null,
-        message: "Silinecek tesis bulunamadÄ±",
+        message: "Silinecek tesis bulunamadı",
       });
     }
     const imagesToDelete = facility.gallery
@@ -231,7 +231,7 @@ exports.deleteFacility = async (req, res, next) => {
     return res.json({
       success: 1,
       data: null,
-      message: "Tesis baÅŸarÄ±yla silindi.",
+      message: "Tesis başarıyla silindi.",
     });
   } catch (err) {
     next(err);

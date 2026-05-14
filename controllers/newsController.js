@@ -1,4 +1,6 @@
 ﻿const { News, NewsGallery, sequelize } = require("../models");
+
+const SPOT_MAX_LEN = 50;
 const { getPaginationParams, getPagingData } = require("../helpers/pagination");
 const fs = require("fs");
 const { Op } = require("sequelize");
@@ -60,7 +62,7 @@ exports.getAllNews = async (req, res, next) => {
         news,
         pagination: getPagingData(count, req.query.page, limit),
       },
-      message: "haberler (Ã¶zet) listelendi.",
+      message: "haberler (özet) listelendi.",
     });
   } catch (err) {
     next(err);
@@ -78,7 +80,7 @@ exports.getNewsById = async (req, res, next) => {
       return res.status(404).json({
         success: 0,
         data: null,
-        message: "GÃ¶rÃ¼ntÃ¼lenecek haber bulunamadÄ±.",
+        message: "Görüntülenecek haber bulunamadı.",
       });
     }
 
@@ -86,7 +88,7 @@ exports.getNewsById = async (req, res, next) => {
     return res.json({
       success: 1,
       data: newsItem,
-      message: "Haber detayÄ± ve tam iÃ§eriÄŸi getirildi.",
+      message: "Haber detayı ve tam içeriği getirildi.",
     });
   } catch (err) {
     next(err);
@@ -99,6 +101,26 @@ exports.createNews = async (req, res, next) => {
   try {
     const { title, spot, content, is_active } = req.body;
     const uploadedFiles = getUploadedFiles(req);
+    if (spot == null || String(spot).trim() === "") {
+      uploadedFiles.forEach((file) => {
+        if (file?.path && fs.existsSync(file.path)) fs.unlinkSync(file.path);
+      });
+      return res.status(400).json({
+        success: 0,
+        data: null,
+        message: "Spot (özet) zorunludur.",
+      });
+    }
+    if (String(spot).length > SPOT_MAX_LEN) {
+      uploadedFiles.forEach((file) => {
+        if (file?.path && fs.existsSync(file.path)) fs.unlinkSync(file.path);
+      });
+      return res.status(400).json({
+        success: 0,
+        data: null,
+        message: `Spot (özet) en fazla ${SPOT_MAX_LEN} karakter olabilir.`,
+      });
+    }
     const existingNews = await News.findOne({ where: { title } });
     if (existingNews) {
       uploadedFiles.forEach((file) => {
@@ -107,7 +129,7 @@ exports.createNews = async (req, res, next) => {
       return res.status(400).json({
         success: 0,
         data: null,
-        message: "Bu baÅŸlÄ±kta bir haber zaten var.",
+        message: "Bu başlıkta bir haber zaten var.",
       });
     }
     transaction = await sequelize.transaction();
@@ -161,8 +183,25 @@ exports.updateNews = async (req, res, next) => {
       return res.status(404).json({
         success: 0,
         data: null,
-        message: "GÃ¼ncellenecek haber bulunamadÄ±.",
+        message: "Güncellenecek haber bulunamadı.",
       });
+    }
+    if (spot !== undefined && spot !== null) {
+      const spotStr = String(spot);
+      if (spotStr.trim() === "") {
+        return res.status(400).json({
+          success: 0,
+          data: null,
+          message: "Spot (özet) zorunludur.",
+        });
+      }
+      if (spotStr.length > SPOT_MAX_LEN) {
+        return res.status(400).json({
+          success: 0,
+          data: null,
+          message: `Spot (özet) en fazla ${SPOT_MAX_LEN} karakter olabilir.`,
+        });
+      }
     }
     await newsItem.update({
       title: title ?? newsItem.title,
@@ -199,7 +238,7 @@ exports.updateNews = async (req, res, next) => {
     return res.json({
       success: 1,
       data: newsItem,
-      message: "Haber gÃ¼ncellendi.",
+      message: "Haber güncellendi.",
     });
   } catch (err) {
     if (transaction) await transaction.rollback();
@@ -223,7 +262,7 @@ exports.deleteNews = async (req, res, next) => {
       return res.status(404).json({
         success: 0,
         data: null,
-        message: "Silinecek haber bulunamadÄ±.",
+        message: "Silinecek haber bulunamadı.",
       });
     }
 
@@ -242,7 +281,7 @@ exports.deleteNews = async (req, res, next) => {
     return res.json({
       success: 1,
       data: null,
-      message: "Haber baÅŸarÄ±yla silindi.",
+      message: "Haber başarıyla silindi.",
     });
   } catch (err) {
     next(err);

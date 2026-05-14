@@ -53,7 +53,7 @@ exports.addFormsToService = async (req, res, next) => {
       }
       return res
         .status(404)
-        .json({ success: 0, message: "Hizmet bulunamadÄ±." });
+        .json({ success: 0, message: "Hizmet bulunamadı." });
     }
     if (!req.files || !req.files["forms"]) {
       return res
@@ -61,7 +61,7 @@ exports.addFormsToService = async (req, res, next) => {
         .json({
           success: 0,
           data: null,
-          message: "YÃ¼klenecek dosya bulunamadÄ±.",
+          message: "Yüklenecek dosya bulunamadı.",
         });
     }
     const formData = req.files["forms"].map((file) => ({
@@ -73,7 +73,7 @@ exports.addFormsToService = async (req, res, next) => {
     return res.status(201).json({
       success: 1,
       data: newForms,
-      message: "Yeni formlar baÅŸarÄ±yla eklendi.",
+      message: "Yeni formlar başarıyla eklendi.",
     });
   } catch (err) {
     if (req.files && req.files["forms"]) {
@@ -97,7 +97,7 @@ exports.updateForm = async (req, res, next) => {
       }
       return res
         .status(404)
-        .json({ success: 0, message: "GÃ¼ncellenecek form bulunamadÄ±." });
+        .json({ success: 0, message: "Güncellenecek form bulunamadı." });
     }
 
     let updatedData = {};
@@ -118,7 +118,7 @@ exports.updateForm = async (req, res, next) => {
     return res.json({
       success: 1,
       data: form,
-      message: "Form baÅŸarÄ±yla gÃ¼ncellendi.",
+      message: "Form başarıyla güncellendi.",
     });
   } catch (err) {
     if (req.files && req.files["forms"]) {
@@ -136,7 +136,7 @@ exports.deleteForm = async (req, res, next) => {
     const { id } = req.params;
     const form = await ServiceForm.findByPk(id);
     if (!form) {
-      return res.status(404).json({ success: 0, message: "Form bulunamadÄ±." });
+      return res.status(404).json({ success: 0, message: "Form bulunamadı." });
     }
     if (fs.existsSync(form.file_path)) {
       fs.unlinkSync(form.file_path);
@@ -145,7 +145,7 @@ exports.deleteForm = async (req, res, next) => {
     return res.json({
       success: 1,
       data: null,
-      message: "Form baÅŸarÄ±yla kaldÄ±rÄ±ldÄ±.",
+      message: "Form başarıyla kaldırıldı.",
     });
   } catch (err) {
     next(err);

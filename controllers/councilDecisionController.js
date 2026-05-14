@@ -21,6 +21,7 @@ exports.getAllDecisions = async (req, res, next) => {
           [Op.or]: [
             { title: { [Op.iLike]: `%${search}%` } },
             { description: { [Op.iLike]: `%${search}%` } },
+            { decision_no: { [Op.iLike]: `%${search}%` } },
           ],
         }
       : {};
@@ -40,8 +41,25 @@ exports.getAllDecisions = async (req, res, next) => {
       data: {
         decisions,
         pagination: getPagingData(count, req.query.page, limit),
-        message: "meclis kararlarÄ± listelendi",
+        message: "meclis kararları listelendi",
       },
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.getDecisionById = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const decision = await CouncilDecision.findByPk(id);
+    if (!decision) {
+      return res.status(404).json({ success: 0, data: null, message: "Karar bulunamadı." });
+    }
+    return res.json({
+      success: 1,
+      data: decision,
+      message: "Karar getirildi.",
     });
   } catch (err) {
     next(err);
@@ -51,7 +69,15 @@ exports.getAllDecisions = async (req, res, next) => {
 //Create
 exports.createDecision = async (req, res, next) => {
   try {
-    const { title, description, publish_date, is_active, files } = req.body;
+    const {
+      title,
+      description,
+      publish_date,
+      is_active,
+      files,
+      decision_no,
+      date,
+    } = req.body;
     if (!title) {
       return res
         .status(400)
@@ -59,10 +85,21 @@ exports.createDecision = async (req, res, next) => {
     }
     const uploadedList = collectUploadedFiles(req);
 
+    const trimmedNo =
+      decision_no != null && String(decision_no).trim() !== ""
+        ? String(decision_no).trim()
+        : null;
+    const dateOnly =
+      date != null && String(date).trim() !== ""
+        ? String(date).trim().slice(0, 10)
+        : null;
+
     const newDecision = await CouncilDecision.create({
       title,
       description: description || null,
       publish_date: publish_date || null,
+      decision_no: trimmedNo,
+      date: dateOnly,
       is_active: is_active ?? true,
       files: normalizeFiles([], files, uploadedList),
     });
@@ -70,7 +107,7 @@ exports.createDecision = async (req, res, next) => {
     res.status(201).json({
       success: 1,
       data: newDecision,
-      message: "Karar baÅŸarÄ±yla eklendi.",
+      message: "Karar başarıyla eklendi.",
     });
   } catch (err) {
     unlinkUploadedFiles(req);
@@ -82,26 +119,49 @@ exports.createDecision = async (req, res, next) => {
 exports.updateDecision = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { title, description, publish_date, is_active, files } = req.body;
+    const {
+      title,
+      description,
+      publish_date,
+      is_active,
+      files,
+      decision_no,
+      date,
+    } = req.body;
     const decision = await CouncilDecision.findByPk(id);
     if (!decision) {
       return res
         .status(404)
-        .json({ success: 0, data: null, message: "Karar bulunamadÄ±." });
+        .json({ success: 0, data: null, message: "Karar bulunamadı." });
     }
     const uploadedList = collectUploadedFiles(req);
+
+    const nextDecisionNo =
+      decision_no !== undefined
+        ? decision_no != null && String(decision_no).trim() !== ""
+          ? String(decision_no).trim()
+          : null
+        : decision.decision_no;
+    const nextDate =
+      date !== undefined
+        ? date != null && String(date).trim() !== ""
+          ? String(date).trim().slice(0, 10)
+          : null
+        : decision.date;
 
     const updatedDecision = await decision.update({
       title: title ?? decision.title,
       description: description ?? decision.description,
       publish_date: publish_date ?? decision.publish_date,
+      decision_no: nextDecisionNo,
+      date: nextDate,
       is_active: is_active ?? decision.is_active,
       files: normalizeFiles(decision.files, files, uploadedList),
     });
     res.json({
       success: 1,
       data: updatedDecision,
-      message: "Karar baÅŸarÄ±yla gÃ¼ncellendi.",
+      message: "Karar başarıyla güncellendi.",
     });
   } catch (err) {
     unlinkUploadedFiles(req);
@@ -118,7 +178,7 @@ exports.deleteDecision = async (req, res, next) => {
     if (!decision) {
       return res
         .status(404)
-        .json({ success: 0, data: null, message: "Karar bulunamadÄ±." });
+        .json({ success: 0, data: null, message: "Karar bulunamadı." });
     }
 
     const filesToDelete = Array.isArray(decision.files) ? decision.files : [];
@@ -129,7 +189,7 @@ exports.deleteDecision = async (req, res, next) => {
     res.json({
       success: 1,
       data: null,
-      message: "Karar baÅŸarÄ±yla silindi.",
+      message: "Karar başarıyla silindi.",
     });
   } catch (err) {
     next(err);

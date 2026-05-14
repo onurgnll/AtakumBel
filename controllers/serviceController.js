@@ -34,7 +34,7 @@ exports.getAllServices = async (req, res, next) => {
           services: [],
           pagination: getPagingData(count, req.query.page, limit),
         },
-        message: "GÃ¶rÃ¼ntÃ¼lenecek hizmet bulunamadÄ±.",
+        message: "Görüntülenecek hizmet bulunamadı.",
       });
     }
     return res.json({
@@ -60,13 +60,13 @@ exports.getServiceById = async (req, res, next) => {
       return res.status(404).json({
         success: 0,
         data: null,
-        message: "GÃ¶rÃ¼ntÃ¼lenecek hizmet bulunamadÄ±.",
+        message: "Görüntülenecek hizmet bulunamadı.",
       });
     }
     return res.json({
       success: 1,
       data: service,
-      message: "Hizmet detaylarÄ± getirildi.",
+      message: "Hizmet detayları getirildi.",
     });
   } catch (err) {
     next(err);
@@ -90,7 +90,7 @@ exports.createService = async (req, res, next) => {
     res.status(201).json({
       success: 1,
       data: newService,
-      message: "Hizmet baÅŸarÄ±yla oluÅŸturuldu.",
+      message: "Hizmet başarıyla oluşturuldu.",
     });
   } catch (err) {
     if (req.files) {
@@ -117,7 +117,7 @@ exports.updateService = async (req, res, next) => {
       }
       return res
         .status(404)
-        .json({ success: 0, data: null, message: "Hizmet bulunamadÄ±." });
+        .json({ success: 0, data: null, message: "Hizmet bulunamadı." });
     }
     const { name, content } = req.body;
     let image_url = service.image_url;
@@ -134,7 +134,7 @@ exports.updateService = async (req, res, next) => {
     res.json({
       success: 1,
       data: service,
-      message: "Hizmet baÅŸarÄ±yla gÃ¼ncellendi.",
+      message: "Hizmet başarıyla güncellendi.",
     });
   } catch (err) {
     if (req.files) {
@@ -158,7 +158,7 @@ exports.deleteService = async (req, res, next) => {
       return res.status(404).json({
         success: 0,
         data: null,
-        message: "Silinecek hizmet bulunamadÄ±.",
+        message: "Silinecek hizmet bulunamadı.",
       });
     }
     const filesToDelete = [];
@@ -179,7 +179,7 @@ exports.deleteService = async (req, res, next) => {
     return res.json({
       success: 1,
       data: null,
-      message: "Hizmet ve baÄŸlÄ± tÃ¼m dosyalar kaldÄ±rÄ±ldÄ±.",
+      message: "Hizmet ve bağlı tüm dosyalar kaldırıldı.",
     });
   } catch (err) {
     next(err);

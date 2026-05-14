@@ -32,7 +32,7 @@ exports.getAllCouncilMembers = async (req, res, next) => {
         members,
         pagination: getPagingData(count, req.query.page, limit),
       },
-      message: "Meclis Ã¼yeleri baÅŸarÄ±yla getirildi.",
+      message: "Meclis üyeleri başarıyla getirildi.",
     });
   } catch (err) {
     next(err);
@@ -53,7 +53,7 @@ exports.addMemberToCouncil = async (req, res, next) => {
       if (req.file) fs.unlinkSync(req.file.path);
       return res.status(409).json({
         success: 0,
-        message: "Bu Ã¼ye zaten kayÄ±tlÄ±.",
+        message: "Bu üye zaten kayıtlı.",
       });
     }
     const image_path = req.file ? req.file.path.replace(/\\/g, "/").replace(/^.*?(\/uploads\/)/, "/uploads/") : null;
@@ -67,7 +67,7 @@ exports.addMemberToCouncil = async (req, res, next) => {
     return res.status(201).json({
       success: 1,
       data: member,
-      message: "Meclis Ã¼yesi baÅŸarÄ±yla eklendi.",
+      message: "Meclis üyesi başarıyla eklendi.",
     });
   } catch (err) {
     next(err);
@@ -83,7 +83,7 @@ exports.updateMember = async (req, res, next) => {
       if (req.file) fs.unlinkSync(req.file.path);
       return res
         .status(404)
-        .json({ success: 0, message: "GÃ¼ncellenecek Ã¼ye bulunamadÄ±." });
+        .json({ success: 0, message: "Güncellenecek üye bulunamadı." });
     }
 
     const { first_name, last_name, political_party } = req.body;
@@ -105,7 +105,7 @@ exports.updateMember = async (req, res, next) => {
     return res.json({
       success: 1,
       data: member,
-      message: "Meclis Ã¼yesi bilgileri baÅŸarÄ±yla gÃ¼ncellendi.",
+      message: "Meclis üyesi bilgileri başarıyla güncellendi.",
     });
   } catch (err) {
     next(err);
@@ -120,7 +120,7 @@ exports.deleteMember = async (req, res, next) => {
     if (!member) {
       return res
         .status(404)
-        .json({ success: 0, data: null, message: "Silinecek Ã¼ye bulunamadÄ±." });
+        .json({ success: 0, data: null, message: "Silinecek üye bulunamadı." });
     }
     if (member.image_url && fs.existsSync(member.image_url)) {
       fs.unlinkSync(member.image_url);
@@ -131,7 +131,7 @@ exports.deleteMember = async (req, res, next) => {
     return res.json({
       success: 1,
       data: null,
-      message: "Meclis Ã¼yesi ve baÄŸlÄ± tÃ¼m dosyalar baÅŸarÄ±yla silindi.",
+      message: "Meclis üyesi ve bağlı tüm dosyalar başarıyla silindi.",
     });
   } catch (err) {
     next(err);

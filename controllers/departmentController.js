@@ -144,6 +144,21 @@ exports.getDepartmentById = async (req, res, next) => {
       ],
     });
 
+    if (department && !department.manager) {
+      const fallbackManager = await Employee.findOne({
+        where: {
+          department_id: id,
+          is_active: true,
+          is_unit_manager: true,
+        },
+        order: [["id", "ASC"]],
+        attributes: ["id", "first_name", "last_name", "title", "dahili_no"],
+      });
+      if (fallbackManager) {
+        department.setDataValue("manager", fallbackManager);
+      }
+    }
+
     if (!department) {
       res
         .status(404)

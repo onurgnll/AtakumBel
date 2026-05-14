@@ -9,6 +9,24 @@ const getUploadedFiles = (req) => {
   return [];
 };
 
+/** Gün.aa.yyyy veya YYYY-MM-DD → YYYY-MM-DD; boş → null */
+function normalizeEventDate(dateStr) {
+  if (dateStr == null || String(dateStr).trim() === "") return null;
+  const s = String(dateStr).trim();
+  if (s.includes(".")) {
+    const [day, month, year] = s.split(".");
+    if (!year || !month || !day) return s.slice(0, 10);
+    return `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`.slice(0, 10);
+  }
+  return s.slice(0, 10);
+}
+
+function toYmdStored(v) {
+  if (v == null) return null;
+  if (v instanceof Date) return v.toISOString().slice(0, 10);
+  return normalizeEventDate(String(v));
+}
+
 //Read
 exports.getAllEvents = async (req, res, next) => {
   try {
@@ -49,7 +67,7 @@ exports.getAllEvents = async (req, res, next) => {
         events,
         pagination: getPagingData(count, req.query.page, limit),
       },
-      message: "Etkinlikler baÅŸarÄ±yla listelendi.",
+      message: "Etkinlikler başarıyla listelendi.",
     });
   } catch (err) {
     next(err);
@@ -65,14 +83,14 @@ exports.getEventById = async (req, res, next) => {
       ],
     });
     if (!event) {
-      res
+      return res
         .status(404)
-        .json({ success: 0, data: null, message: "Etkinlik bulunamadÄ±." });
+        .json({ success: 0, data: null, message: "Etkinlik bulunamadı." });
     }
-    res.json({
+    return res.json({
       success: 1,
       data: event,
-      message: "Etkinlik detaylarÄ± getirildi.",
+      message: "Etkinlik detayları getirildi.",
     });
   } catch (err) {
     next(err);
@@ -93,28 +111,45 @@ exports.updateEvent = async (req, res, next) => {
       address,
       description,
     } = req.body;
-    const formatDate = (dateStr) => {
-      if (!dateStr || !dateStr.includes(".")) return dateStr;
-      const [day, month, year] = dateStr.split(".");
-      return `${year}-${month}-${day}`;
-    };
     const event = await Event.findByPk(id);
     if (!event) {
       return res
         .status(404)
-        .json({ success: 0, data: null, message: "Etkinlik bulunamadÄ±." });
+        .json({ success: 0, data: null, message: "Etkinlik bulunamadı." });
+    }
+    const uploadedFiles = getUploadedFiles(req);
+    const nextStart =
+      start_date !== undefined
+        ? normalizeEventDate(start_date)
+        : toYmdStored(event.start_date);
+    const nextEnd =
+      end_date !== undefined
+        ? normalizeEventDate(end_date)
+        : toYmdStored(event.end_date);
+    if (nextStart && nextEnd && nextStart > nextEnd) {
+      uploadedFiles.forEach((file) => {
+        if (file?.path && fs.existsSync(file.path)) fs.unlinkSync(file.path);
+      });
+      return res.status(400).json({
+        success: 0,
+        data: null,
+        message: "Başlangıç tarihi bitiş tarihinden sonra olamaz.",
+      });
     }
     await event.update({
       title: title ?? event.title,
       type: type ?? event.type,
-      start_date: formatDate(start_date) ?? event.start_date,
-      end_date: formatDate(end_date) ?? event.end_date,
+      start_date:
+        start_date !== undefined
+          ? normalizeEventDate(start_date)
+          : event.start_date,
+      end_date:
+        end_date !== undefined ? normalizeEventDate(end_date) : event.end_date,
       event_time: event_time ?? event.event_time,
       address: address ?? event.address,
       description: description ?? event.description,
     });
 
-    const uploadedFiles = getUploadedFiles(req);
     if (uploadedFiles.length > 0) {
       transaction = await sequelize.transaction();
       await EventGallery.update(
@@ -142,7 +177,7 @@ exports.updateEvent = async (req, res, next) => {
     res.json({
       success: 1,
       data: event,
-      message: "Etkinlik baÅŸarÄ±yla gÃ¼ncellendi.",
+      message: "Etkinlik başarıyla güncellendi.",
     });
   } catch (err) {
     if (transaction) await transaction.rollback();
@@ -168,14 +203,21 @@ exports.createEvent = async (req, res, next) => {
       description,
     } = req.body;
 
-    const formatDate = (dateStr) => {
-      if (!dateStr || !dateStr.includes(".")) return dateStr;
-      const [day, month, year] = dateStr.split(".");
-      return `${year}-${month}-${day}`;
-    };
+    const uploadedFiles = getUploadedFiles(req);
+    const startNorm = normalizeEventDate(start_date);
+    const endNorm = normalizeEventDate(end_date);
+    if (startNorm && endNorm && startNorm > endNorm) {
+      uploadedFiles.forEach((file) => {
+        if (file?.path && fs.existsSync(file.path)) fs.unlinkSync(file.path);
+      });
+      return res.status(400).json({
+        success: 0,
+        data: null,
+        message: "Başlangıç tarihi bitiş tarihinden sonra olamaz.",
+      });
+    }
 
     const existingEvent = await Event.findOne({ where: { title } });
-    const uploadedFiles = getUploadedFiles(req);
     if (existingEvent) {
       uploadedFiles.forEach((file) => {
         if (file?.path && fs.existsSync(file.path)) fs.unlinkSync(file.path);
@@ -185,7 +227,7 @@ exports.createEvent = async (req, res, next) => {
         .json({
           success: 0,
           data: null,
-          message: "Bu baÅŸlÄ±kta bir etkinlik zaten var.",
+          message: "Bu başlıkta bir etkinlik zaten var.",
         });
     }
 
@@ -193,8 +235,8 @@ exports.createEvent = async (req, res, next) => {
     const newEvent = await Event.create({
       title,
       type,
-      start_date: formatDate(start_date),
-      end_date: formatDate(end_date),
+      start_date: startNorm,
+      end_date: endNorm,
       event_time,
       address,
       description,
@@ -219,7 +261,7 @@ exports.createEvent = async (req, res, next) => {
 
     res
       .status(201)
-      .json({ success: 1, data: newEvent, message: "Etkinlik oluÅŸturuldu." });
+      .json({ success: 1, data: newEvent, message: "Etkinlik oluşturuldu." });
   } catch (err) {
     if (transaction) await transaction.rollback();
     const uploadedFiles = getUploadedFiles(req);
@@ -240,7 +282,7 @@ exports.deleteEvent = async (req, res, next) => {
     if (!event) {
       return res
         .status(404)
-        .json({ success: 0, data: null, message: "Etkinlik bulunamadÄ±." });
+        .json({ success: 0, data: null, message: "Etkinlik bulunamadı." });
     }
     const imagesToDelete = event.gallery
       ? event.gallery.map((img) => img.image_url)
@@ -256,7 +298,7 @@ exports.deleteEvent = async (req, res, next) => {
     res.json({
       success: 1,
       data: null,
-      message: "Etkinlik ve galerisi baÅŸarÄ±yla silindi.",
+      message: "Etkinlik ve galerisi başarıyla silindi.",
     });
   } catch (err) {
     next(err);

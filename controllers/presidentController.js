@@ -40,7 +40,7 @@ exports.getPresident = async (req, res, next) => {
       return res.status(404).json({
         success: 0,
         data: null,
-        message: "BaÅŸkan bilgisi bulunamadÄ±.",
+        message: "Başkan bilgisi bulunamadı.",
       });
     }
     const departments = await Department.findAll({
@@ -52,7 +52,7 @@ exports.getPresident = async (req, res, next) => {
     res.json({
       success: 1,
       data: { ...plain, departments },
-      message: "BaÅŸkan bilgileri getirildi.",
+      message: "Başkan bilgileri getirildi.",
     });
   } catch (err) {
     next(err);
@@ -76,14 +76,14 @@ exports.getPresidentMessage = async (req, res, next) => {
       return res.status(404).json({
         success: 0,
         data: null,
-        message: "KayÄ±tlÄ± baÅŸkan mesajÄ± bulunamadÄ±.",
+        message: "Kayıtlı başkan mesajı bulunamadı.",
       });
     }
 
     return res.json({
       success: 1,
       data: president,
-      message: "GÃ¼ncel baÅŸkan mesajÄ± getirildi.",
+      message: "Güncel başkan mesajı getirildi.",
     });
   } catch (err) {
     next(err);
@@ -132,7 +132,7 @@ exports.upsertPresident = async (req, res, next) => {
           ? JSON.parse(social_media_accounts)
           : social_media_accounts;
       if (!Array.isArray(parsedSocialMedia)) {
-        throw new Error("social_media_accounts bir dizi olmalÄ±dÄ±r.");
+        throw new Error("social_media_accounts bir dizi olmalıdır.");
       }
     }
 
@@ -232,7 +232,7 @@ exports.upsertPresident = async (req, res, next) => {
     res.json({
       success: 1,
       data: merged,
-      message: "BaÅŸkan bilgileri baÅŸarÄ±yla gÃ¼ncellendi.",
+      message: "Başkan bilgileri başarıyla güncellendi.",
     });
   } catch (err) {
     const fileToCleanup =

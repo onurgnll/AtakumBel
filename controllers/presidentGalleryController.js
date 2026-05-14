@@ -13,7 +13,7 @@ exports.getPresidentGallery = async (req, res, next) => {
     res.json({
       success: 1,
       data: gallery,
-      message: "BaÅŸkan galeri gÃ¶rÃ¼ntÃ¼leri getirildi.",
+      message: "Başkan galeri görüntüleri getirildi.",
     });
   } catch (err) {
     next(err);
@@ -35,7 +35,7 @@ exports.addImagesToPresidentGallery = async (req, res, next) => {
     if (files.length === 0) {
       return res.status(400).json({
         success: 0,
-        message: "Dosya yÃ¼klenmedi. LÃ¼tfen gÃ¶rselleri seÃ§tiÄŸinizden emin olun.",
+        message: "Dosya yüklenmedi. Lütfen görselleri seçtiğinizden emin olun.",
       });
     }
     await PresidentGallery.update(
@@ -66,7 +66,7 @@ exports.addImagesToPresidentGallery = async (req, res, next) => {
     res.json({
       success: 1,
       data: newImages,
-      message: "GÃ¶rseller baÅŸarÄ±yla eklendi.",
+      message: "Görseller başarıyla eklendi.",
     });
   } catch (err) {
     if (req.files) {
@@ -103,7 +103,7 @@ exports.setMainImage = async (req, res, next) => {
     res.json({
       success: 1,
       data: PresidentGallery,
-      message: "Ana gÃ¶rsel gÃ¼ncellendi.",
+      message: "Ana görsel güncellendi.",
     });
   } catch (err) {
     await t.rollback();
@@ -121,7 +121,7 @@ exports.deletePresidentGalleryImage = async (req, res, next) => {
     if (!image) {
       return res
         .status(404)
-        .json({ success: 0, data: null, message: "Resim bulunamadÄ±." });
+        .json({ success: 0, data: null, message: "Resim bulunamadı." });
     }
 
     if (fs.existsSync(image.image_url)) {

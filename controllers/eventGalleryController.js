@@ -24,7 +24,7 @@ exports.addImageToGallery = async (req, res, next) => {
       return res.status(400).json({
         success: 0,
         data: null,
-        message: "Dosya yÃ¼klenmedi.",
+        message: "Dosya yüklenmedi.",
       });
     }
     const currentCount = await EventGallery.count({ where: { event_id } });
@@ -44,7 +44,7 @@ exports.addImageToGallery = async (req, res, next) => {
     res.json({
       success: 1,
       data: newImages,
-      message: "GÃ¶rseller baÅŸarÄ±yla eklendi.",
+      message: "Görseller başarıyla eklendi.",
     });
   } catch (err) {
     next(err);
@@ -60,14 +60,14 @@ exports.deleteGalleryImage = async (req, res, next) => {
     if (!image) {
       return res
         .status(404)
-        .json({ success: 0, data: null, message: "GÃ¶rsel bulunamadÄ±." });
+        .json({ success: 0, data: null, message: "Görsel bulunamadı." });
     }
     if (fs.existsSync(image.image_url)) {
       fs.unlinkSync(image.image_url);
     }
 
     await image.destroy();
-    res.json({ success: 1, data: null, message: "GÃ¶rsel baÅŸarÄ±yla silindi." });
+    res.json({ success: 1, data: null, message: "Görsel başarıyla silindi." });
   } catch (err) {
     next(err);
   }
@@ -93,7 +93,7 @@ exports.setMainImage = async (req, res, next) => {
     res.json({
       success: 1,
       data: EventGallery,
-      message: "Ana gÃ¶rsel gÃ¼ncellendi.",
+      message: "Ana görsel güncellendi.",
     });
   } catch (err) {
     await t.rollback();
