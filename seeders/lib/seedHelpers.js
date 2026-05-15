@@ -38,7 +38,7 @@ async function serviceIdByName(queryInterface, name) {
 async function councilDecisionIdByNo(queryInterface, decisionNo) {
   const id = await firstId(
     queryInterface.sequelize,
-    `SELECT id FROM "Council_Decisions" WHERE decision_no = :no ORDER BY id DESC LIMIT 1`,
+    `SELECT id FROM "Publications" WHERE record_type = 'council_decision' AND decision_no = :no ORDER BY id DESC LIMIT 1`,
     { no: decisionNo },
   );
   if (id == null) throw new Error(`Meclis kararı bulunamadı: ${decisionNo}`);

@@ -2,7 +2,7 @@ const {
   Department,
   Employee,
   VicePresident,
-  PublicNotice,
+  Publication,
   VicePresidentDepartment,
 } = require("../models");
 const { getPaginationParams, getPagingData } = require("../helpers/pagination");
@@ -136,8 +136,10 @@ exports.getDepartmentById = async (req, res, next) => {
           attributes: ["id", "first_name", "last_name"],
         },
         {
-          model: PublicNotice,
+          model: Publication,
           as: "public_notices",
+          where: { record_type: "public_notice" },
+          required: false,
           limit: 5,
           order: [["id", "DESC"]],
         },

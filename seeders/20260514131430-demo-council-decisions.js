@@ -6,8 +6,9 @@ const IMG = require("./data/demoSeedImageUrls");
 
 module.exports = {
   async up(queryInterface) {
-    await queryInterface.bulkInsert("Council_Decisions", [
+    await queryInterface.bulkInsert("Publications", [
       {
+        record_type: "council_decision",
         title: "Meclis Kararı — Sahil Düzenleme",
         description: "Sahil düzenleme projesi 1. etap karar açıklaması.",
         publish_date: "2026-04-12",
@@ -21,6 +22,7 @@ module.exports = {
         file_url: IMG.HERO_1,
       },
       {
+        record_type: "council_decision",
         title: "Meclis Kararı — Sosyal Destek",
         description: "Sosyal destek bütçe revizyon kararı.",
         publish_date: "2026-04-30",
@@ -37,7 +39,8 @@ module.exports = {
   },
 
   async down(queryInterface) {
-    await queryInterface.bulkDelete("Council_Decisions", {
+    await queryInterface.bulkDelete("Publications", {
+      record_type: "council_decision",
       decision_no: { [Sequelize.Op.in]: [C.COUNCIL_DECISION_NO_SAHIL, C.COUNCIL_DECISION_NO_SOSYAL] },
     });
   },

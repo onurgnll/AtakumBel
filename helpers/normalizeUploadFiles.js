@@ -54,7 +54,18 @@ function normalizeFiles(existingFiles, bodyFiles, uploaded) {
 }
 
 function collectUploadedFiles(req) {
-  if (req.files && Array.isArray(req.files) && req.files.length) return req.files;
+  if (req.files) {
+    if (Array.isArray(req.files) && req.files.length) return req.files;
+    const list = [];
+    const bucket = req.files;
+    for (const key of ["files", "file"]) {
+      if (!bucket[key]) continue;
+      const chunk = bucket[key];
+      if (Array.isArray(chunk)) list.push(...chunk);
+      else list.push(chunk);
+    }
+    if (list.length) return list;
+  }
   if (req.file) return [req.file];
   return [];
 }

@@ -1,26 +1,43 @@
 "use strict";
 const { Model } = require("sequelize");
+
+/** @typedef {'public_notice'|'tender'|'council_decision'|'real_estate_listing'} PublicationRecordType */
+
+const RECORD_TYPES = Object.freeze({
+  PUBLIC_NOTICE: "public_notice",
+  TENDER: "tender",
+  COUNCIL_DECISION: "council_decision",
+  REAL_ESTATE_LISTING: "real_estate_listing",
+});
+
 module.exports = (sequelize, DataTypes) => {
-  class PublicNotice extends Model {
+  class Publication extends Model {
+    static RECORD_TYPES = RECORD_TYPES;
+
     static associate(models) {
-      PublicNotice.belongsTo(models.Department, {
+      Publication.belongsTo(models.Department, {
         foreignKey: "department_id",
         as: "department",
-      });
-      PublicNotice.belongsTo(models.CouncilDecision, {
-        foreignKey: "decision_id",
-        as: "decision",
       });
     }
   }
 
-  PublicNotice.init(
+  Publication.init(
     {
       id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
+      },
+      record_type: {
+        type: DataTypes.ENUM(
+          RECORD_TYPES.PUBLIC_NOTICE,
+          RECORD_TYPES.TENDER,
+          RECORD_TYPES.COUNCIL_DECISION,
+          RECORD_TYPES.REAL_ESTATE_LISTING,
+        ),
+        allowNull: false,
       },
       title: {
         type: DataTypes.STRING,
@@ -72,15 +89,35 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: true,
       },
+      tender_number: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      decision_no: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      summary: {
+        type: DataTypes.TEXT,
+        allowNull: true,
+      },
+      full_text: {
+        type: DataTypes.TEXT,
+        allowNull: true,
+      },
+      date: {
+        type: DataTypes.DATEONLY,
+        allowNull: true,
+      },
     },
     {
       sequelize,
-      modelName: "PublicNotice",
-      tableName: "Public_Notices",
+      modelName: "Publication",
+      tableName: "Publications",
       timestamps: false,
       underscored: true,
     },
   );
 
-  return PublicNotice;
+  return Publication;
 };

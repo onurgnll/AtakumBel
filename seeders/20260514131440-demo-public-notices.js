@@ -17,8 +17,9 @@ module.exports = {
     const decSahil = await councilDecisionIdByNo(queryInterface, C.COUNCIL_DECISION_NO_SAHIL);
     const decSosyal = await councilDecisionIdByNo(queryInterface, C.COUNCIL_DECISION_NO_SOSYAL);
 
-    await queryInterface.bulkInsert("Public_Notices", [
+    await queryInterface.bulkInsert("Publications", [
       {
+        record_type: "public_notice",
         title: TITLES[0],
         description: "Sahil düzenleme yapım işi duyuru açıklaması.",
         publish_date: "2026-05-01",
@@ -34,6 +35,7 @@ module.exports = {
         decision_id: decSahil,
       },
       {
+        record_type: "public_notice",
         title: TITLES[1],
         description: "Sosyal destek programı başvuru duyurusu.",
         publish_date: "2026-06-01",
@@ -52,6 +54,9 @@ module.exports = {
   },
 
   async down(queryInterface) {
-    await queryInterface.bulkDelete("Public_Notices", { title: { [Sequelize.Op.in]: TITLES } });
+    await queryInterface.bulkDelete("Publications", {
+      record_type: "public_notice",
+      title: { [Sequelize.Op.in]: TITLES },
+    });
   },
 };

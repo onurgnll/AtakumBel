@@ -12,8 +12,9 @@ module.exports = {
     const fenId = await departmentIdByName(queryInterface, C.DEPT_NAME_FEN);
     const sosyalId = await departmentIdByName(queryInterface, C.DEPT_NAME_SOSYAL);
 
-    await queryInterface.bulkInsert("Tenders", [
+    await queryInterface.bulkInsert("Publications", [
       {
+        record_type: "tender",
         title: "İhale İlanı — Sahil Düzenleme",
         description: "Sahil düzenleme ihale ilanı.",
         publish_date: "2026-05-20",
@@ -25,6 +26,7 @@ module.exports = {
         tender_number: TENDER_NUMBERS[0],
       },
       {
+        record_type: "tender",
         title: "İhale İlanı — Sosyal Destek Hizmeti",
         description: "Sosyal destek hizmeti ihale duyurusu.",
         publish_date: "2026-06-01",
@@ -39,7 +41,8 @@ module.exports = {
   },
 
   async down(queryInterface) {
-    await queryInterface.bulkDelete("Tenders", {
+    await queryInterface.bulkDelete("Publications", {
+      record_type: "tender",
       tender_number: { [Sequelize.Op.in]: TENDER_NUMBERS },
     });
   },

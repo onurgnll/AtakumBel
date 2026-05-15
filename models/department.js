@@ -25,9 +25,15 @@ module.exports = (sequelize, DataTypes) => {
         otherKey: "vice_president_id",
         as: "vice_presidents",
       });
-      Department.hasMany(models.PublicNotice, {
+      Department.hasMany(models.Publication, {
         foreignKey: "department_id",
         as: "public_notices",
+        scope: { record_type: "public_notice" },
+      });
+      Department.hasMany(models.Publication, {
+        foreignKey: "department_id",
+        as: "tenders",
+        scope: { record_type: "tender" },
       });
     }
   }

@@ -10,16 +10,13 @@ const {
 /** İlk path segmenti (api sonrası) → Sequelize model adı (models/index) */
 const ROUTE_TO_MODEL = {
   news: "News",
-  "public-notices": "PublicNotice",
+  publications: "Publication",
   events: "Event",
   facilities: "Facility",
   departments: "Department",
   directives: "Directive",
   employees: "Employee",
   "council-members": "CouncilMember",
-  "council-decisions": "CouncilDecision",
-  tenders: "Tender",
-  "real-estate-listings": "RealEstateListing",
   "gathering-areas": "GatheringArea",
   "free-wifi-points": "FreeWifiPoint",
   "waste-points": "WastePoint",
