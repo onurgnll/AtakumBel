@@ -1,4 +1,4 @@
-﻿const { News, NewsGallery, sequelize } = require("../models");
+const { PressRelease, PressReleaseGallery, sequelize } = require("../models");
 
 const SPOT_MAX_LEN = 50;
 const { getPaginationParams, getPagingData } = require("../helpers/pagination");
@@ -26,9 +26,7 @@ function coerceBoolean(value, whenMissing) {
   return Boolean(value);
 }
 
-
-//Read
-exports.getAllNews = async (req, res, next) => {
+exports.getAllPressReleases = async (req, res, next) => {
   try {
     const { limit, offset } = getPaginationParams(
       req.query.page,
@@ -43,14 +41,14 @@ exports.getAllNews = async (req, res, next) => {
         { spot: { [Op.iLike]: `%${search}%` } },
       ];
     }
-    const { rows: news, count } = await News.findAndCountAll({
+    const { rows: press_releases, count } = await PressRelease.findAndCountAll({
       where: whereCondition,
       attributes: { exclude: ["content"] },
       limit,
       offset,
       include: [
         {
-          model: NewsGallery,
+          model: PressReleaseGallery,
           as: "gallery",
           required: false,
         },
@@ -62,44 +60,43 @@ exports.getAllNews = async (req, res, next) => {
     return res.json({
       success: 1,
       data: {
-        news,
+        press_releases,
         pagination: getPagingData(count, req.query.page, limit),
       },
-      message: "haberler (özet) listelendi.",
+      message: "Basın bültenleri (özet) listelendi.",
     });
   } catch (err) {
     next(err);
   }
 };
 
-exports.getNewsById = async (req, res, next) => {
+exports.getPressReleaseById = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const newsItem = await News.findByPk(id, {
-      include: [{ model: NewsGallery, as: "gallery" }],
+    const item = await PressRelease.findByPk(id, {
+      include: [{ model: PressReleaseGallery, as: "gallery" }],
     });
 
-    if (!newsItem) {
+    if (!item) {
       return res.status(404).json({
         success: 0,
         data: null,
-        message: "Görüntülenecek haber bulunamadı.",
+        message: "Görüntülenecek basın bülteni bulunamadı.",
       });
     }
 
-    await newsItem.increment("view_count", { by: 1 });
+    await item.increment("view_count", { by: 1 });
     return res.json({
       success: 1,
-      data: newsItem,
-      message: "Haber detayı ve tam içeriği getirildi.",
+      data: item,
+      message: "Basın bülteni detayı getirildi.",
     });
   } catch (err) {
     next(err);
   }
 };
 
-//Create
-exports.createNews = async (req, res, next) => {
+exports.createPressRelease = async (req, res, next) => {
   let transaction;
   try {
     const { title, spot, content, is_active, files } = req.body;
@@ -121,33 +118,38 @@ exports.createNews = async (req, res, next) => {
         message: `Spot (özet) en fazla ${SPOT_MAX_LEN} karakter olabilir.`,
       });
     }
-    const existingNews = await News.findOne({ where: { title } });
-    if (existingNews) {
+    const existing = await PressRelease.findOne({ where: { title } });
+    if (existing) {
       unlinkUploadedFiles(req);
       return res.status(400).json({
         success: 0,
         data: null,
-        message: "Bu başlıkta bir haber zaten var.",
+        message: "Bu başlıkta bir basın bülteni zaten var.",
       });
     }
     transaction = await sequelize.transaction();
-    const newNews = await News.create({
-      title,
-      spot,
-      content,
-      publish_date: new Date(),
-      is_active: coerceBoolean(is_active, true),
-      view_count: 0,
-      files: normalizeFiles([], files, docUploads),
-    }, { transaction });
+    const created = await PressRelease.create(
+      {
+        title,
+        spot,
+        content,
+        publish_date: new Date(),
+        is_active: coerceBoolean(is_active, true),
+        view_count: 0,
+        files: normalizeFiles([], files, docUploads),
+      },
+      { transaction },
+    );
 
     if (galleryUploads.length > 0) {
       await Promise.all(
         galleryUploads.map((file, index) =>
-          NewsGallery.create(
+          PressReleaseGallery.create(
             {
-              news_id: newNews.id,
-              image_url: file.path.replace(/\\/g, "/").replace(/^.*?(\/uploads\/)/, "/uploads/"),
+              press_release_id: created.id,
+              image_url: file.path
+                .replace(/\\/g, "/")
+                .replace(/^.*?(\/uploads\/)/, "/uploads/"),
               order: index + 1,
               is_main: index === 0,
             },
@@ -158,9 +160,11 @@ exports.createNews = async (req, res, next) => {
     }
     await transaction.commit();
 
-    return res
-      .status(201)
-      .json({ success: 1, data: newNews, message: "Haber eklendi." });
+    return res.status(201).json({
+      success: 1,
+      data: created,
+      message: "Basın bülteni eklendi.",
+    });
   } catch (err) {
     if (transaction) await transaction.rollback();
     unlinkUploadedFiles(req);
@@ -168,18 +172,17 @@ exports.createNews = async (req, res, next) => {
   }
 };
 
-//Update
-exports.updateNews = async (req, res, next) => {
+exports.updatePressRelease = async (req, res, next) => {
   let transaction;
   try {
     const { id } = req.params;
-    const newsItem = await News.findByPk(id);
+    const item = await PressRelease.findByPk(id);
     const { title, spot, content, is_active, files } = req.body;
-    if (!newsItem) {
+    if (!item) {
       return res.status(404).json({
         success: 0,
         data: null,
-        message: "Güncellenecek haber bulunamadı.",
+        message: "Güncellenecek basın bülteni bulunamadı.",
       });
     }
     if (spot !== undefined && spot !== null) {
@@ -200,7 +203,7 @@ exports.updateNews = async (req, res, next) => {
       }
     }
     const docUploads = collectUploadedFiles(req);
-    const prevFiles = Array.isArray(newsItem.files) ? newsItem.files : [];
+    const prevFiles = Array.isArray(item.files) ? item.files : [];
     const nextFiles =
       files !== undefined || docUploads.length
         ? normalizeFiles(prevFiles, files, docUploads)
@@ -209,29 +212,33 @@ exports.updateNews = async (req, res, next) => {
       syncRemovedAttachmentFiles(prevFiles, nextFiles);
     }
 
-    await newsItem.update({
-      title: title ?? newsItem.title,
-      spot: spot ?? newsItem.spot,
-      content: content ?? newsItem.content,
-      is_active: coerceBoolean(is_active, newsItem.is_active),
+    await item.update({
+      title: title ?? item.title,
+      spot: spot ?? item.spot,
+      content: content ?? item.content,
+      is_active: coerceBoolean(is_active, item.is_active),
       files: nextFiles,
     });
 
     const galleryUploads = collectGalleryImages(req);
     if (galleryUploads.length > 0) {
       transaction = await sequelize.transaction();
-      await NewsGallery.update(
+      await PressReleaseGallery.update(
         { is_main: false },
-        { where: { news_id: newsItem.id, is_main: true }, transaction },
+        { where: { press_release_id: item.id, is_main: true }, transaction },
       );
-      const maxOrder = await NewsGallery.max("order", { where: { news_id: newsItem.id } });
+      const maxOrder = await PressReleaseGallery.max("order", {
+        where: { press_release_id: item.id },
+      });
       const startOrder = Number(maxOrder) > 0 ? Number(maxOrder) + 1 : 1;
       await Promise.all(
         galleryUploads.map((file, index) =>
-          NewsGallery.create(
+          PressReleaseGallery.create(
             {
-              news_id: newsItem.id,
-              image_url: file.path.replace(/\\/g, "/").replace(/^.*?(\/uploads\/)/, "/uploads/"),
+              press_release_id: item.id,
+              image_url: file.path
+                .replace(/\\/g, "/")
+                .replace(/^.*?(\/uploads\/)/, "/uploads/"),
               order: startOrder + index,
               is_main: index === 0,
             },
@@ -244,8 +251,8 @@ exports.updateNews = async (req, res, next) => {
 
     return res.json({
       success: 1,
-      data: newsItem,
-      message: "Haber güncellendi.",
+      data: item,
+      message: "Basın bülteni güncellendi.",
     });
   } catch (err) {
     if (transaction) await transaction.rollback();
@@ -254,28 +261,27 @@ exports.updateNews = async (req, res, next) => {
   }
 };
 
-// Delete
-exports.deleteNews = async (req, res, next) => {
+exports.deletePressRelease = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const newsItem = await News.findByPk(id, {
-      include: [{ model: NewsGallery, as: "gallery" }],
+    const item = await PressRelease.findByPk(id, {
+      include: [{ model: PressReleaseGallery, as: "gallery" }],
     });
 
-    if (!newsItem) {
+    if (!item) {
       return res.status(404).json({
         success: 0,
         data: null,
-        message: "Silinecek haber bulunamadı.",
+        message: "Silinecek basın bülteni bulunamadı.",
       });
     }
 
-    const imagesToDelete = newsItem.gallery
-      ? newsItem.gallery.map((img) => img.image_url)
+    const imagesToDelete = item.gallery
+      ? item.gallery.map((img) => img.image_url)
       : [];
-    const filesToDelete = Array.isArray(newsItem.files) ? newsItem.files : [];
+    const filesToDelete = Array.isArray(item.files) ? item.files : [];
 
-    await newsItem.destroy();
+    await item.destroy();
 
     imagesToDelete.forEach((path) => {
       if (path && fs.existsSync(path)) {
@@ -287,10 +293,9 @@ exports.deleteNews = async (req, res, next) => {
     return res.json({
       success: 1,
       data: null,
-      message: "Haber başarıyla silindi.",
+      message: "Basın bülteni silindi.",
     });
   } catch (err) {
     next(err);
   }
 };
-

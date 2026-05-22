@@ -8,6 +8,7 @@ const {
   normalizeFiles,
   collectUploadedFiles,
   unlinkUploadedFiles,
+  deleteStoredFilePaths,
 } = require("../helpers/normalizeUploadFiles");
 
 function dateOnly(v) {
@@ -135,10 +136,14 @@ function buildCreatePayload(recordType, body, uploaded) {
         date: dateOnly(date),
         summary: summary || description || null,
         full_text: full_text || null,
+        department_id: parseOptionalInt(department_id),
       };
     }
     case "real_estate_listing":
-      return base;
+      return {
+        ...base,
+        department_id: parseOptionalInt(department_id),
+      };
     default:
       return base;
   }
@@ -213,9 +218,11 @@ function applyUpdate(row, body, uploaded) {
       if (date !== undefined) patch.date = dateOnly(date);
       if (summary !== undefined) patch.summary = summary || null;
       if (full_text !== undefined) patch.full_text = full_text || null;
+      if (department_id !== undefined) patch.department_id = parseOptionalInt(department_id);
       break;
     case "real_estate_listing":
       if (description !== undefined) patch.description = description;
+      if (department_id !== undefined) patch.department_id = parseOptionalInt(department_id);
       break;
     default:
       break;
@@ -391,13 +398,10 @@ exports.updatePublication = async (req, res, next) => {
       });
     }
 
-    if (row.record_type === "public_notice" && req.body.files !== undefined) {
+    if (req.body.files !== undefined || uploaded.length) {
       const previousFiles = Array.isArray(row.files) ? row.files : [];
       const nextFiles = patch.files ?? previousFiles;
-      const removedFiles = previousFiles.filter((p) => !nextFiles.includes(p));
-      removedFiles.forEach((filePath) => {
-        if (filePath && fs.existsSync(filePath)) fs.unlinkSync(filePath);
-      });
+      deleteStoredFilePaths(previousFiles.filter((p) => !nextFiles.includes(p)));
     }
 
     await row.update(patch);

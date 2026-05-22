@@ -1,5 +1,6 @@
-﻿const { CouncilMember } = require("../models");
+﻿const { CouncilMember, sequelize } = require("../models");
 const { getPaginationParams, getPagingData } = require("../helpers/pagination");
+const { reorderByIds, getNextSortOrder } = require("../helpers/reorderEntities");
 const fs = require("fs");
 const { Op } = require("sequelize");
 
@@ -24,7 +25,10 @@ exports.getAllCouncilMembers = async (req, res, next) => {
       where: whereCondition,
       limit,
       offset,
-      order: [["id", "ASC"]],
+      order: [
+        ["order", "ASC"],
+        ["id", "ASC"],
+      ],
     });
     return res.json({
       success: 1,
@@ -57,11 +61,13 @@ exports.addMemberToCouncil = async (req, res, next) => {
       });
     }
     const image_path = req.file ? req.file.path.replace(/\\/g, "/").replace(/^.*?(\/uploads\/)/, "/uploads/") : null;
+    const nextOrder = await getNextSortOrder(CouncilMember);
     const member = await CouncilMember.create({
       first_name,
       last_name,
       political_party,
       image_url: image_path,
+      order: nextOrder,
     });
 
     return res.status(201).json({
@@ -108,6 +114,35 @@ exports.updateMember = async (req, res, next) => {
       message: "Meclis üyesi bilgileri başarıyla güncellendi.",
     });
   } catch (err) {
+    next(err);
+  }
+};
+
+exports.reorderCouncilMembers = async (req, res, next) => {
+  const t = await sequelize.transaction();
+  try {
+    const { ids } = req.body;
+    await reorderByIds(CouncilMember, ids, t);
+    await t.commit();
+    const members = await CouncilMember.findAll({
+      order: [
+        ["order", "ASC"],
+        ["id", "ASC"],
+      ],
+    });
+    return res.json({
+      success: 1,
+      data: { members },
+      message: "Sıralama güncellendi.",
+    });
+  } catch (err) {
+    await t.rollback();
+    if (err.code === "INVALID_IDS" || err.code === "INCOMPLETE_LIST") {
+      return res.status(400).json({ success: 0, data: null, message: err.message });
+    }
+    if (err.code === "NOT_FOUND") {
+      return res.status(404).json({ success: 0, data: null, message: err.message });
+    }
     next(err);
   }
 };

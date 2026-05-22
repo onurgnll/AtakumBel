@@ -3,8 +3,16 @@ const router = express.Router();
 const vicePresidentController = require("../controllers/vicePresidentController");
 const { protect, authorize } = require("../middlewares/authMiddleware");
 const upload = require("../middlewares/upload");
+const { reorderIdsBody } = require("../validators/commonValidator");
 
 router.get("/", vicePresidentController.getAllVicePresidents);
+router.patch(
+  "/reorder",
+  protect,
+  authorize("vicePresidents", "update"),
+  reorderIdsBody,
+  vicePresidentController.reorderVicePresidents,
+);
 router.post(
   "/",
   protect,

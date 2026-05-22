@@ -5,6 +5,7 @@
   sequelize,
 } = require("../models");
 const { getPaginationParams, getPagingData } = require("../helpers/pagination");
+const { reorderByIds, getNextSortOrder } = require("../helpers/reorderEntities");
 const fs = require("fs");
 const { Op } = require("sequelize");
 
@@ -84,6 +85,10 @@ exports.getAllVicePresidents = async (req, res, next) => {
         limit,
         offset,
         distinct: true,
+        order: [
+          ["order", "ASC"],
+          ["id", "ASC"],
+        ],
         include: [
           {
             model: Department,
@@ -139,12 +144,14 @@ exports.createVicePresident = async (req, res, next) => {
 
     const image_path = req.file ? req.file.path.replace(/\\/g, "/").replace(/^.*?(\/uploads\/)/, "/uploads/") : null;
 
+    const nextOrder = await getNextSortOrder(VicePresident, t);
     const newVicePresident = await VicePresident.create({
       first_name,
       last_name,
       biography,
       department_id: null,
       image_url: image_path,
+      order: nextOrder,
     }, { transaction: t });
 
     const parsedDepartmentIds = parseDepartmentIds(department_ids, department_id);
@@ -286,6 +293,43 @@ exports.updateVicePresident = async (req, res, next) => {
     });
   } catch (err) {
     await t.rollback();
+    next(err);
+  }
+};
+
+exports.reorderVicePresidents = async (req, res, next) => {
+  const t = await sequelize.transaction();
+  try {
+    const { ids } = req.body;
+    await reorderByIds(VicePresident, ids, t);
+    await t.commit();
+    const vice_presidents = await VicePresident.findAll({
+      order: [
+        ["order", "ASC"],
+        ["id", "ASC"],
+      ],
+      include: [
+        {
+          model: Department,
+          as: "departments",
+          attributes: ["id", "name"],
+          through: { attributes: [] },
+        },
+      ],
+    });
+    return res.json({
+      success: 1,
+      data: { vice_presidents },
+      message: "Sıralama güncellendi.",
+    });
+  } catch (err) {
+    await t.rollback();
+    if (err.code === "INVALID_IDS" || err.code === "INCOMPLETE_LIST") {
+      return res.status(400).json({ success: 0, data: null, message: err.message });
+    }
+    if (err.code === "NOT_FOUND") {
+      return res.status(404).json({ success: 0, data: null, message: err.message });
+    }
     next(err);
   }
 };

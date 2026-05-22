@@ -1,5 +1,8 @@
+const fs = require("fs");
+const path = require("path");
 const {
   Department,
+  DepartmentDocument,
   Employee,
   VicePresident,
   Publication,
@@ -143,6 +146,13 @@ exports.getDepartmentById = async (req, res, next) => {
           limit: 5,
           order: [["id", "DESC"]],
         },
+        {
+          model: DepartmentDocument,
+          as: "documents",
+          where: { is_active: true },
+          required: false,
+          order: [["id", "DESC"]],
+        },
       ],
     });
 
@@ -154,7 +164,7 @@ exports.getDepartmentById = async (req, res, next) => {
           is_unit_manager: true,
         },
         order: [["id", "ASC"]],
-        attributes: ["id", "first_name", "last_name", "title", "dahili_no"],
+        attributes: ["id", "first_name", "last_name", "title","image_url", "dahili_no"],
       });
       if (fallbackManager) {
         department.setDataValue("manager", fallbackManager);
@@ -162,12 +172,12 @@ exports.getDepartmentById = async (req, res, next) => {
     }
 
     if (!department) {
-      res
+      return res
         .status(404)
         .json({ success: 0, data: null, message: "Birim bulunamadı." });
     }
 
-    res.json({
+    return res.json({
       success: 1,
       data: department,
       message: "Birim detayları getirildi.",
@@ -273,6 +283,19 @@ exports.deleteDepartment = async (req, res, next) => {
         data: null,
         message: "Silinecek birim bulunamadı.",
       });
+    }
+    const docs = await DepartmentDocument.findAll({ where: { department_id: id } });
+    for (const doc of docs) {
+      const files = Array.isArray(doc.files) ? doc.files : [];
+      for (const filePath of files) {
+        if (!filePath || typeof filePath !== "string") continue;
+        const normalized = filePath.replace(/\\/g, "/");
+        const relative = normalized.startsWith("/uploads/")
+          ? `public${normalized}`
+          : normalized.replace(/^\/+/, "");
+        const absPath = path.resolve(process.cwd(), relative);
+        if (fs.existsSync(absPath)) fs.unlinkSync(absPath);
+      }
     }
     await department.destroy();
     return res.json({

@@ -150,4 +150,21 @@ const authorizeSuperAdmin = (req, res, next) => {
   });
 };
 
-module.exports = { protect, authorize, authorizeSuperAdmin };
+/** Geçerli Bearer token varsa req.admin doldurur; yoksa veya geçersizse isteği kesmez. */
+const optionalProtect = async (req, res, next) => {
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith("Bearer") &&
+    process.env.JWT_SECRET
+  ) {
+    try {
+      const token = req.headers.authorization.split(" ")[1];
+      req.admin = jwt.verify(token, process.env.JWT_SECRET);
+    } catch {
+      // Public endpoint: invalid token is ignored
+    }
+  }
+  return next();
+};
+
+module.exports = { protect, optionalProtect, authorize, authorizeSuperAdmin };

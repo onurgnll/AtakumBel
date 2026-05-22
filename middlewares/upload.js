@@ -46,4 +46,11 @@ const upload = multer({
   },
 });
 
+const contentWithAttachmentsUpload = upload.fields([
+  { name: "images", maxCount: 10 },
+  { name: "files", maxCount: 25 },
+  { name: "document", maxCount: 25 },
+]);
+
 module.exports = upload;
+module.exports.contentWithAttachmentsUpload = contentWithAttachmentsUpload;

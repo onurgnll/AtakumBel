@@ -35,6 +35,10 @@ module.exports = (sequelize, DataTypes) => {
         as: "tenders",
         scope: { record_type: "tender" },
       });
+      Department.hasMany(models.DepartmentDocument, {
+        foreignKey: "department_id",
+        as: "documents",
+      });
     }
   }
 

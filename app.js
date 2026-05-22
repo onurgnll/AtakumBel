@@ -23,6 +23,9 @@ app.use("/api", routes);
 
 app.use((err, req, res, next) => {
   logger.error(`HATA: ${req.method} ${req.url} - ${err.message}`);
+  if (res.headersSent) {
+    return next(err);
+  }
   res.status(500).json({
     success: 0,
     message: err.message || "Sunucu tarafında beklenmedik bir hata oluştu.",

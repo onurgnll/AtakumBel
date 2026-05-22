@@ -1,13 +1,15 @@
 ﻿const { Event, EventGallery, sequelize } = require("../models");
 const { getPaginationParams, getPagingData } = require("../helpers/pagination");
+const {
+  normalizeFiles,
+  collectUploadedFiles,
+  collectGalleryImages,
+  unlinkUploadedFiles,
+  deleteStoredFilePaths,
+  syncRemovedAttachmentFiles,
+} = require("../helpers/normalizeUploadFiles");
 const fs = require("fs");
 const { Op } = require("sequelize");
-
-const getUploadedFiles = (req) => {
-  if (Array.isArray(req.files) && req.files.length > 0) return req.files;
-  if (req.file) return [req.file];
-  return [];
-};
 
 /** Gün.aa.yyyy veya YYYY-MM-DD → YYYY-MM-DD; boş → null */
 function normalizeEventDate(dateStr) {
@@ -117,7 +119,7 @@ exports.updateEvent = async (req, res, next) => {
         .status(404)
         .json({ success: 0, data: null, message: "Etkinlik bulunamadı." });
     }
-    const uploadedFiles = getUploadedFiles(req);
+    const galleryUploads = collectGalleryImages(req);
     const nextStart =
       start_date !== undefined
         ? normalizeEventDate(start_date)
@@ -127,15 +129,25 @@ exports.updateEvent = async (req, res, next) => {
         ? normalizeEventDate(end_date)
         : toYmdStored(event.end_date);
     if (nextStart && nextEnd && nextStart > nextEnd) {
-      uploadedFiles.forEach((file) => {
-        if (file?.path && fs.existsSync(file.path)) fs.unlinkSync(file.path);
-      });
+      unlinkUploadedFiles(req);
       return res.status(400).json({
         success: 0,
         data: null,
         message: "Başlangıç tarihi bitiş tarihinden sonra olamaz.",
       });
     }
+
+    const { files } = req.body;
+    const docUploads = collectUploadedFiles(req);
+    const prevFiles = Array.isArray(event.files) ? event.files : [];
+    const nextFiles =
+      files !== undefined || docUploads.length
+        ? normalizeFiles(prevFiles, files, docUploads)
+        : prevFiles;
+    if (files !== undefined || docUploads.length) {
+      syncRemovedAttachmentFiles(prevFiles, nextFiles);
+    }
+
     await event.update({
       title: title ?? event.title,
       type: type ?? event.type,
@@ -148,9 +160,10 @@ exports.updateEvent = async (req, res, next) => {
       event_time: event_time ?? event.event_time,
       address: address ?? event.address,
       description: description ?? event.description,
+      files: nextFiles,
     });
 
-    if (uploadedFiles.length > 0) {
+    if (galleryUploads.length > 0) {
       transaction = await sequelize.transaction();
       await EventGallery.update(
         { is_main: false },
@@ -159,7 +172,7 @@ exports.updateEvent = async (req, res, next) => {
       const maxOrder = await EventGallery.max("order", { where: { event_id: event.id } });
       const startOrder = Number(maxOrder) > 0 ? Number(maxOrder) + 1 : 1;
       await Promise.all(
-        uploadedFiles.map((file, index) =>
+        galleryUploads.map((file, index) =>
           EventGallery.create(
             {
               event_id: event.id,
@@ -181,10 +194,7 @@ exports.updateEvent = async (req, res, next) => {
     });
   } catch (err) {
     if (transaction) await transaction.rollback();
-    const uploadedFiles = getUploadedFiles(req);
-    uploadedFiles.forEach((file) => {
-      if (file?.path && fs.existsSync(file.path)) fs.unlinkSync(file.path);
-    });
+    unlinkUploadedFiles(req);
     next(err);
   }
 };
@@ -201,15 +211,15 @@ exports.createEvent = async (req, res, next) => {
       event_time,
       address,
       description,
+      files,
     } = req.body;
 
-    const uploadedFiles = getUploadedFiles(req);
+    const galleryUploads = collectGalleryImages(req);
+    const docUploads = collectUploadedFiles(req);
     const startNorm = normalizeEventDate(start_date);
     const endNorm = normalizeEventDate(end_date);
     if (startNorm && endNorm && startNorm > endNorm) {
-      uploadedFiles.forEach((file) => {
-        if (file?.path && fs.existsSync(file.path)) fs.unlinkSync(file.path);
-      });
+      unlinkUploadedFiles(req);
       return res.status(400).json({
         success: 0,
         data: null,
@@ -219,9 +229,7 @@ exports.createEvent = async (req, res, next) => {
 
     const existingEvent = await Event.findOne({ where: { title } });
     if (existingEvent) {
-      uploadedFiles.forEach((file) => {
-        if (file?.path && fs.existsSync(file.path)) fs.unlinkSync(file.path);
-      });
+      unlinkUploadedFiles(req);
       return res
         .status(400)
         .json({
@@ -240,11 +248,12 @@ exports.createEvent = async (req, res, next) => {
       event_time,
       address,
       description,
+      files: normalizeFiles([], files, docUploads),
     }, { transaction });
 
-    if (uploadedFiles.length > 0) {
+    if (galleryUploads.length > 0) {
       await Promise.all(
-        uploadedFiles.map((file, index) =>
+        galleryUploads.map((file, index) =>
           EventGallery.create(
             {
               event_id: newEvent.id,
@@ -264,10 +273,7 @@ exports.createEvent = async (req, res, next) => {
       .json({ success: 1, data: newEvent, message: "Etkinlik oluşturuldu." });
   } catch (err) {
     if (transaction) await transaction.rollback();
-    const uploadedFiles = getUploadedFiles(req);
-    uploadedFiles.forEach((file) => {
-      if (file?.path && fs.existsSync(file.path)) fs.unlinkSync(file.path);
-    });
+    unlinkUploadedFiles(req);
     next(err);
   }
 };
@@ -287,6 +293,7 @@ exports.deleteEvent = async (req, res, next) => {
     const imagesToDelete = event.gallery
       ? event.gallery.map((img) => img.image_url)
       : [];
+    const filesToDelete = Array.isArray(event.files) ? event.files : [];
     await event.destroy();
 
     imagesToDelete.forEach((path) => {
@@ -294,6 +301,7 @@ exports.deleteEvent = async (req, res, next) => {
         fs.unlinkSync(path);
       }
     });
+    deleteStoredFilePaths(filesToDelete);
 
     res.json({
       success: 1,

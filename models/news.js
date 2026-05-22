@@ -42,6 +42,11 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
+      files: {
+        type: DataTypes.JSONB,
+        allowNull: true,
+        defaultValue: [],
+      },
     },
     {
       sequelize,

@@ -5,11 +5,12 @@ const { protect, authorize } = require("../middlewares/authMiddleware");
 const { idParam, paginationQuery } = require("../validators/commonValidator");
 const { requireBody } = require("../validators/moduleValidators");
 const upload = require("../middlewares/upload");
+const contentUpload = upload.contentWithAttachmentsUpload;
 
 router.get("/", paginationQuery, eventController.getAllEvents);
 router.get("/:id", idParam(), eventController.getEventById);
-router.post("/", protect, authorize("events"), upload.array("images", 10), requireBody, eventController.createEvent);
-router.put("/:id", protect, authorize("events"), idParam(), upload.array("images", 10), eventController.updateEvent);
+router.post("/", protect, authorize("events"), contentUpload, requireBody, eventController.createEvent);
+router.put("/:id", protect, authorize("events"), idParam(), contentUpload, eventController.updateEvent);
 router.delete(
   "/:id",
   protect,

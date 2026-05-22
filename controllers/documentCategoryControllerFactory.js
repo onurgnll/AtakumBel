@@ -23,6 +23,15 @@ const deleteFileIfExists = (rawPath) => {
   if (absPath && fs.existsSync(absPath)) fs.unlinkSync(absPath);
 };
 
+const coerceBool = (v, defaultVal = true) => {
+  if (v === undefined || v === null || v === "") return defaultVal;
+  if (typeof v === "boolean") return v;
+  const s = String(v).toLowerCase();
+  if (s === "true" || s === "1") return true;
+  if (s === "false" || s === "0") return false;
+  return defaultVal;
+};
+
 const normalizeFiles = (existingFiles, uploadedFiles, bodyFiles) => {
   const hasBodyFiles = bodyFiles !== undefined && bodyFiles !== null;
   const files = hasBodyFiles ? [] : Array.isArray(existingFiles) ? [...existingFiles] : [];
@@ -48,28 +57,41 @@ const normalizeFiles = (existingFiles, uploadedFiles, bodyFiles) => {
   return files;
 };
 
-module.exports = function buildDocumentCategoryController(Model, labels) {
+module.exports = function buildDocumentCategoryController(Model, labels, options = {}) {
   const { listMessage, createMessage, updateMessage, deleteMessage, notFoundMessage } =
     labels;
+  const {
+    foreignKey,
+    foreignKeyRequired = false,
+    include = [],
+    publicActiveOnly = false,
+  } = options;
 
   return {
     async getAll(req, res, next) {
       try {
         const { limit, offset } = getPaginationParams(req.query.page, req.query.per_page);
         const search = req.query.search ? req.query.search.trim() : null;
-        const whereCondition = search
-          ? {
-              [Op.or]: [
-                { title: { [Op.iLike]: `%${search}%` } },
-                { description: { [Op.iLike]: `%${search}%` } },
-              ],
-            }
-          : {};
+        const whereCondition = {};
+        if (search) {
+          whereCondition[Op.or] = [
+            { title: { [Op.iLike]: `%${search}%` } },
+            { description: { [Op.iLike]: `%${search}%` } },
+          ];
+        }
+        if (foreignKey && req.query[foreignKey]) {
+          whereCondition[foreignKey] = Number(req.query[foreignKey]);
+        }
+        if (publicActiveOnly && !req.admin) {
+          whereCondition.is_active = true;
+        }
         const { rows, count } = await Model.findAndCountAll({
           where: whereCondition,
           limit,
           offset,
           order: [["id", "DESC"]],
+          include,
+          distinct: include.length > 0,
         });
         return res.json({
           success: 1,
@@ -84,10 +106,18 @@ module.exports = function buildDocumentCategoryController(Model, labels) {
     async create(req, res, next) {
       try {
         const { title, description, publish_date, is_active, files } = req.body;
+        const foreignValue = foreignKey ? req.body[foreignKey] : undefined;
         if (!title) {
           return res
             .status(400)
             .json({ success: 0, data: null, message: "title zorunludur." });
+        }
+        if (foreignKeyRequired && (foreignValue === undefined || foreignValue === "")) {
+          return res.status(400).json({
+            success: 0,
+            data: null,
+            message: `${foreignKey} zorunludur.`,
+          });
         }
         const uploadedFiles = getUploadedFiles(req);
 
@@ -95,8 +125,11 @@ module.exports = function buildDocumentCategoryController(Model, labels) {
           title,
           description: description || null,
           publish_date: publish_date || null,
-          is_active: is_active ?? true,
+          is_active: coerceBool(is_active, true),
           files: normalizeFiles([], uploadedFiles, files),
+          ...(foreignKey && foreignValue !== undefined && foreignValue !== ""
+            ? { [foreignKey]: Number(foreignValue) }
+            : {}),
         });
 
         return res.status(201).json({ success: 1, data: item, message: createMessage });
@@ -123,18 +156,26 @@ module.exports = function buildDocumentCategoryController(Model, labels) {
         }
 
         const { title, description, publish_date, is_active, files } = req.body;
+        const foreignValue = foreignKey ? req.body[foreignKey] : undefined;
         const uploadedFiles = getUploadedFiles(req);
 
         const prevFiles = Array.isArray(item.files) ? item.files : [];
         const nextFiles = normalizeFiles(prevFiles, uploadedFiles, files);
 
-        await item.update({
+        const patch = {
           title: title ?? item.title,
           description: description ?? item.description,
           publish_date: publish_date ?? item.publish_date,
-          is_active: is_active ?? item.is_active,
+          is_active:
+            is_active !== undefined && is_active !== null && is_active !== ""
+              ? coerceBool(is_active, item.is_active)
+              : item.is_active,
           files: nextFiles,
-        });
+        };
+        if (foreignKey && foreignValue !== undefined && foreignValue !== "") {
+          patch[foreignKey] = Number(foreignValue);
+        }
+        await item.update(patch);
 
         prevFiles
           .filter((existingPath) => !nextFiles.includes(existingPath))

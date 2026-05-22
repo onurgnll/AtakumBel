@@ -10,6 +10,7 @@ const {
 /** İlk path segmenti (api sonrası) → Sequelize model adı (models/index) */
 const ROUTE_TO_MODEL = {
   news: "News",
+  "press-releases": "PressRelease",
   publications: "Publication",
   events: "Event",
   facilities: "Facility",
@@ -29,9 +30,13 @@ const ROUTE_TO_MODEL = {
   "audit-reports": "AuditReport",
   "strategic-plans": "StrategicPlan",
   "kvkk-documents": "KvkkDocument",
+  "department-documents": "DepartmentDocument",
+  "institution-history": "InstitutionHistory",
+  "workplace-licenses": "WorkplaceLicense",
   services: "Service",
   suggestions: "Suggestion",
   "news-galleries": "NewsGallery",
+  "press-release-galleries": "PressReleaseGallery",
   "event-galleries": "EventGallery",
   "facility-galleries": "FacilityGallery",
   "president-galleries": "PresidentGallery",
@@ -46,6 +51,20 @@ const ROUTE_TO_MODEL = {
 const POST_UPSERT_LOADERS = {
   president: async (models) => {
     const row = await models.President.findOne({
+      order: [["id", "DESC"]],
+      raw: true,
+    });
+    return row || null;
+  },
+  "institution-history": async (models) => {
+    const row = await models.InstitutionHistory.findOne({
+      order: [["id", "DESC"]],
+      raw: true,
+    });
+    return row || null;
+  },
+  "workplace-licenses": async (models) => {
+    const row = await models.WorkplaceLicense.findOne({
       order: [["id", "DESC"]],
       raw: true,
     });

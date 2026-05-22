@@ -3,7 +3,7 @@ const getPaginationParams = (page, per_page) => {
   const parsedPage = page ? Number.parseInt(page, 10) : 1;
   const limit = Number.isNaN(parsedLimit)
     ? 20
-    : Math.max(1, Math.min(parsedLimit, 100));
+    : Math.max(1, Math.min(parsedLimit, 500));
   const safePage = Number.isNaN(parsedPage) ? 1 : Math.max(1, parsedPage);
   const offset = (safePage - 1) * limit;
 

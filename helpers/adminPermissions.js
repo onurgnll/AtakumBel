@@ -15,6 +15,7 @@ const PERMISSION_MODULES = [
   "tenders",
   "realEstateListings",
   "news",
+  "pressReleases",
   "events",
   "facilities",
   "suggestions",
@@ -27,8 +28,11 @@ const PERMISSION_MODULES = [
   "auditReports",
   "strategicPlans",
   "kvkkDocuments",
+  "departmentDocuments",
   "adminAuditLogs",
   "contentPopups",
+  "institutionHistory",
+  "workplaceLicenses",
 ];
 
 const createCrudPermissions = (value = false) => ({

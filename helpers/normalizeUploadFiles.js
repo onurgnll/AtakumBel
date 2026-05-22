@@ -58,7 +58,7 @@ function collectUploadedFiles(req) {
     if (Array.isArray(req.files) && req.files.length) return req.files;
     const list = [];
     const bucket = req.files;
-    for (const key of ["files", "file"]) {
+    for (const key of ["files", "file", "document"]) {
       if (!bucket[key]) continue;
       const chunk = bucket[key];
       if (Array.isArray(chunk)) list.push(...chunk);
@@ -75,10 +75,47 @@ function unlinkUploadedFiles(req) {
   for (const f of collectUploadedFiles(req)) {
     if (f?.path && fs.existsSync(f.path)) fs.unlinkSync(f.path);
   }
+  for (const f of collectGalleryImages(req)) {
+    if (f?.path && fs.existsSync(f.path)) fs.unlinkSync(f.path);
+  }
+}
+
+/** Multipart `images` alanı (galeri görselleri) */
+function collectGalleryImages(req) {
+  if (!req.files) return [];
+  if (Array.isArray(req.files)) return req.files;
+  const imgs = req.files.images;
+  if (!imgs) return [];
+  return Array.isArray(imgs) ? imgs : [imgs];
+}
+
+function deleteStoredFilePaths(paths) {
+  const fs = require("fs");
+  const path = require("path");
+  if (!Array.isArray(paths)) return;
+  for (const rawPath of paths) {
+    if (!rawPath || typeof rawPath !== "string") continue;
+    const normalized = rawPath.replace(/\\/g, "/");
+    const relative = normalized.startsWith("/uploads/")
+      ? `public${normalized}`
+      : normalized.replace(/^\/+/, "");
+    const absPath = path.resolve(process.cwd(), relative);
+    if (fs.existsSync(absPath)) fs.unlinkSync(absPath);
+  }
+}
+
+function syncRemovedAttachmentFiles(previousFiles, nextFiles) {
+  const prev = Array.isArray(previousFiles) ? previousFiles : [];
+  const next = Array.isArray(nextFiles) ? nextFiles : [];
+  const removed = prev.filter((p) => !next.includes(p));
+  deleteStoredFilePaths(removed);
 }
 
 module.exports = {
   normalizeFiles,
   collectUploadedFiles,
+  collectGalleryImages,
   unlinkUploadedFiles,
+  deleteStoredFilePaths,
+  syncRemovedAttachmentFiles,
 };

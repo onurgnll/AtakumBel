@@ -33,7 +33,7 @@ const paginationQuery = [
   query("per_page")
     .optional()
     .isInt({ min: 1, max: 500 })
-    .withMessage("per_page değeri 1-100 aralığında olmalıdır."),
+    .withMessage("per_page değeri 1-500 aralığında olmalıdır."),
   handleValidation,
 ];
 
@@ -79,10 +79,21 @@ const requireFields = (fields = []) => [
   handleValidation,
 ];
 
+const reorderIdsBody = [
+  body("ids")
+    .isArray({ min: 1 })
+    .withMessage("ids dizisi zorunludur ve en az bir öğe içermelidir."),
+  body("ids.*")
+    .isInt({ min: 1 })
+    .withMessage("ids dizisindeki her değer pozitif bir sayı olmalıdır."),
+  handleValidation,
+];
+
 module.exports = {
   handleValidation,
   idParam,
   paginationQuery,
   requireBody,
   requireFields,
+  reorderIdsBody,
 };
