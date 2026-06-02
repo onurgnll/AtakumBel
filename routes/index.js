@@ -39,6 +39,7 @@ const photoGalleryRoutes = require("./photoGalleryRoutes");
 const contentPopupRoutes = require("./contentPopupRoutes");
 const institutionHistoryRoutes = require("./institutionHistoryRoutes");
 const workplaceLicenseRoutes = require("./workplaceLicenseRoutes");
+const searchRoutes = require("./searchRoutes");
 
 // Rotaları ana router'a bağlıyoruz
 router.use("/admin", adminRoutes);
@@ -78,5 +79,6 @@ router.use("/photo-gallery", photoGalleryRoutes);
 router.use("/content-popups", contentPopupRoutes);
 router.use("/institution-history", institutionHistoryRoutes);
 router.use("/workplace-licenses", workplaceLicenseRoutes);
+router.use("/search", searchRoutes);
 
 module.exports = router;
