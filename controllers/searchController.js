@@ -4,6 +4,7 @@ const {
   President,
   PressRelease,
   Service,
+  Project,
   Publication,
   PressMaterial,
   Directive,
@@ -118,27 +119,27 @@ exports.searchAll = async (req, res, next) => {
         model: Service,
         activeFilter: false,
         fields: ["name", "content"],
-        attributes: ["id", "name"],
+        attributes: ["id", "name", "content" ],
         order: [["id", "DESC"]],
         titleField: "name",
         subtitleStatic: "Hizmet",
       },
       {
-        kind: "service_form",
-        model: ServiceForm,
+        kind: "project",
+        model: Project,
         activeFilter: false,
-        fields: ["form_name", "file_path"],
-        attributes: ["id", "service_id", "form_name", "file_path"],
+        fields: ["name", "content"],
+        attributes: ["id", "name", "content"],
         order: [["id", "DESC"]],
-        titleField: "form_name",
-        subtitleField: "file_path",
+        titleField: "name",
+        subtitleStatic: "Proje",
       },
       {
         kind: "publication",
         model: Publication,
         activeFilter: true,
         fields: ["title", "description", "content", "summary", "full_text", "tender_number", "decision_no"],
-        attributes: ["id", "record_type", "title", "publish_date", "is_active"],
+        attributes: ["id", "record_type", "title", "publish_date", "is_active", "description", "content", "summary", "full_text", "tender_number", "decision_no"],
         order: [["publish_date", "DESC"]],
         subtitleField: "record_type",
         dateField: "publish_date",
@@ -157,7 +158,7 @@ exports.searchAll = async (req, res, next) => {
         model: Facility,
         activeFilter: false,
         fields: ["name", "address", "description"],
-        attributes: ["id", "name", "address"],
+        attributes: ["id", "name", "address", "description"],
         order: [["id", "DESC"]],
         titleField: "name",
         subtitleField: "address",
@@ -167,8 +168,11 @@ exports.searchAll = async (req, res, next) => {
         model: Department,
         activeFilter: false,
         fields: ["name", "description", "address"],
-        attributes: ["id", "name"],
-        order: [["id", "ASC"]],
+        attributes: ["id", "name", "description", "address"],
+        order: [
+          ["order", "ASC"],
+          ["id", "ASC"],
+        ],
         titleField: "name",
         subtitleStatic: "Müdürlük",
       },
@@ -240,7 +244,7 @@ exports.searchAll = async (req, res, next) => {
         model: WorkplaceLicense,
         activeFilter: false,
         fields: ["content"],
-        attributes: ["id"],
+        attributes: ["id", "content"],
         order: [["id", "DESC"]],
         titleStatic: "İşyeri Ruhsatı",
       },
@@ -249,7 +253,7 @@ exports.searchAll = async (req, res, next) => {
         model: InstitutionHistory,
         activeFilter: false,
         fields: ["content"],
-        attributes: ["id"],
+        attributes: ["id", "content"],
         order: [["id", "DESC"]],
         titleStatic: "Kurum Tarihçesi",
       },
@@ -274,24 +278,17 @@ exports.searchAll = async (req, res, next) => {
       {
         kind: "employee",
         model: Employee,
+        requiresAdmin: true,
         activeFilter: true,
         fields: ["first_name", "last_name", "title", "dahili_no"],
         attributes: ["id", "first_name", "last_name", "title", "dahili_no", "department_id", "is_active"],
         order: [["id", "ASC"]],
         subtitleField: "title",
       },
-      {
-        kind: "gathering_area",
-        model: GatheringArea,
-        activeFilter: false,
-        fields: ["name"],
-        attributes: ["id", "name"],
-        order: [["id", "ASC"]],
-      },
     ];
 
     const resultsEntries = await Promise.all(
-      queries.map(async (cfg) => {
+      queries.filter((cfg) => (cfg.requiresAdmin ? isAdmin : true)).map(async (cfg) => {
         let where = { [Op.or]: buildILikeOr(cfg.fields, q) };
         if (cfg.activeFilter) where = applyIsActiveFilter(where, isAdmin);
 
@@ -307,36 +304,11 @@ exports.searchAll = async (req, res, next) => {
 
     const results = Object.fromEntries(resultsEntries);
 
-    const suggestions = queries.flatMap((cfg) => {
-      const rows = results[cfg.kind] ?? [];
-      return rows.map((row) => {
-        const raw = row?.get ? row.get({ plain: true }) : row;
-        const title =
-          cfg.titleStatic ??
-          (cfg.titleField ? raw?.[cfg.titleField] : raw?.title) ??
-          (raw?.first_name || raw?.last_name
-            ? [raw?.first_name, raw?.last_name].filter(Boolean).join(" ")
-            : undefined) ??
-          String(raw?.id ?? "");
-        const subtitle =
-          cfg.subtitleStatic ?? (cfg.subtitleField ? raw?.[cfg.subtitleField] : undefined);
-        const date = cfg.dateField ? raw?.[cfg.dateField] : undefined;
-        return {
-          kind: cfg.kind,
-          id: raw?.id,
-          title,
-          subtitle,
-          date,
-        };
-      });
-    });
-
     return res.json({
       success: 1,
       data: {
         query: q,
         results,
-        suggestions,
       },
       message: "Arama sonuçları getirildi.",
     });

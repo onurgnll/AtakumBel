@@ -34,6 +34,7 @@ const ROUTE_TO_MODEL = {
   "institution-history": "InstitutionHistory",
   "workplace-licenses": "WorkplaceLicense",
   services: "Service",
+  projects: "Project",
   suggestions: "Suggestion",
   "news-galleries": "NewsGallery",
   "press-release-galleries": "PressReleaseGallery",

@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const adminController = require("../controllers/adminController");
 const adminAuditLogController = require("../controllers/adminAuditLogController");
+const adminDashboardController = require("../controllers/adminDashboardController");
 const authController = require("../controllers/authController");
 const { protect, authorize, authorizeSuperAdmin } = require("../middlewares/authMiddleware");
 const {
@@ -24,6 +25,8 @@ router.post("/login", loginValidation, authController.login);
 router.use(protect);
 
 router.get("/me", adminController.getMe);
+router.get("/dashboard/system", adminDashboardController.getSystemInfo);
+router.get("/dashboard/activity", adminDashboardController.getActivity);
 router.get(
   "/audit-logs",
   authorize("adminAuditLogs", "read"),

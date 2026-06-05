@@ -62,6 +62,18 @@ async function ensureDepartmentsUnassigned(departmentIds, currentVicePresidentId
   return conflicts.map((item) => item.department?.name || `ID:${item.department_id}`);
 }
 
+function sortLinkedDepartments(records) {
+  for (const record of records) {
+    const depts = record.departments;
+    if (!Array.isArray(depts) || depts.length < 2) continue;
+    depts.sort((a, b) => {
+      const byOrder = (a.order ?? 0) - (b.order ?? 0);
+      return byOrder !== 0 ? byOrder : a.id - b.id;
+    });
+  }
+  return records;
+}
+
 //Read
 exports.getAllVicePresidents = async (req, res, next) => {
   try {
@@ -93,11 +105,12 @@ exports.getAllVicePresidents = async (req, res, next) => {
           {
             model: Department,
             as: "departments",
-            attributes: ["id", "name"],
+            attributes: ["id", "name", "order"],
             through: { attributes: [] },
           },
         ],
       });
+    sortLinkedDepartments(vice_presidents);
     if (vice_presidents.length === 0) {
       return res.json({
         success: 1,
@@ -312,11 +325,12 @@ exports.reorderVicePresidents = async (req, res, next) => {
         {
           model: Department,
           as: "departments",
-          attributes: ["id", "name"],
+          attributes: ["id", "name", "order"],
           through: { attributes: [] },
         },
       ],
     });
+    sortLinkedDepartments(vice_presidents);
     return res.json({
       success: 1,
       data: { vice_presidents },

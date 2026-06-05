@@ -7,8 +7,10 @@ const {
   VicePresident,
   Publication,
   VicePresidentDepartment,
+  sequelize,
 } = require("../models");
 const { getPaginationParams, getPagingData } = require("../helpers/pagination");
+const { reorderByIds, getNextSortOrder } = require("../helpers/reorderEntities");
 const { Op } = require("sequelize");
 
 //Read
@@ -33,7 +35,10 @@ exports.getAllDepartments = async (req, res, next) => {
       where: whereCondition,
       limit,
       offset,
-      order: [["name", "ASC"]],
+      order: [
+        ["order", "ASC"],
+        ["id", "ASC"],
+      ],
       include: [
         {
           model: VicePresident,
@@ -210,12 +215,14 @@ exports.createDepartment = async (req, res, next) => {
       });
     }
     const presidentFlag = coerceBool(reports_to_president, false);
+    const nextOrder = await getNextSortOrder(Department);
     const newDepartment = await Department.create({
       name,
       description,
       address,
       manager_employee_id: manager_employee_id || null,
       reports_to_president: presidentFlag,
+      order: nextOrder,
     });
     return res
       .status(201)
@@ -268,6 +275,51 @@ exports.updateDepartment = async (req, res, next) => {
       message: "Birim bilgisi güncellendi",
     });
   } catch (err) {
+    next(err);
+  }
+};
+
+exports.reorderDepartments = async (req, res, next) => {
+  const t = await sequelize.transaction();
+  try {
+    const { ids } = req.body;
+    await reorderByIds(Department, ids, t);
+    await t.commit();
+    const departments = await Department.findAll({
+      order: [
+        ["order", "ASC"],
+        ["id", "ASC"],
+      ],
+      include: [
+        {
+          model: VicePresident,
+          as: "vice_presidents",
+          attributes: ["id", "first_name", "last_name"],
+          through: { attributes: [] },
+          required: false,
+        },
+        {
+          model: Employee,
+          as: "manager",
+          required: false,
+          where: { is_active: true },
+          attributes: ["id", "first_name", "last_name", "title", "dahili_no"],
+        },
+      ],
+    });
+    return res.json({
+      success: 1,
+      data: { departments },
+      message: "Sıralama güncellendi.",
+    });
+  } catch (err) {
+    await t.rollback();
+    if (err.code === "INVALID_IDS" || err.code === "INCOMPLETE_LIST") {
+      return res.status(400).json({ success: 0, data: null, message: err.message });
+    }
+    if (err.code === "NOT_FOUND") {
+      return res.status(404).json({ success: 0, data: null, message: err.message });
+    }
     next(err);
   }
 };

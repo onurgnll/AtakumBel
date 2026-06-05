@@ -46,7 +46,10 @@ exports.getPresident = async (req, res, next) => {
     const departments = await Department.findAll({
       where: { reports_to_president: true },
       attributes: ["id", "name"],
-      order: [["name", "ASC"]],
+      order: [
+        ["order", "ASC"],
+        ["id", "ASC"],
+      ],
     });
     const plain = president.get({ plain: true });
     res.json({
@@ -225,7 +228,10 @@ exports.upsertPresident = async (req, res, next) => {
     const departments = await Department.findAll({
       where: { reports_to_president: true },
       attributes: ["id", "name"],
-      order: [["name", "ASC"]],
+      order: [
+        ["order", "ASC"],
+        ["id", "ASC"],
+      ],
     });
     const merged = { ...president.get({ plain: true }), departments };
 
