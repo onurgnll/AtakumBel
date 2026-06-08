@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const serviceFormController = require("../controllers/ServiceFormController");
+const serviceFormController = require("../controllers/serviceFormController");
 const { protect, authorize } = require("../middlewares/authMiddleware");
 const { paginationQuery } = require("../validators/commonValidator");
 const upload = require("../middlewares/upload");
