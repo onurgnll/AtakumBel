@@ -10,7 +10,7 @@ const requestGuard = (req, res, next) => {
     if (!body || typeof body !== "object" || Array.isArray(body)) {
       return res.status(400).json({
         success: 0,
-        message: "Geçerli bir request body gönderilmelidir.",
+        message: "Geçerli bir istek gövdesi gönderilmelidir.",
       });
     }
 
@@ -20,7 +20,7 @@ const requestGuard = (req, res, next) => {
     if (!hasAnyValue) {
       return res.status(400).json({
         success: 0,
-        message: "Request body en az bir dolu alan içermelidir.",
+        message: "İstek gövdesi en az bir dolu alan içermelidir.",
       });
     }
   }
@@ -31,7 +31,7 @@ const requestGuard = (req, res, next) => {
     if (!possibleId || !isPositiveInteger(possibleId)) {
       return res.status(400).json({
         success: 0,
-        message: "İşlem için geçerli bir id parametresi gereklidir.",
+        message: "İşlem için geçerli bir kimlik parametresi gereklidir.",
       });
     }
   }
@@ -41,7 +41,7 @@ const requestGuard = (req, res, next) => {
     if (page !== undefined && (!isPositiveInteger(String(page)) || Number(page) < 1)) {
       return res.status(400).json({
         success: 0,
-        message: "page değeri 1 veya daha büyük bir sayı olmalıdır.",
+        message: "Sayfa numarası 1 veya daha büyük olmalıdır.",
       });
     }
     if (
@@ -50,7 +50,7 @@ const requestGuard = (req, res, next) => {
     ) {
       return res.status(400).json({
         success: 0,
-        message: "per_page değeri 1-100 aralığında olmalıdır.",
+        message: "Sayfa başına kayıt sayısı 1-500 aralığında olmalıdır.",
       });
     }
   }

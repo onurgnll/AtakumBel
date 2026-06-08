@@ -2,19 +2,23 @@ const express = require("express");
 const router = express.Router();
 const controller = require("../controllers/pressReleaseController");
 const { protect, authorize } = require("../middlewares/authMiddleware");
-const { idParam, paginationQuery } = require("../validators/commonValidator");
-const { requireBody } = require("../validators/moduleValidators");
+const { idParam } = require("../validators/commonValidator");
+const {
+  pressReleaseCreateValidation,
+  pressReleaseUpdateValidation,
+  listWithSearchQuery,
+} = require("../validators/moduleValidators");
 const upload = require("../middlewares/upload");
 const contentUpload = upload.contentWithAttachmentsUpload;
 
-router.get("/", paginationQuery, controller.getAllPressReleases);
+router.get("/", listWithSearchQuery, controller.getAllPressReleases);
 router.get("/:id", idParam(), controller.getPressReleaseById);
 router.post(
   "/",
   protect,
   authorize("pressReleases"),
   contentUpload,
-  requireBody,
+  pressReleaseCreateValidation,
   controller.createPressRelease,
 );
 router.put(
@@ -23,6 +27,7 @@ router.put(
   authorize("pressReleases"),
   idParam(),
   contentUpload,
+  pressReleaseUpdateValidation,
   controller.updatePressRelease,
 );
 router.delete(

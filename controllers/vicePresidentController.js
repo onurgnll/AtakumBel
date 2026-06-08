@@ -187,7 +187,7 @@ exports.createVicePresident = async (req, res, next) => {
       return res.status(409).json({
         success: 0,
         data: null,
-        message: `Bu mudurlukler baska bir baskan yardimcisina bagli: ${conflictingDepartments.join(", ")}`,
+        message: `Bu müdürlükler başka bir başkan yardımcısına bağlı: ${conflictingDepartments.join(", ")}`,
       });
     }
 
@@ -271,7 +271,7 @@ exports.updateVicePresident = async (req, res, next) => {
         return res.status(409).json({
           success: 0,
           data: null,
-          message: `Bu mudurlukler baska bir baskan yardimcisina bagli: ${conflictingDepartments.join(", ")}`,
+          message: `Bu müdürlükler başka bir başkan yardımcısına bağlı: ${conflictingDepartments.join(", ")}`,
         });
       }
 

@@ -5,7 +5,10 @@ const { protect } = require("../middlewares/authMiddleware");
 const { authorizePublication } = require("../middlewares/authorizePublication");
 const upload = require("../middlewares/upload");
 const { idParam, handleValidation } = require("../validators/commonValidator");
-const { requireBody, requireFields } = require("../validators/commonValidator");
+const {
+  publicationCreateValidation,
+  publicationUpdateValidation,
+} = require("../validators/moduleValidators");
 const { query } = require("express-validator");
 
 const publicationUpload = upload.fields([
@@ -17,22 +20,23 @@ const publicationListQuery = [
   query("page")
     .optional()
     .isInt({ min: 1 })
-    .withMessage("page değeri 1 veya daha büyük bir sayı olmalıdır."),
+    .withMessage("Sayfa numarası 1 veya daha büyük olmalıdır."),
   query("per_page")
     .optional()
     .isInt({ min: 1, max: 500 })
-    .withMessage("per_page değeri 1-500 aralığında olmalıdır."),
-  query("search").optional().isString().withMessage("search metin olmalıdır."),
-  query("record_type").optional().isString().withMessage("record_type metin olmalıdır."),
+    .withMessage("Sayfa başına kayıt sayısı 1-500 aralığında olmalıdır."),
+  query("search")
+    .optional()
+    .isString()
+    .trim()
+    .isLength({ max: 200 })
+    .withMessage("Arama metni en fazla 200 karakter olabilir."),
+  query("record_type").optional().isString().withMessage("Kayıt türü metin olmalıdır."),
   query("is_active")
     .optional()
     .isIn(["true", "false", "1", "0"])
-    .withMessage("is_active true veya false olmalıdır."),
+    .withMessage("Aktiflik durumu doğru veya yanlış olmalıdır."),
   handleValidation,
-];
-
-const publicationCreateValidation = [
-  ...requireFields(["title", "record_type"]),
 ];
 
 router.get("/", publicationListQuery, publicationController.getAllPublications);
@@ -53,7 +57,7 @@ router.put(
   authorizePublication,
   idParam(),
   publicationUpload,
-  requireBody,
+  publicationUpdateValidation,
   publicationController.updatePublication,
 );
 

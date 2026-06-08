@@ -10,7 +10,7 @@ exports.getMe = async (req, res, next) => {
       attributes: { exclude: ["password", "totp_secret"] },
     });
     if (!admin) {
-      return res.status(404).json({ success: 0, message: "Admin bulunamadı." });
+      return res.status(404).json({ success: 0, message: "Yönetici bulunamadı." });
     }
     res.json({ success: 1, data: admin, message: "Profil bilgileri getirildi." });
   } catch (err) {
@@ -56,7 +56,7 @@ exports.updateAdmin = async (req, res, next) => {
 
     const admin = await Admin.findByPk(id);
     if (!admin) {
-      return res.status(404).json({ success: 0, message: "Admin bulunamadı." });
+      return res.status(404).json({ success: 0, message: "Yönetici bulunamadı." });
     }
 
     const updateData = {
@@ -98,7 +98,7 @@ exports.deleteAdmin = async (req, res, next) => {
     const admin = await Admin.findByPk(id);
 
     if (!admin) {
-      return res.status(404).json({ success: 0, message: "Admin bulunamadı." });
+      return res.status(404).json({ success: 0, message: "Yönetici bulunamadı." });
     }
 
     await admin.destroy();

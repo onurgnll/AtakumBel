@@ -9,7 +9,7 @@ function parsePresidentDepartmentIds(rawValue) {
   const parsed =
     typeof rawValue === "string" ? JSON.parse(rawValue) : rawValue;
   if (!Array.isArray(parsed)) {
-    throw new Error("president_department_ids bir dizi olmalidir.");
+    throw new Error("Başkan müdürlük kimlikleri bir dizi olmalıdır.");
   }
   return Array.from(
     new Set(
@@ -27,7 +27,7 @@ function parseJsonArrayField(rawValue, fallback = []) {
   const parsed =
     typeof rawValue === "string" ? JSON.parse(rawValue) : rawValue;
   if (!Array.isArray(parsed)) {
-    throw new Error("Beklenen alan dizi formatinda olmali.");
+    throw new Error("Beklenen alan dizi formatında olmalıdır.");
   }
   return parsed;
 }
@@ -135,7 +135,7 @@ exports.upsertPresident = async (req, res, next) => {
           ? JSON.parse(social_media_accounts)
           : social_media_accounts;
       if (!Array.isArray(parsedSocialMedia)) {
-        throw new Error("social_media_accounts bir dizi olmalıdır.");
+        throw new Error("Sosyal medya hesapları bir dizi olmalıdır.");
       }
     }
 

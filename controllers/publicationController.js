@@ -2,6 +2,7 @@ const { Publication, Department } = require("../models");
 const { getPaginationParams, getPagingData } = require("../helpers/pagination");
 const { sortDateLiteral, pickSortDate } = require("../helpers/publicationSortDate");
 const { isValidRecordType, RECORD_TYPES } = require("../helpers/publicationPermissions");
+const { labelRecordTypes } = require("../helpers/errorLabels");
 const fs = require("fs");
 const { Op } = require("sequelize");
 const {
@@ -49,7 +50,7 @@ function parseRecordTypeFilter(raw) {
   const invalid = types.filter((t) => !isValidRecordType(t));
   if (invalid.length) {
     const err = new Error(
-      `Geçersiz record_type: ${invalid.join(", ")}. İzin verilenler: ${RECORD_TYPES.join(", ")}`,
+      `Geçersiz kayıt türü: ${labelRecordTypes(invalid)}. Geçerli türler: ${labelRecordTypes(RECORD_TYPES)}`,
     );
     err.status = 400;
     throw err;
@@ -333,14 +334,14 @@ exports.createPublication = async (req, res, next) => {
       return res.status(400).json({
         success: 0,
         data: null,
-        message: `record_type zorunludur (${RECORD_TYPES.join(", ")}).`,
+        message: `Kayıt türü zorunludur. Geçerli türler: ${labelRecordTypes(RECORD_TYPES)}.`,
       });
     }
     if (!req.body.title) {
       return res.status(400).json({
         success: 0,
         data: null,
-        message: "title zorunludur.",
+        message: "Başlık zorunludur.",
       });
     }
 

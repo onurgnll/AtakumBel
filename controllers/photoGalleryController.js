@@ -44,7 +44,7 @@ exports.createPhotos = async (req, res, next) => {
       return res.status(400).json({
         success: 0,
         data: null,
-        message: "Yuklenecek gorsel bulunamadi.",
+        message: "Yüklenecek görsel bulunamadı.",
       });
     }
 
@@ -79,7 +79,7 @@ exports.deletePhoto = async (req, res, next) => {
       return res.status(404).json({
         success: 0,
         data: null,
-        message: "Gorsel bulunamadi.",
+        message: "Görsel bulunamadı.",
       });
     }
 

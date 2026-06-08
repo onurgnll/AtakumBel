@@ -2,6 +2,7 @@
 const path = require("path");
 const { getPaginationParams, getPagingData } = require("../helpers/pagination");
 const { Op } = require("sequelize");
+const { labelField } = require("../helpers/errorLabels");
 
 const getUploadedFiles = (req) => {
   if (Array.isArray(req.files) && req.files.length > 0) return req.files;
@@ -110,13 +111,13 @@ module.exports = function buildDocumentCategoryController(Model, labels, options
         if (!title) {
           return res
             .status(400)
-            .json({ success: 0, data: null, message: "title zorunludur." });
+            .json({ success: 0, data: null, message: "Başlık zorunludur." });
         }
         if (foreignKeyRequired && (foreignValue === undefined || foreignValue === "")) {
           return res.status(400).json({
             success: 0,
             data: null,
-            message: `${foreignKey} zorunludur.`,
+            message: `${labelField(foreignKey)} zorunludur.`,
           });
         }
         const uploadedFiles = getUploadedFiles(req);

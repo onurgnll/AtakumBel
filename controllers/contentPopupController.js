@@ -69,7 +69,7 @@ exports.getContentPopupById = async (req, res, next) => {
     const { id } = req.params;
     const row = await ContentPopup.findByPk(id);
     if (!row) {
-      return res.status(404).json({ success: 0, data: null, message: "Popup bulunamadı." });
+      return res.status(404).json({ success: 0, data: null, message: "Açılır pencere bulunamadı." });
     }
     return res.json({ success: 1, data: row, message: "Popup detayı." });
   } catch (err) {
@@ -117,7 +117,7 @@ exports.updateContentPopup = async (req, res, next) => {
     const row = await ContentPopup.findByPk(id);
     if (!row) {
       if (req.file?.path && fs.existsSync(req.file.path)) fs.unlinkSync(req.file.path);
-      return res.status(404).json({ success: 0, data: null, message: "Popup bulunamadı." });
+      return res.status(404).json({ success: 0, data: null, message: "Açılır pencere bulunamadı." });
     }
 
     const {
@@ -164,7 +164,7 @@ exports.deleteContentPopup = async (req, res, next) => {
     const { id } = req.params;
     const row = await ContentPopup.findByPk(id);
     if (!row) {
-      return res.status(404).json({ success: 0, data: null, message: "Popup bulunamadı." });
+      return res.status(404).json({ success: 0, data: null, message: "Açılır pencere bulunamadı." });
     }
     if (row.image_url) unlinkIfExists(row.image_url);
     await row.destroy();

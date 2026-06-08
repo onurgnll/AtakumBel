@@ -57,7 +57,7 @@ exports.searchAll = async (req, res, next) => {
       return res.status(400).json({
         success: 0,
         data: null,
-        message: "Arama için `q` parametresi zorunludur.",
+        message: "Arama için sorgu parametresi zorunludur.",
       });
     }
 

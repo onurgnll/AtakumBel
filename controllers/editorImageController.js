@@ -3,7 +3,7 @@ exports.uploadEditorImage = async (req, res) => {
     return res.status(400).json({
       success: 0,
       data: null,
-      message: "Yuklenecek gorsel bulunamadi.",
+      message: "Yüklenecek görsel bulunamadı.",
     });
   }
 

@@ -5,7 +5,10 @@ const router = express.Router();
 const gatheringAreaController = require("../controllers/gatheringAreaController");
 const { protect, authorize } = require("../middlewares/authMiddleware");
 const { idParam, paginationQuery } = require("../validators/commonValidator");
-const { requireBody } = require("../validators/moduleValidators");
+const {
+  mapPointCreateValidation,
+  mapPointUpdateValidation,
+} = require("../validators/moduleValidators");
 
 router.get("/", paginationQuery, gatheringAreaController.getAllGatheringAreas);
 router.get("/:id", idParam(), gatheringAreaController.getGatheringAreaById);
@@ -13,7 +16,7 @@ router.post(
   "/",
   protect,
   authorize("mapPoints"),
-  requireBody,
+  mapPointCreateValidation,
   gatheringAreaController.createGatheringArea,
 );
 router.put(
@@ -21,7 +24,7 @@ router.put(
   protect,
   authorize("mapPoints"),
   idParam(),
-  requireBody,
+  mapPointUpdateValidation,
   gatheringAreaController.updateGatheringArea,
 );
 router.delete(
@@ -33,4 +36,3 @@ router.delete(
 );
 
 module.exports = router;
-

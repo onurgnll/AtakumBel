@@ -6,6 +6,7 @@ const {
   isValidRecordType,
   permissionModuleForRecordType,
 } = require("../helpers/publicationPermissions");
+const { labelRecordType } = require("../helpers/errorLabels");
 
 async function resolveRecordType(req) {
   const fromBody = req.body?.record_type;
@@ -39,14 +40,14 @@ const authorizePublication = async (req, res, next) => {
       return res.status(400).json({
         success: 0,
         data: null,
-        message: "record_type zorunludur.",
+        message: "Kayıt türü zorunludur.",
       });
     }
     if (!isValidRecordType(recordType)) {
       return res.status(400).json({
         success: 0,
         data: null,
-        message: `Geçersiz record_type: ${recordType}`,
+        message: `Geçersiz kayıt türü: ${labelRecordType(recordType)}`,
       });
     }
 

@@ -1,4 +1,5 @@
 const { body, param, query, validationResult } = require("express-validator");
+const { labelField } = require("../helpers/errorLabels");
 
 const handleValidation = (req, res, next) => {
   const errors = validationResult(req);
@@ -18,10 +19,10 @@ const handleValidation = (req, res, next) => {
 const idParam = (name = "id") => [
   param(name)
     .exists()
-    .withMessage(`${name} parametresi zorunludur.`)
+    .withMessage(`${labelField(name)} parametresi zorunludur.`)
     .bail()
     .isInt({ min: 1 })
-    .withMessage(`${name} pozitif bir sayı olmalıdır.`),
+    .withMessage(`${labelField(name)} pozitif bir sayı olmalıdır.`),
   handleValidation,
 ];
 
@@ -29,18 +30,18 @@ const paginationQuery = [
   query("page")
     .optional()
     .isInt({ min: 1 })
-    .withMessage("page değeri 1 veya daha büyük bir sayı olmalıdır."),
+    .withMessage("Sayfa numarası 1 veya daha büyük olmalıdır."),
   query("per_page")
     .optional()
     .isInt({ min: 1, max: 500 })
-    .withMessage("per_page değeri 1-500 aralığında olmalıdır."),
+    .withMessage("Sayfa başına kayıt sayısı 1-500 aralığında olmalıdır."),
   handleValidation,
 ];
 
 const requireBody = [
   body().custom((value) => {
     if (!value || typeof value !== "object" || Array.isArray(value)) {
-      throw new Error("Geçerli bir request body gönderilmelidir.");
+      throw new Error("Geçerli bir istek gövdesi gönderilmelidir.");
     }
 
     const hasAnyValue = Object.values(value).some(
@@ -48,7 +49,7 @@ const requireBody = [
     );
 
     if (!hasAnyValue) {
-      throw new Error("Request body en az bir dolu alan içermelidir.");
+      throw new Error("İstek gövdesi en az bir dolu alan içermelidir.");
     }
     return true;
   }),
@@ -58,7 +59,7 @@ const requireBody = [
 const requireFields = (fields = []) => [
   body().custom((value) => {
     if (!value || typeof value !== "object" || Array.isArray(value)) {
-      throw new Error("Geçerli bir request body gönderilmelidir.");
+      throw new Error("Geçerli bir istek gövdesi gönderilmelidir.");
     }
 
     const missingFields = fields.filter((field) => {
@@ -71,7 +72,7 @@ const requireFields = (fields = []) => [
     });
 
     if (missingFields.length > 0) {
-      throw new Error(`Zorunlu alanlar eksik: ${missingFields.join(", ")}`);
+      throw new Error(`Zorunlu alanlar eksik: ${missingFields.map(labelField).join(", ")}`);
     }
 
     return true;
@@ -82,10 +83,10 @@ const requireFields = (fields = []) => [
 const reorderIdsBody = [
   body("ids")
     .isArray({ min: 1 })
-    .withMessage("ids dizisi zorunludur ve en az bir öğe içermelidir."),
+    .withMessage("Kimlik listesi zorunludur ve en az bir öğe içermelidir."),
   body("ids.*")
     .isInt({ min: 1 })
-    .withMessage("ids dizisindeki her değer pozitif bir sayı olmalıdır."),
+    .withMessage("Kimlik listesindeki her değer pozitif bir sayı olmalıdır."),
   handleValidation,
 ];
 

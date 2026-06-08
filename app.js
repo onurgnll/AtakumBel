@@ -5,10 +5,11 @@ const { sequelize } = require("./models");
 const cors = require("cors");
 const routes = require("./routes/index");
 const requestGuard = require("./middlewares/requestGuard");
+const { translateErrorMessage } = require("./helpers/translateErrorMessage");
 const app = express();
 
 if (!process.env.JWT_SECRET) {
-  throw new Error("JWT_SECRET tanımlı değil. Uygulama başlatılamıyor.");
+  throw new Error("Güvenlik anahtarı tanımlı değil. Uygulama başlatılamıyor.");
 }
 
 app.use(cors());
@@ -26,9 +27,10 @@ app.use((err, req, res, next) => {
   if (res.headersSent) {
     return next(err);
   }
-  res.status(500).json({
+  const status = err.status && err.status >= 400 && err.status < 600 ? err.status : 500;
+  res.status(status).json({
     success: 0,
-    message: err.message || "Sunucu tarafında beklenmedik bir hata oluştu.",
+    message: translateErrorMessage(err),
     stack: process.env.NODE_ENV === "development" ? err.stack : undefined,
   });
 });

@@ -56,7 +56,7 @@ exports.login = async (req, res, next) => {
     if (!process.env.JWT_SECRET) {
       return res.status(500).json({
         success: 0,
-        message: "Sunucu yapılandırma hatası: JWT_SECRET tanımlı değil.",
+        message: "Sunucu yapılandırma hatası: güvenlik anahtarı tanımlı değil.",
       });
     }
 
@@ -135,7 +135,7 @@ exports.completeTotpSetup = async (req, res, next) => {
     if (!process.env.JWT_SECRET) {
       return res.status(500).json({
         success: 0,
-        message: "Sunucu yapılandırma hatası: JWT_SECRET tanımlı değil.",
+        message: "Sunucu yapılandırma hatası: güvenlik anahtarı tanımlı değil.",
       });
     }
 
@@ -155,7 +155,7 @@ exports.completeTotpSetup = async (req, res, next) => {
 
     const admin = await Admin.findByPk(decoded.sub);
     if (!admin || !admin.totp_secret) {
-      return res.status(400).json({ success: 0, message: "Authenticator kurulumu bulunamadı." });
+      return res.status(400).json({ success: 0, message: "İki faktörlü doğrulama kurulumu bulunamadı." });
     }
     if (admin.totp_enabled) {
       const token = signAccessToken(admin);
@@ -168,7 +168,7 @@ exports.completeTotpSetup = async (req, res, next) => {
     }
 
     if (!verifyTotpCode(admin.totp_secret, code)) {
-      return res.status(401).json({ success: 0, message: "Authenticator kodu hatalı." });
+      return res.status(401).json({ success: 0, message: "Doğrulama kodu hatalı." });
     }
 
     await admin.update({ totp_enabled: true, last_login: new Date() });
@@ -184,7 +184,7 @@ exports.verifyLoginTotp = async (req, res, next) => {
     if (!process.env.JWT_SECRET) {
       return res.status(500).json({
         success: 0,
-        message: "Sunucu yapılandırma hatası: JWT_SECRET tanımlı değil.",
+        message: "Sunucu yapılandırma hatası: güvenlik anahtarı tanımlı değil.",
       });
     }
 
@@ -204,11 +204,11 @@ exports.verifyLoginTotp = async (req, res, next) => {
 
     const admin = await Admin.findByPk(decoded.sub);
     if (!admin || !admin.totp_enabled || !admin.totp_secret) {
-      return res.status(400).json({ success: 0, message: "Authenticator bu hesap için etkin değil." });
+      return res.status(400).json({ success: 0, message: "İki faktörlü doğrulama bu hesap için etkin değil." });
     }
 
     if (!verifyTotpCode(admin.totp_secret, code)) {
-      return res.status(401).json({ success: 0, message: "Authenticator kodu hatalı." });
+      return res.status(401).json({ success: 0, message: "Doğrulama kodu hatalı." });
     }
 
     await admin.update({ last_login: new Date() });

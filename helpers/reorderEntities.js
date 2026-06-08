@@ -2,7 +2,7 @@
 
 const reorderByIds = async (Model, ids, transaction) => {
   if (!Array.isArray(ids) || ids.length === 0) {
-    const err = new Error("ids dizisi zorunludur.");
+    const err = new Error("Kimlik listesi zorunludur.");
     err.code = "INVALID_IDS";
     throw err;
   }

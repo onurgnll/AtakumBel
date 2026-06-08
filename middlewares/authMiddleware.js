@@ -7,6 +7,7 @@ const {
   buildAuditRequestBodyWithDiff,
   loadAuditMutationSnapshot,
 } = require("../helpers/auditUpdateSnapshot");
+const { labelAction, labelModule } = require("../helpers/errorLabels");
 
 const getActionFromRequest = (req) => {
   if (req.method === "POST") return "create";
@@ -43,7 +44,7 @@ const protect = async (req, res, next) => {
       if (!process.env.JWT_SECRET) {
         return res.status(500).json({
           success: 0,
-          message: "Sunucu yapılandırma hatası: JWT_SECRET tanımlı değil.",
+          message: "Sunucu yapılandırma hatası: güvenlik anahtarı tanımlı değil.",
         });
       }
       token = req.headers.authorization.split(" ")[1];
@@ -105,7 +106,7 @@ const protect = async (req, res, next) => {
     } catch (err) {
       return res.status(401).json({
         success: 0,
-        message: "Yetkisiz erişim! Geçersiz veya süresi dolmuş token.",
+        message: "Yetkisiz erişim! Geçersiz veya süresi dolmuş erişim belirteci.",
       });
     }
   }
@@ -113,7 +114,7 @@ const protect = async (req, res, next) => {
   if (!token) {
     return res.status(401).json({
       success: 0,
-      message: "Yetkisiz erişim! Token bulunamadı.",
+      message: "Yetkisiz erişim! Erişim belirteci bulunamadı.",
     });
   }
 };
@@ -135,7 +136,7 @@ const authorize = (moduleName, action) => {
 
     return res.status(403).json({
       success: 0,
-      message: `'${moduleName}' modülünde '${requestedAction}' yetkiniz bulunmamaktadır.`,
+      message: `'${labelModule(moduleName)}' modülünde ${labelAction(requestedAction)} yetkiniz bulunmamaktadır.`,
     });
   };
 };
@@ -146,7 +147,7 @@ const authorizeSuperAdmin = (req, res, next) => {
   }
   return res.status(403).json({
     success: 0,
-    message: "Bu işlem için superadmin yetkisi gereklidir.",
+    message: "Bu işlem için üst yönetici yetkisi gereklidir.",
   });
 };
 

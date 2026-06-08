@@ -4,7 +4,10 @@ const councilMemberController = require("../controllers/councilMemberController"
 const upload = require("../middlewares/upload");
 const { protect, authorize } = require("../middlewares/authMiddleware");
 const { idParam, paginationQuery, reorderIdsBody } = require("../validators/commonValidator");
-const { requireBody } = require("../validators/moduleValidators");
+const {
+  councilMemberCreateValidation,
+  councilMemberUpdateValidation,
+} = require("../validators/moduleValidators");
 
 router.get("/", paginationQuery, councilMemberController.getAllCouncilMembers);
 router.patch(
@@ -19,7 +22,7 @@ router.post(
   protect,
   authorize("councilMembers"),
   upload.single("image"),
-  requireBody,
+  councilMemberCreateValidation,
   councilMemberController.addMemberToCouncil,
 );
 router.put(
@@ -28,7 +31,7 @@ router.put(
   authorize("councilMembers"),
   idParam(),
   upload.single("image"),
-  requireBody,
+  councilMemberUpdateValidation,
   councilMemberController.updateMember,
 );
 router.delete(

@@ -3,22 +3,26 @@ const router = express.Router();
 const suggestionController = require("../controllers/suggestionController");
 const { protect, authorize } = require("../middlewares/authMiddleware");
 const { idParam, paginationQuery } = require("../validators/commonValidator");
-const { requireBody } = require("../validators/moduleValidators");
+const {
+  suggestionCreateValidation,
+  suggestionStatusUpdateValidation,
+  listWithSearchQuery,
+} = require("../validators/moduleValidators");
 
 router.get(
   "/",
   protect,
   authorize("suggestions"),
-  paginationQuery,
+  listWithSearchQuery,
   suggestionController.getAllSuggestions,
 );
-router.post("/", requireBody, suggestionController.createSuggestion);
+router.post("/", suggestionCreateValidation, suggestionController.createSuggestion);
 router.put(
   "/:id",
   protect,
   authorize("suggestions"),
   idParam(),
-  requireBody,
+  suggestionStatusUpdateValidation,
   suggestionController.updateSuggestionStatus,
 );
 router.delete(

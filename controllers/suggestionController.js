@@ -84,7 +84,7 @@ exports.updateSuggestionStatus = async (req, res, next) => {
     if (!validStatuses.includes(status)) {
       return res.status(400).json({
         success: 0,
-        message: `Geçersiz durum. Sadece şunlar olabilir: ${validStatuses.join(", ")}`,
+        message: `Geçersiz durum. Geçerli değerler: beklemede, incelendi, tamamlandı`,
       });
     }
     const suggestion = await Suggestion.findByPk(id);
