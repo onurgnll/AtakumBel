@@ -3,6 +3,7 @@ const logger = require("./utils/logger");
 const express = require("express");
 const { sequelize } = require("./models");
 const cors = require("cors");
+const helmet = require("helmet");
 const routes = require("./routes/index");
 const requestGuard = require("./middlewares/requestGuard");
 const { translateErrorMessage } = require("./helpers/translateErrorMessage");
@@ -23,7 +24,23 @@ if (trustProxy === "true") {
 } else {
   app.set("trust proxy", 1);
 }
-app.use(cors());
+
+app.use(
+  helmet({
+    crossOriginResourcePolicy: { policy: "cross-origin" },
+    contentSecurityPolicy: false,
+  })
+);
+
+if(process.env.CORS_ORIGIN) {
+  app.use(cors({
+    origin: process.env.CORS_ORIGIN,
+    credentials: true,
+  }));
+} else {
+  app.use(cors());
+}
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(requestLogger);
