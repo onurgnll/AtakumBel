@@ -1,4 +1,4 @@
-const jwt = require("jsonwebtoken");
+const { getClientIp } = require("../helpers/getClientIp");
 const {
   serializeResponsePayload,
   attachJsonResponseCapture,
@@ -75,7 +75,7 @@ const protect = async (req, res, next) => {
           adminId: decoded.id,
           method: req.method,
           path: pathLogged,
-          ip: req.ip || req.socket?.remoteAddress || null,
+          ip: getClientIp(req),
           userAgent: String(req.get("user-agent") || "").slice(0, 500),
           capture,
         };

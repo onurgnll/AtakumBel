@@ -13,7 +13,16 @@ if (!process.env.JWT_SECRET) {
   throw new Error("Güvenlik anahtarı tanımlı değil. Uygulama başlatılamıyor.");
 }
 
-app.set("trust proxy", 1);
+const trustProxy = process.env.TRUST_PROXY;
+if (trustProxy === "true") {
+  app.set("trust proxy", true);
+} else if (trustProxy === "false") {
+  app.set("trust proxy", false);
+} else if (trustProxy && /^\d+$/.test(trustProxy)) {
+  app.set("trust proxy", Number(trustProxy));
+} else {
+  app.set("trust proxy", 1);
+}
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
