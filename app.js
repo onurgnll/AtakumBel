@@ -9,6 +9,10 @@ const requestGuard = require("./middlewares/requestGuard");
 const { translateErrorMessage } = require("./helpers/translateErrorMessage");
 const requestLogger = require("./middlewares/requestLogger");
 const {
+  cacheMiddleware,
+  invalidateCacheMiddleware,
+} = require("./middlewares/httpCache");
+const {
   generalRateLimiter,
   authRateLimiter,
   searchRateLimiter,
@@ -62,6 +66,8 @@ app.use("/api/service-forms", publicWriteRateLimiter);
 app.use("/api", generalRateLimiter);
 
 app.use("/api", requestGuard);
+app.use("/api", invalidateCacheMiddleware);
+app.use("/api", cacheMiddleware);
 app.use("/api", routes);
 
 app.use((err, req, res, next) => {
