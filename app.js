@@ -8,6 +8,12 @@ const routes = require("./routes/index");
 const requestGuard = require("./middlewares/requestGuard");
 const { translateErrorMessage } = require("./helpers/translateErrorMessage");
 const requestLogger = require("./middlewares/requestLogger");
+const {
+  generalRateLimiter,
+  authRateLimiter,
+  searchRateLimiter,
+  publicWriteRateLimiter,
+} = require("./middlewares/rateLimit");
 const app = express();
 
 if (!process.env.JWT_SECRET) {
@@ -48,6 +54,13 @@ app.use(requestLogger);
 const PORT = process.env.PORT || 5002;
 const path = require("path");
 app.use("/api/uploads", express.static(path.join(__dirname, "public/uploads")));
+
+app.use("/api/admin/login", authRateLimiter);
+app.use("/api/search", searchRateLimiter);
+app.use("/api/suggestions", publicWriteRateLimiter);
+app.use("/api/service-forms", publicWriteRateLimiter);
+app.use("/api", generalRateLimiter);
+
 app.use("/api", requestGuard);
 app.use("/api", routes);
 
