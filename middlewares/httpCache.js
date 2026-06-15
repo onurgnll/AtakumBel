@@ -1,9 +1,10 @@
-const logger = require("../utils/logger");
 const {
   cache,
   isEnabled,
   buildCacheKey,
   flushRouteCache,
+  logCache,
+  TTL_SECONDS,
 } = require("../utils/cache");
 
 const getResourcePrefix = (req) => {
@@ -27,29 +28,51 @@ const RELATED_CACHE_ROUTES = {
   "/api/president-galleries": ["/api/president"],
 };
 
-const invalidateRouteCaches = (baseUrl) => {
-  flushRouteCache(baseUrl);
+const getCacheSkipReason = (req) => {
+  if (!isEnabled()) return "disabled";
+  if (req.method !== "GET") return null;
+  if (req.headers.authorization) return "authorization";
+  if (req.query.admin === "true") return "admin_query";
 
+  const path = getResourcePrefix(req);
+  if (SKIP_PREFIXES.some((prefix) => path.startsWith(prefix))) {
+    return "excluded_route";
+  }
+
+  return null;
+};
+
+const invalidateRouteCaches = (baseUrl, meta = {}) => {
+  const flushed = [{ prefix: baseUrl, count: flushRouteCache(baseUrl) }];
   const related = RELATED_CACHE_ROUTES[baseUrl];
+
   if (related) {
     for (const route of related) {
-      flushRouteCache(route);
+      flushed.push({ prefix: route, count: flushRouteCache(route), related: true });
     }
+  }
+
+  const totalFlushed = flushed.reduce((sum, item) => sum + item.count, 0);
+  if (totalFlushed > 0) {
+    logCache("invalidate", {
+      ...meta,
+      resource: baseUrl,
+      flushed,
+      totalFlushed,
+    });
   }
 };
 
-const shouldSkipCache = (req) => {
-  if (!isEnabled()) return true;
-  if (req.method !== "GET") return true;
-  if (req.headers.authorization) return true;
-  if (req.query.admin === "true") return true;
-
-  const path = getResourcePrefix(req);
-  return SKIP_PREFIXES.some((prefix) => path.startsWith(prefix));
-};
-
 const cacheMiddleware = (req, res, next) => {
-  if (shouldSkipCache(req)) {
+  const skipReason = getCacheSkipReason(req);
+  if (skipReason) {
+    if (req.method === "GET") {
+      logCache("skip", {
+        method: req.method,
+        url: req.originalUrl,
+        reason: skipReason,
+      });
+    }
     return next();
   }
 
@@ -57,9 +80,22 @@ const cacheMiddleware = (req, res, next) => {
   const cached = cache.get(key);
 
   if (cached) {
+    logCache("hit", {
+      method: req.method,
+      url: req.originalUrl,
+      key,
+      status: cached.status,
+    });
     res.set("X-Cache", "HIT");
     return res.status(cached.status).json(cached.body);
   }
+
+  logCache("lookup", {
+    method: req.method,
+    url: req.originalUrl,
+    key,
+    result: "miss",
+  });
 
   const originalJson = res.json.bind(res);
 
@@ -67,7 +103,13 @@ const cacheMiddleware = (req, res, next) => {
     if (res.statusCode >= 200 && res.statusCode < 300) {
       cache.set(key, { status: res.statusCode, body });
       res.set("X-Cache", "MISS");
-      logger.debug(`Cache yazıldı: ${key}`);
+      logCache("store", {
+        method: req.method,
+        url: req.originalUrl,
+        key,
+        status: res.statusCode,
+        ttlSeconds: TTL_SECONDS,
+      });
     }
 
     return originalJson(body);
@@ -90,7 +132,10 @@ const invalidateCacheMiddleware = (req, res, next) => {
 
   res.json = (body) => {
     if (res.statusCode >= 200 && res.statusCode < 300) {
-      invalidateRouteCaches(getResourcePrefix(req));
+      invalidateRouteCaches(getResourcePrefix(req), {
+        method,
+        url: req.originalUrl,
+      });
     }
 
     return originalJson(body);

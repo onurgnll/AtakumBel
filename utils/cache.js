@@ -12,6 +12,22 @@ const cache = new NodeCache({
 
 const isEnabled = () => process.env.CACHE_ENABLED !== "false";
 
+const isCacheLogEnabled = () => {
+  if (process.env.CACHE_LOG_ENABLED === "true") return true;
+  if (process.env.CACHE_LOG_ENABLED === "false") return false;
+  return process.env.NODE_ENV === "development";
+};
+
+const logCache = (event, meta = {}) => {
+  if (!isCacheLogEnabled()) return;
+
+  logger.info(`[cache] ${event}`, {
+    type: "cache",
+    event,
+    ...meta,
+  });
+};
+
 const buildCacheKey = (req) => `${req.method}:${req.originalUrl}`;
 
 const flushRouteCache = (baseUrl) => {
@@ -27,7 +43,7 @@ const flushRouteCache = (baseUrl) => {
   }
 
   if (flushed > 0) {
-    logger.debug(`Cache temizlendi: ${prefix}* (${flushed} anahtar)`);
+    logCache("flush", { prefix, flushed });
   }
 
   return flushed;
@@ -38,7 +54,10 @@ const getStats = () => cache.getStats();
 module.exports = {
   cache,
   isEnabled,
+  isCacheLogEnabled,
+  logCache,
   buildCacheKey,
   flushRouteCache,
   getStats,
+  TTL_SECONDS,
 };
