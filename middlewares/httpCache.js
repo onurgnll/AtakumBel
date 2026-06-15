@@ -30,7 +30,6 @@ const RELATED_CACHE_ROUTES = {
 
 const getCacheSkipReason = (req) => {
   if (!isEnabled()) return "disabled";
-  if (req.method !== "GET") return null;
   if (req.headers.authorization) return "authorization";
   if (req.query.admin === "true") return "admin_query";
 
@@ -64,15 +63,17 @@ const invalidateRouteCaches = (baseUrl, meta = {}) => {
 };
 
 const cacheMiddleware = (req, res, next) => {
+  if (req.method !== "GET") {
+    return next();
+  }
+
   const skipReason = getCacheSkipReason(req);
   if (skipReason) {
-    if (req.method === "GET") {
-      logCache("skip", {
-        method: req.method,
-        url: req.originalUrl,
-        reason: skipReason,
-      });
-    }
+    logCache("skip", {
+      method: req.method,
+      url: req.originalUrl,
+      reason: skipReason,
+    });
     return next();
   }
 
