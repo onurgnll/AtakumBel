@@ -6,17 +6,20 @@ const cors = require("cors");
 const routes = require("./routes/index");
 const requestGuard = require("./middlewares/requestGuard");
 const { translateErrorMessage } = require("./helpers/translateErrorMessage");
+const requestLogger = require("./middlewares/requestLogger");
 const app = express();
 
 if (!process.env.JWT_SECRET) {
   throw new Error("Güvenlik anahtarı tanımlı değil. Uygulama başlatılamıyor.");
 }
 
+app.set("trust proxy", 1);
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(requestLogger);
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5002;
 const path = require("path");
 app.use("/api/uploads", express.static(path.join(__dirname, "public/uploads")));
 app.use("/api", requestGuard);
@@ -37,12 +40,12 @@ app.use((err, req, res, next) => {
 async function startServer() {
   try {
     await sequelize.authenticate();
-    console.log("Veritabanı bağlantısı başarılı.");
-    app.listen(PORT, "::" , () => {
-      console.log(`Sunucu http://localhost:${PORT} adresinde çalışıyor.`);
+    logger.info("Veritabanı bağlantısı başarılı.");
+    app.listen(PORT, "::", () => {
+      logger.info(`Sunucu http://localhost:${PORT} adresinde çalışıyor.`);
     });
   } catch (error) {
-    console.error("Veritabanına bağlanılamadı:", error);
+    logger.error("Veritabanına bağlanılamadı", { error: error.message, stack: error.stack });
   }
 }
 startServer();
