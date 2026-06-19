@@ -41,6 +41,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: true,
       },
+      link: {
+        type: DataTypes.STRING(500),
+        allowNull: true,
+      },
     },
     {
       sequelize,

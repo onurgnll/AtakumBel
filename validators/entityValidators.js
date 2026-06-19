@@ -406,6 +406,7 @@ function buildDocumentCategoryCreateValidation({ foreignKeyRequired = false } = 
     optionalText("description", { min: 1 }),
     optionalDateField("publish_date"),
     optionalBool("is_active"),
+    optionalText("link", { max: 500 }),
   ];
   if (foreignKeyRequired) {
     rules.push(requiredPositiveInt("department_id"));
@@ -423,6 +424,7 @@ function buildDocumentCategoryUpdateValidation({ foreignKeyRequired = false } = 
     optionalText("description", { min: 1 }),
     optionalDateField("publish_date"),
     optionalBool("is_active"),
+    optionalText("link", { max: 500 }),
   ];
   if (foreignKeyRequired) {
     rules.push(optionalPositiveInt("department_id"));

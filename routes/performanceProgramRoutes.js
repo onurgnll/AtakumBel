@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const controller = require("../controllers/performanceProgramController");
 const { protect, authorize } = require("../middlewares/authMiddleware");
-const upload = require("../middlewares/upload");
+const { documentUpload } = require("../middlewares/upload");
 const { idParam, paginationQuery } = require("../validators/commonValidator");
 const {
   documentCategoryCreateValidation,
@@ -14,7 +14,7 @@ router.post(
   "/",
   protect,
   authorize("performancePrograms"),
-  upload.single("document"),
+  documentUpload.single("document"),
   documentCategoryCreateValidation,
   controller.create,
 );
@@ -23,7 +23,7 @@ router.put(
   protect,
   authorize("performancePrograms"),
   idParam(),
-  upload.single("document"),
+  documentUpload.single("document"),
   documentCategoryUpdateValidation,
   controller.update,
 );

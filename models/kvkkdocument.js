@@ -14,6 +14,7 @@ module.exports = (sequelize, DataTypes) => {
       publish_date: { type: DataTypes.DATEONLY, allowNull: true },
       is_active: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: true },
       files: { type: DataTypes.JSONB, allowNull: true, defaultValue: [] },
+      link: { type: DataTypes.STRING(500), allowNull: true },
     },
     {
       sequelize,

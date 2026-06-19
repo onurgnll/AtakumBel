@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const pressMaterialController = require("../controllers/pressMaterialController");
 const { protect, authorize } = require("../middlewares/authMiddleware");
-const upload = require("../middlewares/upload");
+const { documentUpload } = require("../middlewares/upload");
 const { idParam, paginationQuery } = require("../validators/commonValidator");
 const {
   documentCategoryCreateValidation,
@@ -14,7 +14,7 @@ router.post(
   "/",
   protect,
   authorize("pressMaterials"),
-  upload.array("documents", 25),
+  documentUpload.array("documents", 25),
   documentCategoryCreateValidation,
   pressMaterialController.createPressMaterial,
 );
@@ -23,7 +23,7 @@ router.put(
   protect,
   authorize("pressMaterials"),
   idParam(),
-  upload.array("documents", 25),
+  documentUpload.array("documents", 25),
   documentCategoryUpdateValidation,
   pressMaterialController.updatePressMaterial,
 );

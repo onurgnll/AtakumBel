@@ -17,40 +17,63 @@ const storage = multer.diskStorage({
   },
 });
 
+const documentFileFilter = (req, file, cb) => {
+  const allowedTypes = [
+    "image/jpeg",
+    "image/png",
+    "image/webp",
+    "application/pdf",
+    "application/msword",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  ];
+  if (allowedTypes.includes(file.mimetype)) {
+    cb(null, true);
+  } else {
+    cb(
+      new Error(
+        "Desteklenmeyen dosya formatı! Sadece resim, PDF ve Word yüklenebilir.",
+      ),
+      false,
+    );
+  }
+};
+
 const upload = multer({
   storage: storage,
   limits: {
     fileSize: 10 * 1024 * 1024, // 10MB uploaded file limit
     fieldSize: 25 * 1024 * 1024, // allow large rich-text HTML (base64 images)
   },
-  fileFilter: (req, file, cb) => {
-    // İzin verilen dosya türleri
-    const allowedTypes = [
-      "image/jpeg",
-      "image/png",
-      "image/webp",
-      "application/pdf",
-      "application/msword",
-      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-    ];
-    if (allowedTypes.includes(file.mimetype)) {
-      cb(null, true);
-    } else {
-      cb(
-        new Error(
-          "Desteklenmeyen dosya formatı! Sadece resim, PDF ve Word yüklenebilir.",
-        ),
-        false,
-      );
-    }
-  },
+  fileFilter: documentFileFilter,
 });
 
-const contentWithAttachmentsUpload = upload.fields([
-  { name: "images", maxCount: 10 },
+const documentUpload = multer({
+  storage: storage,
+  limits: {
+    fileSize: 200 * 1024 * 1024, // 200MB — belge kategorileri
+    fieldSize: 25 * 1024 * 1024,
+  },
+  fileFilter: documentFileFilter,
+});
+
+const CONTENT_MAX_IMAGES = 25;
+
+const contentUpload = multer({
+  storage: storage,
+  limits: {
+    fileSize: 200 * 1024 * 1024, // 200MB — haber, etkinlik, basın bülteni vb.
+    fieldSize: 25 * 1024 * 1024,
+  },
+  fileFilter: documentFileFilter,
+});
+
+const contentWithAttachmentsUpload = contentUpload.fields([
+  { name: "images", maxCount: CONTENT_MAX_IMAGES },
   { name: "files", maxCount: 25 },
   { name: "document", maxCount: 25 },
 ]);
 
 module.exports = upload;
+module.exports.documentUpload = documentUpload;
+module.exports.contentUpload = contentUpload;
 module.exports.contentWithAttachmentsUpload = contentWithAttachmentsUpload;

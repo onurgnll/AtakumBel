@@ -33,6 +33,46 @@ const coerceBool = (v, defaultVal = true) => {
   return defaultVal;
 };
 
+const normalizeLink = (link) => {
+  if (link === undefined || link === null) return undefined;
+  const trimmed = String(link).trim();
+  return trimmed || null;
+};
+
+const hasAttachmentFiles = (files, uploadedFiles) =>
+  uploadedFiles.length > 0 || (Array.isArray(files) && files.length > 0);
+
+const rejectUploadedFiles = (uploadedFiles, res) => {
+  uploadedFiles.forEach((uploadedFile) => {
+    if (uploadedFile && fs.existsSync(uploadedFile.path)) fs.unlinkSync(uploadedFile.path);
+  });
+  return res.status(400).json({
+    success: 0,
+    data: null,
+    message: "Link ve dosya aynı anda eklenemez.",
+  });
+};
+
+const resolveLinkAndFiles = ({ linkInput, existingFiles, uploadedFiles, bodyFiles, prevLink }) => {
+  const linkProvided = linkInput !== undefined;
+  const nextLink = linkProvided ? normalizeLink(linkInput) : prevLink ?? null;
+  const nextFiles = normalizeFiles(existingFiles, uploadedFiles, bodyFiles);
+
+  if (nextLink && hasAttachmentFiles(nextFiles, uploadedFiles)) {
+    return { error: "both" };
+  }
+
+  if (nextLink) {
+    return { link: nextLink, files: [] };
+  }
+
+  if (hasAttachmentFiles(nextFiles, uploadedFiles) || bodyFiles !== undefined) {
+    return { link: null, files: nextFiles };
+  }
+
+  return { link: nextLink, files: nextFiles };
+};
+
 const normalizeFiles = (existingFiles, uploadedFiles, bodyFiles) => {
   const hasBodyFiles = bodyFiles !== undefined && bodyFiles !== null;
   const files = hasBodyFiles ? [] : Array.isArray(existingFiles) ? [...existingFiles] : [];
@@ -106,7 +146,7 @@ module.exports = function buildDocumentCategoryController(Model, labels, options
 
     async create(req, res, next) {
       try {
-        const { title, description, publish_date, is_active, files } = req.body;
+        const { title, description, publish_date, is_active, files, link } = req.body;
         const foreignValue = foreignKey ? req.body[foreignKey] : undefined;
         if (!title) {
           return res
@@ -121,13 +161,24 @@ module.exports = function buildDocumentCategoryController(Model, labels, options
           });
         }
         const uploadedFiles = getUploadedFiles(req);
+        const resolved = resolveLinkAndFiles({
+          linkInput: link,
+          existingFiles: [],
+          uploadedFiles,
+          bodyFiles: files,
+          prevLink: null,
+        });
+        if (resolved.error === "both") {
+          return rejectUploadedFiles(uploadedFiles, res);
+        }
 
         const item = await Model.create({
           title,
           description: description || null,
           publish_date: publish_date || null,
           is_active: coerceBool(is_active, true),
-          files: normalizeFiles([], uploadedFiles, files),
+          link: resolved.link,
+          files: resolved.files,
           ...(foreignKey && foreignValue !== undefined && foreignValue !== ""
             ? { [foreignKey]: Number(foreignValue) }
             : {}),
@@ -156,12 +207,22 @@ module.exports = function buildDocumentCategoryController(Model, labels, options
             .json({ success: 0, data: null, message: notFoundMessage });
         }
 
-        const { title, description, publish_date, is_active, files } = req.body;
+        const { title, description, publish_date, is_active, files, link } = req.body;
         const foreignValue = foreignKey ? req.body[foreignKey] : undefined;
         const uploadedFiles = getUploadedFiles(req);
 
         const prevFiles = Array.isArray(item.files) ? item.files : [];
-        const nextFiles = normalizeFiles(prevFiles, uploadedFiles, files);
+        const resolved = resolveLinkAndFiles({
+          linkInput: link,
+          existingFiles: prevFiles,
+          uploadedFiles,
+          bodyFiles: files,
+          prevLink: item.link,
+        });
+        if (resolved.error === "both") {
+          return rejectUploadedFiles(uploadedFiles, res);
+        }
+        const nextFiles = resolved.files;
 
         const patch = {
           title: title ?? item.title,
@@ -171,6 +232,7 @@ module.exports = function buildDocumentCategoryController(Model, labels, options
             is_active !== undefined && is_active !== null && is_active !== ""
               ? coerceBool(is_active, item.is_active)
               : item.is_active,
+          link: resolved.link,
           files: nextFiles,
         };
         if (foreignKey && foreignValue !== undefined && foreignValue !== "") {
