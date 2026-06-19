@@ -45,8 +45,8 @@ router.get("/:id", idParam(), publicationController.getPublicationById);
 router.post(
   "/",
   protect,
-  authorizePublication,
   publicationUpload,
+  authorizePublication,
   publicationCreateValidation,
   publicationController.createPublication,
 );
@@ -54,9 +54,9 @@ router.post(
 router.put(
   "/:id",
   protect,
-  authorizePublication,
   idParam(),
   publicationUpload,
+  authorizePublication,
   publicationUpdateValidation,
   publicationController.updatePublication,
 );
