@@ -21,6 +21,8 @@ const {
   nameOptional,
   spotRequired,
   spotOptional,
+  newsSpotRequired,
+  newsSpotOptional,
 } = require("./fields");
 
 // ─── Birimler ───────────────────────────────────────────────────────────────
@@ -84,7 +86,7 @@ const employeeUpdateValidation = [
 
 const newsCreateValidation = [
   titleRequired(),
-  spotRequired(),
+  newsSpotRequired(),
   requiredText("content", { min: 1 }),
   optionalBool("is_active"),
   handleValidation,
@@ -93,14 +95,28 @@ const newsCreateValidation = [
 const newsUpdateValidation = [
   ...requireBody,
   titleOptional(),
-  spotOptional(),
+  newsSpotOptional(),
   optionalText("content", { min: 1 }),
   optionalBool("is_active"),
   handleValidation,
 ];
 
-const pressReleaseCreateValidation = [...newsCreateValidation];
-const pressReleaseUpdateValidation = [...newsUpdateValidation];
+const pressReleaseCreateValidation = [
+  titleRequired(),
+  spotRequired(),
+  requiredText("content", { min: 1 }),
+  optionalBool("is_active"),
+  handleValidation,
+];
+
+const pressReleaseUpdateValidation = [
+  ...requireBody,
+  titleOptional(),
+  spotOptional(),
+  optionalText("content", { min: 1 }),
+  optionalBool("is_active"),
+  handleValidation,
+];
 
 // ─── Etkinlikler ────────────────────────────────────────────────────────────
 
@@ -112,10 +128,10 @@ const eventCreateValidation = [
     .withMessage("Etkinlik türü zorunludur.")
     .isIn(EVENT_TYPES)
     .withMessage("Etkinlik türü yarışma veya aktivite olmalıdır."),
-  requiredText("start_date", { min: 1 }),
-  requiredText("end_date", { min: 1 }),
-  requiredText("event_time", { min: 1, max: 50 }),
-  requiredText("address", { min: 1, max: 500 }),
+  optionalDateField("start_date"),
+  optionalDateField("end_date"),
+  optionalText("event_time", { max: 50 }),
+  optionalText("address", { max: 500 }),
   requiredText("description", { min: 1 }),
   handleValidation,
 ];
@@ -128,10 +144,10 @@ const eventUpdateValidation = [
     .trim()
     .isIn(EVENT_TYPES)
     .withMessage("Etkinlik türü yarışma veya aktivite olmalıdır."),
-  optionalText("start_date", { min: 1 }),
-  optionalText("end_date", { min: 1 }),
-  optionalText("event_time", { min: 1, max: 50 }),
-  optionalText("address", { min: 1, max: 500 }),
+  optionalDateField("start_date"),
+  optionalDateField("end_date"),
+  optionalText("event_time", { max: 50 }),
+  optionalText("address", { max: 500 }),
   optionalText("description", { min: 1 }),
   handleValidation,
 ];

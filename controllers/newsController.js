@@ -1,6 +1,6 @@
 ﻿const { News, NewsGallery, sequelize } = require("../models");
 
-const SPOT_MAX_LEN = 50;
+const SPOT_MAX_LEN = 500;
 const { getPaginationParams, getPagingData } = require("../helpers/pagination");
 const {
   normalizeFiles,

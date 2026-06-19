@@ -1,6 +1,7 @@
 const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
+const optimizeUploadedImages = require("./optimizeUploadedImages");
 
 const MAX_FILE_SIZE_BYTES = 200 * 1024 * 1024;
 const MAX_FIELD_SIZE_BYTES = 25 * 1024 * 1024;
@@ -66,14 +67,36 @@ const contentUpload = multer({
   fileFilter: documentFileFilter,
 });
 
-const contentWithAttachmentsUpload = contentUpload.fields([
+function chainImageOptimization(multerMiddleware) {
+  return (req, res, next) => {
+    multerMiddleware(req, res, (err) => {
+      if (err) return next(err);
+      optimizeUploadedImages(req, res, next);
+    });
+  };
+}
+
+function wrapMulter(instance) {
+  return {
+    single: (fieldName) => chainImageOptimization(instance.single(fieldName)),
+    array: (fieldName, maxCount) =>
+      chainImageOptimization(instance.array(fieldName, maxCount)),
+    fields: (fields) => chainImageOptimization(instance.fields(fields)),
+  };
+}
+
+const uploadWithOptimization = wrapMulter(upload);
+const documentUploadWithOptimization = wrapMulter(documentUpload);
+const contentUploadWithOptimization = wrapMulter(contentUpload);
+const contentWithAttachmentsUploadOptimized = wrapMulter(contentUpload).fields([
   { name: "images", maxCount: CONTENT_MAX_IMAGES },
   { name: "files", maxCount: 25 },
   { name: "document", maxCount: 25 },
 ]);
 
-module.exports = upload;
-module.exports.documentUpload = documentUpload;
-module.exports.contentUpload = contentUpload;
-module.exports.contentWithAttachmentsUpload = contentWithAttachmentsUpload;
+module.exports = uploadWithOptimization;
+module.exports.documentUpload = documentUploadWithOptimization;
+module.exports.contentUpload = contentUploadWithOptimization;
+module.exports.contentWithAttachmentsUpload =
+  contentWithAttachmentsUploadOptimized;
 module.exports.MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_BYTES;

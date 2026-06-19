@@ -157,8 +157,9 @@ exports.updateEvent = async (req, res, next) => {
           : event.start_date,
       end_date:
         end_date !== undefined ? normalizeEventDate(end_date) : event.end_date,
-      event_time: event_time ?? event.event_time,
-      address: address ?? event.address,
+      event_time:
+        event_time !== undefined ? event_time || null : event.event_time,
+      address: address !== undefined ? address || null : event.address,
       description: description ?? event.description,
       files: nextFiles,
     });
@@ -245,8 +246,8 @@ exports.createEvent = async (req, res, next) => {
       type,
       start_date: startNorm,
       end_date: endNorm,
-      event_time,
-      address,
+      event_time: event_time || null,
+      address: address || null,
       description,
       files: normalizeFiles([], files, docUploads),
     }, { transaction });

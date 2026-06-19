@@ -4,6 +4,7 @@ const { body, query } = require("express-validator");
 const { labelField } = require("../helpers/errorLabels");
 
 const SPOT_MAX_LEN = 50;
+const NEWS_SPOT_MAX_LEN = 500;
 const RECORD_TYPES = ["public_notice", "tender", "council_decision", "real_estate_listing"];
 const EVENT_TYPES = ["competition", "activity"];
 const SUGGESTION_STATUSES = ["pending", "reviewed", "completed"];
@@ -185,6 +186,10 @@ const nameRequired = () => requiredText("name", { min: 2, max: 255 });
 const nameOptional = () => optionalText("name", { min: 2, max: 255 });
 const spotRequired = () => requiredText("spot", { min: 1, max: SPOT_MAX_LEN });
 const spotOptional = () => optionalText("spot", { min: 1, max: SPOT_MAX_LEN });
+const newsSpotRequired = () =>
+  requiredText("spot", { min: 1, max: NEWS_SPOT_MAX_LEN });
+const newsSpotOptional = () =>
+  optionalText("spot", { min: 1, max: NEWS_SPOT_MAX_LEN });
 
 const searchQuery = query("search")
   .optional()
@@ -212,6 +217,7 @@ const searchLimitQuery = query("limit")
 
 module.exports = {
   SPOT_MAX_LEN,
+  NEWS_SPOT_MAX_LEN,
   RECORD_TYPES,
   EVENT_TYPES,
   SUGGESTION_STATUSES,
@@ -231,6 +237,8 @@ module.exports = {
   nameOptional,
   spotRequired,
   spotOptional,
+  newsSpotRequired,
+  newsSpotOptional,
   searchQuery,
   adminListQuery,
   searchQRequired,
