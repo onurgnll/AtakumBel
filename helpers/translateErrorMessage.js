@@ -8,7 +8,7 @@ function translateErrorMessage(err) {
   if (err instanceof multer.MulterError) {
     switch (err.code) {
       case "LIMIT_FILE_SIZE":
-        return "Dosya boyutu izin verilen sınırı (10 MB) aşıyor.";
+        return "Dosya boyutu izin verilen sınırı (200 MB) aşıyor.";
       case "LIMIT_FILE_COUNT":
         return "Yüklenebilecek dosya sayısı sınırı aşıldı.";
       case "LIMIT_UNEXPECTED_FILE":

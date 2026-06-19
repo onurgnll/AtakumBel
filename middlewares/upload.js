@@ -2,6 +2,9 @@ const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
 
+const MAX_FILE_SIZE_BYTES = 200 * 1024 * 1024;
+const MAX_FIELD_SIZE_BYTES = 25 * 1024 * 1024;
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     const folderName = req.baseUrl.split("/").pop() || "general";
@@ -38,21 +41,20 @@ const documentFileFilter = (req, file, cb) => {
   }
 };
 
+const multerLimits = {
+  fileSize: MAX_FILE_SIZE_BYTES,
+  fieldSize: MAX_FIELD_SIZE_BYTES,
+};
+
 const upload = multer({
   storage: storage,
-  limits: {
-    fileSize: 10 * 1024 * 1024, // 10MB uploaded file limit
-    fieldSize: 25 * 1024 * 1024, // allow large rich-text HTML (base64 images)
-  },
+  limits: multerLimits,
   fileFilter: documentFileFilter,
 });
 
 const documentUpload = multer({
   storage: storage,
-  limits: {
-    fileSize: 200 * 1024 * 1024, // 200MB — belge kategorileri
-    fieldSize: 25 * 1024 * 1024,
-  },
+  limits: multerLimits,
   fileFilter: documentFileFilter,
 });
 
@@ -60,10 +62,7 @@ const CONTENT_MAX_IMAGES = 25;
 
 const contentUpload = multer({
   storage: storage,
-  limits: {
-    fileSize: 200 * 1024 * 1024, // 200MB — haber, etkinlik, basın bülteni vb.
-    fieldSize: 25 * 1024 * 1024,
-  },
+  limits: multerLimits,
   fileFilter: documentFileFilter,
 });
 
@@ -77,3 +76,4 @@ module.exports = upload;
 module.exports.documentUpload = documentUpload;
 module.exports.contentUpload = contentUpload;
 module.exports.contentWithAttachmentsUpload = contentWithAttachmentsUpload;
+module.exports.MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_BYTES;
