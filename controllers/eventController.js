@@ -51,6 +51,8 @@ exports.getAllEvents = async (req, res, next) => {
     const { rows: events, count } = await Event.findAndCountAll({
       where: whereCondition,
       attributes: { exclude: ["description"] },
+      limit,
+      offset,
       include: [
         {
           model: EventGallery,
@@ -58,9 +60,8 @@ exports.getAllEvents = async (req, res, next) => {
           required: false,
         },
       ],
-      limit,
-      offset,
       order: [["start_date", "DESC"]],
+      distinct: true,
     });
 
     return res.json({
