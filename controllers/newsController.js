@@ -26,6 +26,25 @@ function coerceBoolean(value, whenMissing) {
   return Boolean(value);
 }
 
+function parsePublishDate(value, whenMissing = new Date()) {
+  if (value === undefined || value === null || value === "") {
+    return whenMissing;
+  }
+  const s = String(value).trim();
+  const tr = s.match(/^(\d{1,2})\.(\d{1,2})\.(\d{4})$/);
+  if (tr) {
+    const [, day, month, year] = tr;
+    return new Date(Date.UTC(Number(year), Number(month) - 1, Number(day), 12, 0, 0));
+  }
+  const iso = s.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (iso) {
+    const [, year, month, day] = iso;
+    return new Date(Date.UTC(Number(year), Number(month) - 1, Number(day), 12, 0, 0));
+  }
+  const parsed = new Date(s);
+  return Number.isNaN(parsed.getTime()) ? whenMissing : parsed;
+}
+
 
 //Read
 exports.getAllNews = async (req, res, next) => {
@@ -102,7 +121,7 @@ exports.getNewsById = async (req, res, next) => {
 exports.createNews = async (req, res, next) => {
   let transaction;
   try {
-    const { title, spot, content, is_active, files } = req.body;
+    const { title, spot, content, is_active, files, publish_date } = req.body;
     const galleryUploads = collectGalleryImages(req);
     const docUploads = collectUploadedFiles(req);
     if (spot == null || String(spot).trim() === "") {
@@ -135,7 +154,7 @@ exports.createNews = async (req, res, next) => {
       title,
       spot,
       content,
-      publish_date: new Date(),
+      publish_date: parsePublishDate(publish_date),
       is_active: coerceBoolean(is_active, true),
       view_count: 0,
       files: normalizeFiles([], files, docUploads),
@@ -174,7 +193,7 @@ exports.updateNews = async (req, res, next) => {
   try {
     const { id } = req.params;
     const newsItem = await News.findByPk(id);
-    const { title, spot, content, is_active, files } = req.body;
+    const { title, spot, content, is_active, files, publish_date } = req.body;
     if (!newsItem) {
       return res.status(404).json({
         success: 0,
@@ -213,6 +232,10 @@ exports.updateNews = async (req, res, next) => {
       title: title ?? newsItem.title,
       spot: spot ?? newsItem.spot,
       content: content ?? newsItem.content,
+      publish_date:
+        publish_date !== undefined && publish_date !== null && publish_date !== ""
+          ? parsePublishDate(publish_date, newsItem.publish_date)
+          : newsItem.publish_date,
       is_active: coerceBoolean(is_active, newsItem.is_active),
       files: nextFiles,
     });

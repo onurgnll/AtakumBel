@@ -88,6 +88,7 @@ const newsCreateValidation = [
   titleRequired(),
   newsSpotRequired(),
   requiredText("content", { min: 1 }),
+  optionalDateField("publish_date"),
   optionalBool("is_active"),
   handleValidation,
 ];
@@ -97,6 +98,7 @@ const newsUpdateValidation = [
   titleOptional(),
   newsSpotOptional(),
   optionalText("content", { min: 1 }),
+  optionalDateField("publish_date"),
   optionalBool("is_active"),
   handleValidation,
 ];

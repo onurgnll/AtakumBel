@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Wifi Noktaları - T.C. Atakum Belediyesi</title>
+  
+  <!-- Open Graph -->
+  <meta property="og:image" content="https://atakum.bel.tr/img/og.jpg" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://atakum.bel.tr/img/og.jpg" />
+  <meta property="og:title" content="T.C ATAKUM BELEDİYESİ - WİFİ NOKTALARI" />
+  <meta property="og:description" content="T.C ATAKUM BELEDİYESİ -  WİFİ NOKTALARI" />
+  
+  <link rel="icon" type="image/x-icon" href="https://atakum.bel.tr/img/2123571844.png">
+  
+  <!-- Bootstrap CSS -->
+  <link 
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" 
+    rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" 
+    crossorigin="anonymous"
+  />
+  
+  <style>
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+    }
+    .map-container {
+      flex-grow: 1;
+      display: flex;
+    }
+    #map {
+      flex-grow: 1;
+    }
+    #placeholder {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('https://atakum.bel.tr/img/navimages/logo.svg') center center no-repeat;
+      background-size: cover;
+      display: none;
+      z-index: 999;
+    }
+    iframe {
+      outline: none !important;
+    }
+    iframe:focus {
+      outline: none !important;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- ÜST NAVBAR -->
+  <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #f8f9fa;">
+    <div class="container-fluid">
+      <div class="col-4">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="#">
+              <img
+                src="https://atakum.bel.tr/img/navimages/logo.svg"
+                style="height:55px;"
+                alt="Atakum Belediyesi Logo"
+              />
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div class="col-4 d-flex justify-content-center align-items-center">
+        <h6 id="map-title" class="text-danger p-2 m-0 text-center">
+          T.C. ATAKUM BELEDİYESİ <br />
+          <b> Ücretsiz Wi-Fi Noktaları</b>
+        </h6>
+      </div>
+      <div class="col-4 d-flex justify-content-end gap-3">
+        <button 
+          type="button" 
+          class="btn btn-dark text-light btn-sm" 
+          data-bs-toggle="modal" 
+          data-bs-target="#modal1"
+        >
+          Nasıl Kullanılır ?
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HARİTA ALANI -->
+  <div class="map-container">
+    <div id="map"></div>
+  </div>
+
+  <!-- Modal - Konum Bilgisi (Tıklanınca Açılacak) -->
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <p id="location-name"></p>
+    </div>
+  </div>
+
+  <!-- ALT NAVBAR / FOOTER -->
+  <nav id="footer" class="navbar navbar-light bg-light">
+    <div class="container-fluid">
+      <a
+        class="navbar-brand me-auto"
+        href="#"
+        target="_blank"
+        style="font-size: 10px;"
+      >
+        T.C. Atakum Belediyesi - Bilgi İşlem Müdürlüğü ♡ ParsTech
+      </a>
+      <div
+        class="col-12 col-xl d-flex align-items-center justify-content-xl-end justify-content-center py-3 py-xl-0"
+      >
+        <div class="border-end text-center">
+          <div class="d-flex flex-column mx-3">
+            <div>
+              <img
+                src="turuncu.gif"
+                width="40"
+                alt="Devreye alınan Wifi Logo"
+              />
+            </div>
+            <div>Aktif Edilen</div>
+          </div>
+        </div>
+        <div class="text-center">
+          <div class="d-flex flex-column mx-3">
+            <div>
+              <img
+                src="gri.gif"
+                width="40"
+                alt="Faz2 Logo"
+              />
+            </div>
+            <div>Aktif Edilecek</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Modal: Nasıl Kullanılır? -->
+  <div 
+    class="modal fade" 
+    id="modal1" 
+    tabindex="-1"
+    aria-labelledby="modal1Label" 
+    aria-hidden="true"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modal1Label">Nasıl Kullanılır ?</h5>
+          <button 
+            type="button" 
+            class="btn-close" 
+            data-bs-dismiss="modal" 
+            aria-label="Kapat"
+          ></button>
+        </div>
+        <div class="modal-body">
+          İçerik güncelleniyor.
+        </div>
+        <div class="modal-footer">
+          <button 
+            type="button" 
+            class="btn btn-secondary" 
+            data-bs-dismiss="modal"
+          >
+            Kapat
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 2 (Örnek) -->
+  <div 
+    class="modal fade" 
+    id="modal2" 
+    tabindex="-1"
+    aria-labelledby="modal2Label" 
+    aria-hidden="true"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modal2Label">Modal Başlık 2</h5>
+          <button 
+            type="button" 
+            class="btn-close" 
+            data-bs-dismiss="modal" 
+            aria-label="Kapat"
+          ></button>
+        </div>
+        <div class="modal-body">
+          Bu, ikinci modalın içeriğidir.
+        </div>
+        <div class="modal-footer">
+          <button 
+            type="button" 
+            class="btn btn-secondary" 
+            data-bs-dismiss="modal"
+          >
+            Kapat
+          </button>
+          <button 
+            type="button" 
+            class="btn btn-primary"
+          >
+            Kaydet
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 3 (Örnek) -->
+  <div 
+    class="modal fade" 
+    id="modal3" 
+    tabindex="-1"
+    aria-labelledby="modal3Label" 
+    aria-hidden="true"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modal3Label">Modal Başlık 3</h5>
+          <button 
+            type="button" 
+            class="btn-close" 
+            data-bs-dismiss="modal" 
+            aria-label="Kapat"
+          ></button>
+        </div>
+        <div class="modal-body">
+          Bu, üçüncü modalın içeriğidir.
+        </div>
+        <div class="modal-footer">
+          <button 
+            type="button" 
+            class="btn btn-secondary" 
+            data-bs-dismiss="modal"
+          >
+            Kapat
+          </button>
+          <button 
+            type="button" 
+            class="btn btn-primary"
+          >
+            Kaydet
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPTS -->
+  <!-- jQuery ve Bootstrap Bundle -->
+  <script 
+    src="https://code.jquery.com/jquery-3.7.1.min.js"
+    integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+    crossorigin="anonymous">
+  </script>
+  
+  <script 
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous">
+  </script>
+  
+  <!-- Yandex Maps (API key: d40e57ba-07ba-4f7e-b1bc-b5ffef8e7f9b) -->
+  <script 
+    src="https://api-maps.yandex.ru/2.1/?apikey=d40e57ba-07ba-4f7e-b1bc-b5ffef8e7f9b&lang=tr_TR" 
+    type="text/javascript">
+  </script>
+
+  <script>
+    // Yandex Map’i başlat
+    ymaps.ready(init);
+
+    function init() {
+      // Merkez konum
+      var centerLocation = [41.3331694, 36.2704833];
+      
+      // Haritanın oluşturulması
+      var map = new ymaps.Map("map", {
+        center: centerLocation,
+        zoom: 15
+      });
+
+      // Tüm WiFi lokasyonlarının listesi
+      var locations = [
+        { lat: 41.3384389, lng: 36.2444694, title: "Hayrettin karaca Rekreasyon Alanı Ücretsiz WiFi Noktası", type: "nowActive" },
+        { lat: 41.339753,  lng: 36.2474861, title: "Ata Tohum Ücretsiz WiFi Noktası", type: "nowActive" },
+        { lat: 41.3400056, lng: 36.2481556, title: "Aquapark Ücretsiz WiFi Noktası", type: "nowActive" },
+        { lat: 41.3359222, lng: 36.258375,  title: "Şehit Öğretmen Aybüke Yalçın Parkı Ücretsiz WiFi Noktası", type: "nowActive" },
+        { lat: 41.339525,  lng: 36.2600278, title: "Down Cafe Ücretsiz WiFi Noktası", type: "nowActive" },
+        { lat: 41.3319861, lng: 36.2609222, title: "Gökhan Bayram Parkı Ücretsiz WiFi Noktası", type: "nowActive" },
+        { lat: 41.3334278, lng: 36.2578417, title: "Atakum Belediyesi STAD Ücretsiz WiFi Noktası", type: "nowActive" },
+        { lat: 41.3270806, lng: 36.2671028, title: "Özgecan Kadın Danışma Merkezi Ücretsiz WiFi Noktası", type: "nowActive" },
+        { lat: 41.3309611, lng: 36.2742861, title: "Muhsin yazıcıoğlu Parkı ve Spor Tesisi Ücretsiz WiFi Noktası", type: "nowActive" },
+        { lat: 41.3269611, lng: 36.26835,   title: "Tünel Park 2 Ücretsiz WiFi Noktası", type: "nowActive" },
+        { lat: 41.3276917, lng: 36.2688194, title: "Tünel Parkı Ücretsiz WiFi Noktası (Tünel Park 1)", type: "nowActive" },
+        { lat: 41.3342306, lng: 36.2654389, title: "Lozan Parkı Ücretsiz WiFi Noktası", type: "nowActive" },
+        { lat: 41.3361889, lng: 36.26545,   title: "Hasan Ali Yücel Gençlik Merkezi Ücretsiz WiFi Noktası", type: "nowActive" },
+        { lat: 41.3364639, lng: 36.2657889, title: "Banda Aceh Parkı Ücretsiz WiFi Noktası", type: "nowActive" },
+        { lat: 41.3348306, lng: 36.2698806, title: "Cumhuriyet Parkı Ücretsiz WiFi Noktası", type: "nowActive" },
+        { lat: 41.3331694, lng: 36.2704833, title: "Ömer Halis Demir Ücretsiz WiFi Noktası", type: "nowActive" },
+        { lat: 41.3336361, lng: 36.27495,   title: "Ahmet Akın Parkı Ücretsiz WiFi Noktası", type: "nowActive" },
+        { lat: 41.3207028, lng: 36.2860278, title: "Cemal yeşilyurt Parkı Ücretsiz WiFi Noktası", type: "nowActive" },
+        { lat: 41.3251417, lng: 36.2754056, title: "Azizsancar Ücretsiz WiFi Noktası", type: "nowActive" },
+        { lat: 41.3260083, lng: 36.2928861, title: "Çamlık Park Ücretsiz WiFi Noktası", type: "nowActive" },
+        { lat: 41.3249944, lng: 36.2881139, title: "İpek Park Ücretsiz WiFi Noktası", type: "nowActive" },
+        { lat: 41.3272472, lng: 36.2824389, title: "Yaşam Park Ücretsiz WiFi Noktası", type: "nowActive" },
+        { lat: 41.3285833, lng: 36.2847444, title: "Atakum Belediyesi Ücretsiz WiFi Noktası", type: "nowActive" },
+        { lat: 41.3295611, lng: 36.2824361, title: "Dost Park Ücretsiz WiFi Noktası", type: "nowActive" },
+        { lat: 41.3320028, lng: 36.2783,    title: "Vedat Türkali Ücretsiz WiFi Noktası", type: "nowActive" },
+        { lat: 41.3339222, lng: 36.2795167, title: "Taşçıoğlu Parkı Ücretsiz WiFi Noktası", type: "nowActive" },
+      ];
+
+      // Her bir konumu haritaya ekle
+      locations.forEach(function (location) {
+        var iconUrl;
+        switch (location.type) {
+          case "nowActive":
+            iconUrl = "turuncu.gif";
+            break;
+          case "other":
+          case "willActive":
+            iconUrl = "gri.gif";
+            break;
+          default:
+            iconUrl = "https://static.vecteezy.com/system/resources/previews/014/441/101/original/wifi-icon-design-in-blue-circle-png.png";
+        }
+
+        // Yandex Placemark oluştur
+        var placemark = new ymaps.Placemark(
+          [location.lat, location.lng],
+          {
+            hintContent: location.title,
+            // Balon içerisinde “Yol Tarifi” butonu
+            balloonContentBody: `
+              <div class="card" style="width: 200px;">
+                <div class="card-header p-2">
+                  <p class="card-title m-0">${location.title}</p>
+                </div>
+                <div class="card-body p-2">
+                  <button 
+                    class="btn btn-primary btn-sm modalBtn" 
+                    data-lat="${location.lat}" 
+                    data-lng="${location.lng}"
+                  >
+                    Yol Tarifi Al
+                  </button>
+                </div>
+              </div>
+            `
+          },
+          {
+            iconLayout: 'default#image',
+            iconImageHref: iconUrl,
+            iconImageSize: [45, 45],
+            // İkonun balonun gösterildiği nokta ile hizalanması
+            iconImageOffset: [-22, -45] 
+          }
+        );
+        
+        map.geoObjects.add(placemark);
+      });
+
+      // "Yol Tarifi Al" butonuna tıklama (document düzeyinde dinleme)
+      document.addEventListener("click", function (event) {
+        if (event.target && event.target.classList.contains("modalBtn")) {
+          var destinationLat = parseFloat(event.target.getAttribute("data-lat"));
+          var destinationLng = parseFloat(event.target.getAttribute("data-lng"));
+          var destination = { lat: destinationLat, lng: destinationLng };
+
+          if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+              function (position) {
+                var currentLocation = {
+                  lat: position.coords.latitude,
+                  lng: position.coords.longitude,
+                };
+                // Yandex Maps yönlendirme linki
+                var yandexUrl = `https://yandex.ru/maps/?rtext=${currentLocation.lat},${currentLocation.lng}~${destination.lat},${destination.lng}&rtt=auto`;
+                window.open(yandexUrl, "_blank");
+              },
+              function () {
+                alert("Konum bilgisi alınamadı. Lütfen konum iznini açınız.");
+              }
+            );
+          } else {
+            alert("Tarayıcınız konum belirlemeyi (geolocation) desteklemiyor.");
+          }
+        }
+      });
+    }
+  </script>
+</body>
+</html>
