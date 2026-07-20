@@ -342,6 +342,41 @@ const marketplaceUpdateValidation = [
   handleValidation,
 ];
 
+// ─── Muhtarlar ──────────────────────────────────────────────────────────────
+
+const muhtarCreateValidation = [
+  requiredText("mahalle_name", { min: 2, max: 150 }),
+  requiredText("first_name", { min: 2, max: 100 }),
+  requiredText("last_name", { min: 2, max: 100 }),
+  optionalText("address", { min: 1 }),
+  optionalText("phone", { min: 1, max: 30 }),
+  body("email")
+    .optional({ values: "falsy" })
+    .trim()
+    .isEmail()
+    .withMessage("Geçerli bir e-posta adresi giriniz."),
+  optionalText("latitude", { min: 1 }),
+  optionalText("longitude", { min: 1 }),
+  handleValidation,
+];
+
+const muhtarUpdateValidation = [
+  ...requireBody,
+  optionalText("mahalle_name", { min: 2, max: 150 }),
+  optionalText("first_name", { min: 2, max: 100 }),
+  optionalText("last_name", { min: 2, max: 100 }),
+  optionalText("address", { min: 1 }),
+  optionalText("phone", { min: 1, max: 30 }),
+  body("email")
+    .optional({ values: "falsy" })
+    .trim()
+    .isEmail()
+    .withMessage("Geçerli bir e-posta adresi giriniz."),
+  optionalText("latitude", { min: 1 }),
+  optionalText("longitude", { min: 1 }),
+  handleValidation,
+];
+
 // ─── Başkan ─────────────────────────────────────────────────────────────────
 
 const presidentUpsertValidation = [
@@ -491,6 +526,8 @@ module.exports = {
   mapPointUpdateValidation,
   marketplaceCreateValidation,
   marketplaceUpdateValidation,
+  muhtarCreateValidation,
+  muhtarUpdateValidation,
   presidentUpsertValidation,
   institutionHistoryUpsertValidation,
   workplaceLicenseUpsertValidation,

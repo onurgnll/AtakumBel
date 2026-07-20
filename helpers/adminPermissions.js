@@ -10,6 +10,7 @@ const PERMISSION_MODULES = [
   "employees",
   "presidents",
   "vicePresidents",
+  "muhtars",
   "councilMembers",
   "councilDecisions",
   "publicNotices",

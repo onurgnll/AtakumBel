@@ -22,6 +22,7 @@ const ROUTE_TO_MODEL = {
   "free-wifi-points": "FreeWifiPoint",
   "waste-points": "WastePoint",
   marketplaces: "Marketplace",
+  muhtars: "Muhtar",
   "vice-presidents": "VicePresident",
   "press-materials": "PressMaterial",
   "activity-reports": "ActivityReport",

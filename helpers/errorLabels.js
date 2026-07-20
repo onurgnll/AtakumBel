@@ -88,6 +88,7 @@ const MODULE_LABELS = {
   employees: "çalışanlar",
   presidents: "başkan",
   vicePresidents: "başkan yardımcıları",
+  muhtars: "muhtarlar",
   councilMembers: "meclis üyeleri",
   councilDecisions: "meclis kararları",
   publicNotices: "kamu duyuruları",
