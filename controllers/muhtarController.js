@@ -2,6 +2,7 @@
 
 const { Muhtar, sequelize } = require("../models");
 const { Op } = require("sequelize");
+const { buildTurkishLikeOr } = require("../helpers/turkishSearch");
 const { getPaginationParams, getPagingData } = require("../helpers/pagination");
 const { reorderByIds, getNextSortOrder } = require("../helpers/reorderEntities");
 const fs = require("fs");
@@ -33,11 +34,11 @@ exports.getAllMuhtars = async (req, res, next) => {
     const search = req.query.search ? req.query.search.trim() : null;
     const whereCondition = search
       ? {
-          [Op.or]: [
-            { mahalle_name: { [Op.iLike]: `%${search}%` } },
-            { first_name: { [Op.iLike]: `%${search}%` } },
-            { last_name: { [Op.iLike]: `%${search}%` } },
-          ],
+          [Op.or]: buildTurkishLikeOr(
+            ["mahalle_name", "first_name", "last_name"],
+            search,
+            sequelize,
+          ),
         }
       : {};
     const { rows: muhtars, count } = await Muhtar.findAndCountAll({

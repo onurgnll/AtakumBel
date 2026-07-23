@@ -27,6 +27,10 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    return queryInterface.bulkDelete("Admins", { email: "admin@atakumbel.gov.tr" }, {});
+    return queryInterface.bulkDelete(
+      "Admins",
+      { email: "admin@atakumbel.gov.tr" },
+      {},
+    );
   },
 };

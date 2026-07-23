@@ -14,6 +14,7 @@ const {
   VicePresident,
   Department,
   CouncilMember,
+  Muhtar,
   Employee,
   StrategicPlan,
   PerformanceProgram,
@@ -24,8 +25,10 @@ const {
   WorkplaceLicense,
   GatheringArea,
   ServiceForm,
+  sequelize,
 } = require("../models");
 const { Op } = require("sequelize");
+const { buildTurkishLikeOr } = require("../helpers/turkishSearch");
 
 function clampInt(value, { min, max, fallback }) {
   const n = Number.parseInt(String(value ?? ""), 10);
@@ -39,7 +42,7 @@ function normalizeQuery(q) {
 }
 
 function buildILikeOr(fields, q) {
-  return fields.map((field) => ({ [field]: { [Op.iLike]: `%${q}%` } }));
+  return buildTurkishLikeOr(fields, q, sequelize);
 }
 
 function applyIsActiveFilter(where, isAdmin) {
@@ -274,6 +277,19 @@ exports.searchAll = async (req, res, next) => {
         attributes: ["id", "first_name", "last_name", "political_party", "order"],
         order: [["order", "ASC"]],
         subtitleField: "political_party",
+      },
+      {
+        kind: "muhtar",
+        model: Muhtar,
+        activeFilter: false,
+        fields: ["mahalle_name", "first_name", "last_name", "address", "phone", "email"],
+        attributes: ["id", "mahalle_name", "first_name", "last_name", "address", "phone", "email", "order"],
+        order: [
+          ["order", "ASC"],
+          ["id", "ASC"],
+        ],
+        titleField: "mahalle_name",
+        subtitleStatic: "Muhtar",
       },
       {
         kind: "employee",
