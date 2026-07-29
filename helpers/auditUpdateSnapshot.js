@@ -17,6 +17,7 @@ const ROUTE_TO_MODEL = {
   departments: "Department",
   directives: "Directive",
   employees: "Employee",
+  faqs: "Faq",
   "council-members": "CouncilMember",
   "gathering-areas": "GatheringArea",
   "free-wifi-points": "FreeWifiPoint",

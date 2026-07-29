@@ -71,6 +71,10 @@ const FIELD_LABELS = {
   reports_to_president: "başkana bağlılık",
   is_unit_manager: "birim müdürü",
   is_contact_person: "irtibat kişisi",
+  question: "soru",
+  answer: "cevap",
+  category: "kategori",
+  order: "sıra",
 };
 
 const ACTION_LABELS = {
@@ -113,6 +117,7 @@ const MODULE_LABELS = {
   contentPopups: "açılır pencereler",
   institutionHistory: "kurum tarihçesi",
   workplaceLicenses: "işyeri ruhsatları",
+  faqs: "sıkça sorulan sorular",
 };
 
 function labelModule(moduleName) {

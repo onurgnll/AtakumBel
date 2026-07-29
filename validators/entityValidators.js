@@ -218,6 +218,25 @@ const directiveUpdateValidation = [
   handleValidation,
 ];
 
+// ─── Sıkça sorulan sorular ──────────────────────────────────────────────────
+
+const faqCreateValidation = [
+  requiredText("question", { min: 5, max: 500 }),
+  requiredText("answer", { min: 1 }),
+  optionalText("category", { max: 120 }),
+  optionalBool("is_active"),
+  handleValidation,
+];
+
+const faqUpdateValidation = [
+  ...requireBody,
+  optionalText("question", { min: 5, max: 500 }),
+  optionalText("answer", { min: 1 }),
+  optionalText("category", { max: 120 }),
+  optionalBool("is_active"),
+  handleValidation,
+];
+
 // ─── Başkan yardımcıları ────────────────────────────────────────────────────
 
 const vicePresidentCreateValidation = [
@@ -514,6 +533,8 @@ module.exports = {
   facilityUpdateValidation,
   directiveCreateValidation,
   directiveUpdateValidation,
+  faqCreateValidation,
+  faqUpdateValidation,
   vicePresidentCreateValidation,
   vicePresidentUpdateValidation,
   councilMemberCreateValidation,

@@ -35,6 +35,7 @@ const PERMISSION_MODULES = [
   "contentPopups",
   "institutionHistory",
   "workplaceLicenses",
+  "faqs",
 ];
 
 const createCrudPermissions = (value = false) => ({
