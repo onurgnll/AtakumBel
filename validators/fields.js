@@ -3,8 +3,11 @@
 const { body, query } = require("express-validator");
 const { labelField } = require("../helpers/errorLabels");
 
-const SPOT_MAX_LEN = 50;
-const NEWS_SPOT_MAX_LEN = 500;
+const SPOT_MAX_LEN = 52;
+/** Haber spot alanı — Spot / özet ile aynı üst sınır */
+const NEWS_SPOT_MAX_LEN = SPOT_MAX_LEN;
+/** Meclis kararı özet / kısa açıklama ve karar özeti */
+const SHORT_SUMMARY_MAX_LEN = 52;
 const RECORD_TYPES = ["public_notice", "tender", "council_decision", "real_estate_listing"];
 const EVENT_TYPES = ["competition", "activity"];
 const SUGGESTION_STATUSES = ["pending", "reviewed", "completed"];
@@ -218,6 +221,7 @@ const searchLimitQuery = query("limit")
 module.exports = {
   SPOT_MAX_LEN,
   NEWS_SPOT_MAX_LEN,
+  SHORT_SUMMARY_MAX_LEN,
   RECORD_TYPES,
   EVENT_TYPES,
   SUGGESTION_STATUSES,

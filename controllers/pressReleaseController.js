@@ -1,6 +1,6 @@
 const { PressRelease, PressReleaseGallery, sequelize } = require("../models");
 
-const SPOT_MAX_LEN = 50;
+const { SPOT_MAX_LEN } = require("../validators/fields");
 const { getPaginationParams, getPagingData } = require("../helpers/pagination");
 const {
   normalizeFiles,

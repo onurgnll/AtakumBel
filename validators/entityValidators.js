@@ -6,6 +6,7 @@ const {
   RECORD_TYPES,
   EVENT_TYPES,
   SUGGESTION_STATUSES,
+  SHORT_SUMMARY_MAX_LEN,
   requiredText,
   optionalText,
   optionalBool,
@@ -24,6 +25,21 @@ const {
   newsSpotRequired,
   newsSpotOptional,
 } = require("./fields");
+
+/** Meclis kararı: özet / kısa açıklama en fazla SHORT_SUMMARY_MAX_LEN */
+const councilShortDescription = () =>
+  body("description")
+    .optional({ values: "falsy" })
+    .custom((value, { req }) => {
+      if (req.body.record_type !== "council_decision") return true;
+      const text = String(value ?? "").trim();
+      if (text.length > SHORT_SUMMARY_MAX_LEN) {
+        throw new Error(
+          `Özet / kısa açıklama en fazla ${SHORT_SUMMARY_MAX_LEN} karakter olabilir.`,
+        );
+      }
+      return true;
+    });
 
 // ─── Birimler ───────────────────────────────────────────────────────────────
 
@@ -440,6 +456,7 @@ const publicationCreateValidation = [
     .isIn(RECORD_TYPES)
     .withMessage("Geçersiz kayıt türü."),
   optionalText("description", { min: 1 }),
+  councilShortDescription(),
   optionalBool("is_active"),
   optionalDateField("start_date"),
   optionalDateField("end_date"),
@@ -447,7 +464,7 @@ const publicationCreateValidation = [
   optionalPositiveInt("department_id"),
   optionalText("tender_number", { max: 100 }),
   optionalText("decision_no", { max: 100 }),
-  optionalText("summary", { min: 1 }),
+  optionalText("summary", { min: 1, max: SHORT_SUMMARY_MAX_LEN }),
   optionalText("full_text", { min: 1 }),
   optionalText("content", { min: 1 }),
   handleValidation,
@@ -456,7 +473,13 @@ const publicationCreateValidation = [
 const publicationUpdateValidation = [
   ...requireBody,
   titleOptional(),
+  body("record_type")
+    .optional()
+    .trim()
+    .isIn(RECORD_TYPES)
+    .withMessage("Geçersiz kayıt türü."),
   optionalText("description", { min: 1 }),
+  councilShortDescription(),
   optionalBool("is_active"),
   optionalDateField("start_date"),
   optionalDateField("end_date"),
@@ -464,7 +487,7 @@ const publicationUpdateValidation = [
   optionalPositiveInt("department_id"),
   optionalText("tender_number", { max: 100 }),
   optionalText("decision_no", { max: 100 }),
-  optionalText("summary", { min: 1 }),
+  optionalText("summary", { min: 1, max: SHORT_SUMMARY_MAX_LEN }),
   optionalText("full_text", { min: 1 }),
   optionalText("content", { min: 1 }),
   handleValidation,
