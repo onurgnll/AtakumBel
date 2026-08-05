@@ -3,12 +3,17 @@
 const express = require("express");
 const router = express.Router();
 const keosMapController = require("../controllers/keosMapController");
-const { protect } = require("../middlewares/authMiddleware");
+const { protect, authorize } = require("../middlewares/authMiddleware");
 const { idParam, paginationQuery } = require("../validators/commonValidator");
 
 router.get("/visibility", keosMapController.getVisibility);
 // POST: requestGuard PUT'ta son path segmentinin sayısal id olmasını zorunlu kılar
-router.post("/visibility", protect, keosMapController.updateVisibility);
+router.post(
+  "/visibility",
+  protect,
+  authorize("keosMap", "update"),
+  keosMapController.updateVisibility,
+);
 
 router.get(
   "/waste-points",
