@@ -31,7 +31,12 @@ exports.getAllFacilities = async (req, res, next) => {
       limit,
       offset,
       include: [
-        { model: FacilityGallery, as: "gallery", where: { is_main: true } },
+        {
+          model: FacilityGallery,
+          as: "gallery",
+          where: { is_main: true },
+          required: false,
+        },
       ],
       distinct: true,
     });
