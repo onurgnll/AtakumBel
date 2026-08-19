@@ -35,6 +35,7 @@ const PERMISSION_MODULES = [
   "contentPopups",
   "heroVideo",
   "keosMap",
+  "mobileApp",
   "mapPoints",
   "institutionHistory",
   "workplaceLicenses",
