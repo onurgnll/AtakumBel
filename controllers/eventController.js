@@ -43,6 +43,7 @@ exports.getAllEvents = async (req, res, next) => {
     if (search) {
       whereCondition[Op.or] = [
         { title: { [Op.iLike]: `%${search}%` } },
+        { spot: { [Op.iLike]: `%${search}%` } },
         { description: { [Op.iLike]: `%${search}%` } },
         { address: { [Op.iLike]: `%${search}%` } },
       ];
@@ -112,6 +113,7 @@ exports.updateEvent = async (req, res, next) => {
       end_date,
       event_time,
       address,
+      spot,
       description,
     } = req.body;
     const event = await Event.findByPk(id);
@@ -161,6 +163,12 @@ exports.updateEvent = async (req, res, next) => {
       event_time:
         event_time !== undefined ? event_time || null : event.event_time,
       address: address !== undefined ? address || null : event.address,
+      spot:
+        spot !== undefined
+          ? spot != null && String(spot).trim() !== ""
+            ? String(spot).trim()
+            : null
+          : event.spot,
       description: description ?? event.description,
       files: nextFiles,
     });
@@ -212,6 +220,7 @@ exports.createEvent = async (req, res, next) => {
       end_date,
       event_time,
       address,
+      spot,
       description,
       files,
     } = req.body;
@@ -249,6 +258,7 @@ exports.createEvent = async (req, res, next) => {
       end_date: endNorm,
       event_time: event_time || null,
       address: address || null,
+      spot: spot != null && String(spot).trim() !== "" ? String(spot).trim() : null,
       description,
       files: normalizeFiles([], files, docUploads),
     }, { transaction });

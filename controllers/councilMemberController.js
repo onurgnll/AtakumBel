@@ -1,6 +1,7 @@
 ﻿const { CouncilMember, sequelize } = require("../models");
 const { getPaginationParams, getPagingData } = require("../helpers/pagination");
 const { reorderByIds, getNextSortOrder } = require("../helpers/reorderEntities");
+const { nextImageUrl, unlinkIfExists, toUploadPath } = require("../helpers/uploadedImage");
 const fs = require("fs");
 const { Op } = require("sequelize");
 
@@ -60,7 +61,7 @@ exports.addMemberToCouncil = async (req, res, next) => {
         message: "Bu üye zaten kayıtlı.",
       });
     }
-    const image_path = req.file ? req.file.path.replace(/\\/g, "/").replace(/^.*?(\/uploads\/)/, "/uploads/") : null;
+    const image_path = toUploadPath(req.file);
     const nextOrder = await getNextSortOrder(CouncilMember);
     const member = await CouncilMember.create({
       first_name,
@@ -92,14 +93,8 @@ exports.updateMember = async (req, res, next) => {
         .json({ success: 0, message: "Güncellenecek üye bulunamadı." });
     }
 
-    const { first_name, last_name, political_party } = req.body;
-    let image_path = member.image_url;
-    if (req.file) {
-      if (member.image_url && fs.existsSync(member.image_url)) {
-        fs.unlinkSync(member.image_url);
-      }
-      image_path = req.file.path.replace(/\\/g, "/").replace(/^.*?(\/uploads\/)/, "/uploads/");
-    }
+    const { first_name, last_name, political_party, clear_image } = req.body;
+    const image_path = nextImageUrl(member.image_url, req.file, clear_image);
 
     await member.update({
       first_name: first_name ?? member.first_name,
@@ -157,9 +152,7 @@ exports.deleteMember = async (req, res, next) => {
         .status(404)
         .json({ success: 0, data: null, message: "Silinecek üye bulunamadı." });
     }
-    if (member.image_url && fs.existsSync(member.image_url)) {
-      fs.unlinkSync(member.image_url);
-    }
+    if (member.image_url) unlinkIfExists(member.image_url);
 
     await member.destroy();
 

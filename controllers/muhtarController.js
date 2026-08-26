@@ -5,6 +5,7 @@ const { Op } = require("sequelize");
 const { buildTurkishLikeOr } = require("../helpers/turkishSearch");
 const { getPaginationParams, getPagingData } = require("../helpers/pagination");
 const { reorderByIds, getNextSortOrder } = require("../helpers/reorderEntities");
+const { nextImageUrl, toUploadPath } = require("../helpers/uploadedImage");
 const fs = require("fs");
 const path = require("path");
 
@@ -99,9 +100,7 @@ exports.createMuhtar = async (req, res, next) => {
 
     const locationUnset = isTruthyFlag(location_unset);
 
-    const image_path = req.file
-      ? req.file.path.replace(/\\/g, "/").replace(/^.*?(\/uploads\/)/, "/uploads/")
-      : null;
+    const image_path = toUploadPath(req.file);
 
     const nextOrder = await getNextSortOrder(Muhtar, t);
     const newMuhtar = await Muhtar.create(
@@ -152,15 +151,9 @@ exports.updateMuhtar = async (req, res, next) => {
       latitude,
       longitude,
       location_unset,
+      clear_image,
     } = req.body;
-    let image_path = muhtar.image_url;
-
-    if (req.file) {
-      deleteImageFile(muhtar.image_url);
-      image_path = req.file.path
-        .replace(/\\/g, "/")
-        .replace(/^.*?(\/uploads\/)/, "/uploads/");
-    }
+    const image_path = nextImageUrl(muhtar.image_url, req.file, clear_image);
 
     const locationUnset = location_unset !== undefined
       ? isTruthyFlag(location_unset)

@@ -14,6 +14,7 @@ exports.getAllDirectives = async (req, res, next) => {
       ? {
           [Op.or]: [
             { title: { [Op.iLike]: `%${search}%` } },
+            { spot: { [Op.iLike]: `%${search}%` } },
             { description: { [Op.iLike]: `%${search}%` } },
           ],
         }
@@ -61,7 +62,7 @@ exports.getDirectiveById = async (req, res, next) => {
 //Create
 exports.createDirective = async (req, res, next) => {
   try {
-    const { title, description, publish_date } = req.body;
+    const { title, spot, description, publish_date } = req.body;
     const existing = await Directive.findOne({ where: { title } });
     if (existing) {
       return res.status(409).json({
@@ -73,6 +74,7 @@ exports.createDirective = async (req, res, next) => {
 
     const newDirective = await Directive.create({
       title,
+      spot: spot != null && String(spot).trim() !== "" ? String(spot).trim() : null,
       description,
       publish_date: new Date(),
     });
@@ -91,7 +93,7 @@ exports.createDirective = async (req, res, next) => {
 exports.updateDirective = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { title, description, publish_date } = req.body;
+    const { title, spot, description, publish_date } = req.body;
 
     const directive = await Directive.findByPk(id);
 
@@ -101,11 +103,16 @@ exports.updateDirective = async (req, res, next) => {
         .json({ success: 0, data: null, message: "Genelge bulunamadı." });
     }
 
-    await directive.update({
+    const patch = {
       title,
       description,
       publish_date,
-    });
+    };
+    if (spot !== undefined) {
+      patch.spot = spot != null && String(spot).trim() !== "" ? String(spot).trim() : null;
+    }
+
+    await directive.update(patch);
 
     res.json({
       success: 1,

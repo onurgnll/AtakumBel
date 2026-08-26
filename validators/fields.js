@@ -3,8 +3,9 @@
 const { body, query } = require("express-validator");
 const { labelField } = require("../helpers/errorLabels");
 
+/** Başlık altı özet — sitede detay hero'sunda görünür */
 const SPOT_MAX_LEN = 52;
-/** Haber spot alanı — Spot / özet ile aynı üst sınır */
+/** Haber / basın bülteni spot alanı — aynı üst sınır */
 const NEWS_SPOT_MAX_LEN = SPOT_MAX_LEN;
 /** Meclis kararı özet / kısa açıklama ve karar özeti */
 const SHORT_SUMMARY_MAX_LEN = 52;
@@ -75,6 +76,13 @@ function optionalBool(field) {
       if (["true", "false", "1", "0"].includes(s)) return true;
       throw new Error(`${lbl(field)} doğru veya yanlış olmalıdır.`);
     });
+}
+
+function optionalClearImage(field = "clear_image") {
+  return body(field)
+    .optional({ values: "falsy" })
+    .isIn(["1", "0", "true", "false"])
+    .withMessage(`${lbl(field)} alanı geçersiz.`);
 }
 
 function optionalPositiveInt(field) {
@@ -229,6 +237,7 @@ module.exports = {
   requiredText,
   optionalText,
   optionalBool,
+  optionalClearImage,
   optionalPositiveInt,
   requiredPositiveInt,
   optionalDecimal,

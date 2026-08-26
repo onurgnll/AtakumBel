@@ -20,6 +20,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
+      spot: {
+        type: DataTypes.TEXT,
+        allowNull: true,
+      },
       description: {
         type: DataTypes.TEXT,
         allowNull: false,

@@ -1,5 +1,6 @@
 ﻿const { Employee, Department, sequelize } = require("../models");
 const { getPaginationParams, getPagingData } = require("../helpers/pagination");
+const { nextImageUrl, unlinkIfExists, toUploadPath } = require("../helpers/uploadedImage");
 const fs = require("fs");
 const { Op } = require("sequelize");
 
@@ -57,7 +58,7 @@ exports.createEmployee = async (req, res, next) => {
       is_active,
     } = req.body;
 
-    const image_path = req.file ? req.file.path.replace(/\\/g, "/").replace(/^.*?(\/uploads\/)/, "/uploads/") : null;
+    const image_path = toUploadPath(req.file);
 
     const existingEmployee = await Employee.findOne({
       where: { first_name, last_name },
@@ -104,10 +105,10 @@ exports.updateEmployee = async (req, res, next) => {
       title,
       department_id,
       dahili_no,
-      image_url,
       is_unit_manager,
       is_contact_person,
       is_active,
+      clear_image,
     } = req.body;
     if (!employee) {
       return res
@@ -115,14 +116,7 @@ exports.updateEmployee = async (req, res, next) => {
         .json({ success: 0, data: null, message: "Çalışan bulunamadı" });
     }
 
-    let image_path = employee.image_url;
-
-    if (req.file) {
-      if (employee.image_url && fs.existsSync(employee.image_url)) {
-        fs.unlinkSync(employee.image_url);
-      }
-      image_path = req.file.path.replace(/\\/g, "/").replace(/^.*?(\/uploads\/)/, "/uploads/");
-    }
+    const image_path = nextImageUrl(employee.image_url, req.file, clear_image);
     await employee.update({
       first_name: first_name ?? employee.first_name,
       last_name: last_name ?? employee.last_name,
@@ -161,9 +155,7 @@ exports.deleteEmployee = async (req, res, next) => {
         .status(404)
         .json({ success: 0, data: null, message: "Çalışan bulunamadı" });
     }
-    if (employee.image_url && fs.existsSync(employee.image_url)) {
-      fs.unlinkSync(employee.image_url);
-    }
+    if (employee.image_url) unlinkIfExists(employee.image_url);
     await employee.destroy();
     return res.json({
       success: 1,

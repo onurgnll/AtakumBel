@@ -36,6 +36,13 @@ function parseOptionalInt(v) {
   return Number.isFinite(n) ? n : null;
 }
 
+function normalizeSpot(v) {
+  if (v === undefined) return undefined;
+  if (v === null) return null;
+  const s = String(v).trim();
+  return s || null;
+}
+
 function normalizeTenderNumber(v) {
   if (v == null || String(v).trim() === "") return null;
   return String(v).trim();
@@ -78,6 +85,7 @@ function mapPublicationRow(row) {
 function buildCreatePayload(recordType, body, uploaded) {
   const {
     title,
+    spot,
     description,
     content,
     is_active,
@@ -95,6 +103,7 @@ function buildCreatePayload(recordType, body, uploaded) {
   const base = {
     record_type: recordType,
     title,
+    spot: normalizeSpot(spot) ?? null,
     description: description || null,
     publish_date: todayDateOnly(),
     is_active: coerceBool(is_active, true),
@@ -153,6 +162,7 @@ function buildCreatePayload(recordType, body, uploaded) {
 function applyUpdate(row, body, uploaded) {
   const {
     title,
+    spot,
     description,
     content,
     is_active,
@@ -170,6 +180,7 @@ function applyUpdate(row, body, uploaded) {
   const patch = {};
 
   if (title !== undefined) patch.title = title;
+  if (spot !== undefined) patch.spot = normalizeSpot(spot);
   if (is_active !== undefined) patch.is_active = coerceBool(is_active, row.is_active);
 
   if (files !== undefined || uploaded.length) {
@@ -264,6 +275,7 @@ exports.getAllPublications = async (req, res, next) => {
     if (search) {
       where[Op.or] = [
         { title: { [Op.iLike]: `%${search}%` } },
+        { spot: { [Op.iLike]: `%${search}%` } },
         { description: { [Op.iLike]: `%${search}%` } },
         { content: { [Op.iLike]: `%${search}%` } },
         { tender_number: { [Op.iLike]: `%${search}%` } },

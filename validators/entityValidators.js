@@ -10,6 +10,7 @@ const {
   requiredText,
   optionalText,
   optionalBool,
+  optionalClearImage,
   optionalPositiveInt,
   requiredPositiveInt,
   optionalDecimal,
@@ -95,6 +96,7 @@ const employeeUpdateValidation = [
   optionalBool("is_unit_manager"),
   optionalBool("is_contact_person"),
   optionalBool("is_active"),
+  optionalClearImage(),
   handleValidation,
 ];
 
@@ -150,6 +152,7 @@ const eventCreateValidation = [
   optionalDateField("end_date"),
   optionalText("event_time", { max: 50 }),
   optionalText("address", { max: 500 }),
+  spotOptional(),
   requiredText("description", { min: 1 }),
   handleValidation,
 ];
@@ -166,6 +169,7 @@ const eventUpdateValidation = [
   optionalDateField("end_date"),
   optionalText("event_time", { max: 50 }),
   optionalText("address", { max: 500 }),
+  spotOptional(),
   optionalText("description", { min: 1 }),
   handleValidation,
 ];
@@ -223,12 +227,14 @@ const facilityUpdateValidation = [
 
 const directiveCreateValidation = [
   titleRequired(),
+  spotOptional(),
   requiredText("description", { min: 1 }),
   handleValidation,
 ];
 
 const directiveUpdateValidation = [
   titleRequired(),
+  spotOptional(),
   requiredText("description", { min: 1 }),
   optionalDateField("publish_date"),
   handleValidation,
@@ -288,6 +294,7 @@ const councilMemberUpdateValidation = [
   optionalText("first_name", { min: 2, max: 100 }),
   optionalText("last_name", { min: 2, max: 100 }),
   optionalText("political_party", { min: 1, max: 150 }),
+  optionalClearImage(),
   handleValidation,
 ];
 
@@ -336,10 +343,7 @@ const contentPopupUpdateValidation = [
   optionalDateField("ends_at"),
   optionalText("redirect_url", { max: 500 }),
   optionalBool("is_active"),
-  body("clear_image")
-    .optional({ values: "falsy" })
-    .isIn(["1", "0", "true", "false"])
-    .withMessage("Görsel temizleme alanı geçersiz."),
+  optionalClearImage(),
   handleValidation,
 ];
 
@@ -409,6 +413,7 @@ const muhtarUpdateValidation = [
     .withMessage("Geçerli bir e-posta adresi giriniz."),
   optionalText("latitude", { min: 1 }),
   optionalText("longitude", { min: 1 }),
+  optionalClearImage(),
   handleValidation,
 ];
 
@@ -455,6 +460,7 @@ const publicationCreateValidation = [
     .withMessage("Kayıt türü zorunludur.")
     .isIn(RECORD_TYPES)
     .withMessage("Geçersiz kayıt türü."),
+  spotOptional(),
   optionalText("description", { min: 1 }),
   councilShortDescription(),
   optionalBool("is_active"),
@@ -478,6 +484,7 @@ const publicationUpdateValidation = [
     .trim()
     .isIn(RECORD_TYPES)
     .withMessage("Geçersiz kayıt türü."),
+  spotOptional(),
   optionalText("description", { min: 1 }),
   councilShortDescription(),
   optionalBool("is_active"),
