@@ -145,7 +145,31 @@ const invalidateCacheMiddleware = (req, res, next) => {
   return next();
 };
 
+const getCachedGet = (req) => {
+  if (req.method !== "GET") return null;
+  if (getCacheSkipReason(req)) return null;
+  return cache.get(buildCacheKey(req)) || null;
+};
+
+const sendCachedGet = (req, res) => {
+  const cached = getCachedGet(req);
+  if (!cached) return false;
+
+  logCache("hit", {
+    method: req.method,
+    url: req.originalUrl,
+    key: buildCacheKey(req),
+    status: cached.status,
+    source: "rate_limit_fallback",
+  });
+  res.set("X-Cache", "HIT");
+  res.status(cached.status).json(cached.body);
+  return true;
+};
+
 module.exports = {
   cacheMiddleware,
   invalidateCacheMiddleware,
+  getCachedGet,
+  sendCachedGet,
 };

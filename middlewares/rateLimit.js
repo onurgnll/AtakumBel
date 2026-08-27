@@ -1,5 +1,6 @@
 const rateLimit = require("express-rate-limit");
 const { getClientIp } = require("../helpers/getClientIp");
+const { getCachedGet, sendCachedGet } = require("./httpCache");
 
 const parsePositiveInt = (value, fallback) => {
   const parsed = Number.parseInt(String(value ?? ""), 10);
@@ -23,32 +24,44 @@ const shouldSkip = (req) => {
   return whitelist.has(getClientIp(req));
 };
 
+const shouldSkipGeneral = (req) => shouldSkip(req) || Boolean(getCachedGet(req));
+
 const rateLimitResponse = (message) => ({
   success: 0,
   message,
 });
 
-const createLimiter = ({ windowMs, max, message }) =>
+const createLimiter = ({ windowMs, max, message, skip = shouldSkip, handler }) =>
   rateLimit({
     windowMs,
     max,
     standardHeaders: true,
     legacyHeaders: false,
     keyGenerator: (req) => getClientIp(req),
-    skip: shouldSkip,
-    handler: (req, res) => {
-      res.status(429).json(rateLimitResponse(message));
-    },
+    skip,
+    handler:
+      handler ||
+      ((req, res) => {
+        res.status(429).json(rateLimitResponse(message));
+      }),
     validate: {
       trustProxy: false,
       xForwardedForHeader: false,
     },
   });
 
+const generalMessage =
+  "Çok fazla istek gönderildi. Lütfen bir süre sonra tekrar deneyin.";
+
 const generalRateLimiter = createLimiter({
   windowMs: parsePositiveInt(process.env.RATE_LIMIT_WINDOW_MS, 15 * 60 * 1000),
   max: parsePositiveInt(process.env.RATE_LIMIT_MAX, 300),
-  message: "Çok fazla istek gönderildi. Lütfen bir süre sonra tekrar deneyin.",
+  message: generalMessage,
+  skip: shouldSkipGeneral,
+  handler: (req, res) => {
+    if (sendCachedGet(req, res)) return;
+    res.status(429).json(rateLimitResponse(generalMessage));
+  },
 });
 
 const authRateLimiter = createLimiter({
