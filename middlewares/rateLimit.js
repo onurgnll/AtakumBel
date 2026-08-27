@@ -1,5 +1,5 @@
 const rateLimit = require("express-rate-limit");
-const { getClientIp, isPrivateIp } = require("../helpers/getClientIp");
+const { getClientIp } = require("../helpers/getClientIp");
 
 const parsePositiveInt = (value, fallback) => {
   const parsed = Number.parseInt(String(value ?? ""), 10);
@@ -20,12 +20,7 @@ const whitelist = new Set(
 
 const shouldSkip = (req) => {
   if (!isRateLimitEnabled()) return true;
-  const ip = getClientIp(req);
-  if (whitelist.has(ip)) return true;
-  // Next.js SSR, backend'e Docker iç ağından gider. Tüm ziyaretçiler aynı
-  // container IP'sini paylaşır; bu IP'yi limitlemek herkesi 429'a düşürür.
-  // Gerçek kullanıcılar nginx üzerinden public IP ile gelir, onlar limitlenir.
-  return isPrivateIp(ip);
+  return whitelist.has(getClientIp(req));
 };
 
 const rateLimitResponse = (message) => ({

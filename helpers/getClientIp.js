@@ -26,16 +26,7 @@ const isPrivateIp = (ip) => {
 const collectIpCandidates = (req) => {
   const candidates = [];
 
-  const forwarded = req.headers["x-forwarded-for"];
-  if (forwarded) {
-    candidates.push(
-      ...String(forwarded)
-        .split(",")
-        .map((part) => normalizeIp(part))
-        .filter(Boolean),
-    );
-  }
-
+  // nginx ve Next.js SSR X-Real-IP yazar; X-Forwarded-For istemciden sahte gelebilir.
   const singleHeaders = [
     "x-real-ip",
     "cf-connecting-ip",
@@ -49,6 +40,16 @@ const collectIpCandidates = (req) => {
       const normalized = normalizeIp(String(value));
       if (normalized) candidates.push(normalized);
     }
+  }
+
+  const forwarded = req.headers["x-forwarded-for"];
+  if (forwarded) {
+    candidates.push(
+      ...String(forwarded)
+        .split(",")
+        .map((part) => normalizeIp(part))
+        .filter(Boolean),
+    );
   }
 
   const socketIp = normalizeIp(req.ip || req.socket?.remoteAddress);
