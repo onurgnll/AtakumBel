@@ -25,8 +25,8 @@ router.post("/login", loginValidation, authController.login);
 router.use(protect);
 
 router.get("/me", adminController.getMe);
-router.get("/dashboard/system", adminDashboardController.getSystemInfo);
-router.get("/dashboard/activity", adminDashboardController.getActivity);
+router.get("/dashboard/system", authorizeSuperAdmin, adminDashboardController.getSystemInfo);
+router.get("/dashboard/activity", authorizeSuperAdmin, adminDashboardController.getActivity);
 router.get(
   "/audit-logs",
   authorize("adminAuditLogs", "read"),
