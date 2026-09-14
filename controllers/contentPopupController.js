@@ -14,6 +14,13 @@ function coerceBoolean(value, whenMissing) {
   return Boolean(value);
 }
 
+function normalizeLayout(value, whenMissing = "landscape") {
+  const v = String(value ?? "").trim().toLowerCase();
+  if (v === "portrait" || v === "dikey") return "portrait";
+  if (v === "landscape" || v === "yatay") return "landscape";
+  return whenMissing;
+}
+
 function toUploadPath(file) {
   if (!file?.path) return null;
   return file.path.replace(/\\/g, "/").replace(/^.*?(\/uploads\/)/, "/uploads/");
@@ -86,6 +93,7 @@ exports.createContentPopup = async (req, res, next) => {
       ends_at,
       redirect_url,
       is_active,
+      layout,
     } = req.body;
 
     const uploaded = toUploadPath(req.file);
@@ -97,6 +105,7 @@ exports.createContentPopup = async (req, res, next) => {
       ends_at: ends_at === "" ? null : ends_at ?? null,
       redirect_url: redirect_url === "" ? null : redirect_url ?? null,
       image_url: uploaded,
+      layout: normalizeLayout(layout, "landscape"),
       is_active: coerceBoolean(is_active, true),
     });
 
@@ -128,6 +137,7 @@ exports.updateContentPopup = async (req, res, next) => {
       redirect_url,
       is_active,
       clear_image,
+      layout,
     } = req.body;
 
     const uploaded = toUploadPath(req.file);
@@ -139,6 +149,7 @@ exports.updateContentPopup = async (req, res, next) => {
       ...(starts_at !== undefined ? { starts_at: starts_at === "" ? null : starts_at } : {}),
       ...(ends_at !== undefined ? { ends_at: ends_at === "" ? null : ends_at } : {}),
       ...(redirect_url !== undefined ? { redirect_url: redirect_url === "" ? null : redirect_url } : {}),
+      ...(layout !== undefined ? { layout: normalizeLayout(layout, row.layout || "landscape") } : {}),
       ...(is_active !== undefined ? { is_active: coerceBoolean(is_active, row.is_active) } : {}),
     };
 

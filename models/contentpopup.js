@@ -38,6 +38,12 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: true,
       },
+      /** portrait = dikey şablon, landscape = yatay şablon */
+      layout: {
+        type: DataTypes.STRING(20),
+        allowNull: false,
+        defaultValue: "landscape",
+      },
       is_active: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
