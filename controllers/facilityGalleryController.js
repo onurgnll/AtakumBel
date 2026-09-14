@@ -1,4 +1,5 @@
 ﻿const { FacilityGallery, sequelize } = require("../models");
+const { promoteFirstIfNoMain } = require("../helpers/galleryCover");
 const fs = require("fs");
 
 //Create
@@ -41,11 +42,13 @@ exports.addImageToGallery = async (req, res, next) => {
 
 //Delete
 exports.deleteGalleryImage = async (req, res, next) => {
+  const t = await sequelize.transaction();
   try {
     const { id } = req.params;
-    const image = await FacilityGallery.findByPk(id);
+    const image = await FacilityGallery.findByPk(id, { transaction: t });
 
     if (!image) {
+      await t.rollback();
       return res
         .status(404)
         .json({ success: 0, data: null, message: "Görsel bulunamadı." });
@@ -54,9 +57,13 @@ exports.deleteGalleryImage = async (req, res, next) => {
       fs.unlinkSync(image.image_url);
     }
 
-    await image.destroy();
+    const facilityId = image.facility_id;
+    await image.destroy({ transaction: t });
+    await promoteFirstIfNoMain(FacilityGallery, "facility_id", facilityId, t);
+    await t.commit();
     res.json({ success: 1, data: null, message: "Görsel başarıyla silindi." });
   } catch (err) {
+    await t.rollback();
     next(err);
   }
 };

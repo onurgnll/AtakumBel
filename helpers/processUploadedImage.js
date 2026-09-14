@@ -29,8 +29,13 @@ async function processUploadedImage(file) {
   const meta = await sharp(filePath, { failOn: "none" }).metadata();
   if (!meta.width || !meta.height) return file;
 
-  let pipeline = sharp(filePath, { failOn: "none" });
-  if (meta.width > MAX_DIMENSION || meta.height > MAX_DIMENSION) {
+  const orientation = meta.orientation ?? 1;
+  const swapped = orientation >= 5 && orientation <= 8;
+  const width = swapped ? meta.height : meta.width;
+  const height = swapped ? meta.width : meta.height;
+
+  let pipeline = sharp(filePath, { failOn: "none" }).rotate();
+  if (width > MAX_DIMENSION || height > MAX_DIMENSION) {
     pipeline = pipeline.resize({
       width: MAX_DIMENSION,
       height: MAX_DIMENSION,

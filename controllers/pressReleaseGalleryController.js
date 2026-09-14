@@ -1,4 +1,5 @@
 const { PressReleaseGallery, sequelize } = require("../models");
+const { promoteFirstIfNoMain } = require("../helpers/galleryCover");
 const fs = require("fs");
 
 exports.getGalleryByPressReleaseId = async (req, res, next) => {
@@ -52,11 +53,13 @@ exports.addImageToGallery = async (req, res, next) => {
 };
 
 exports.deleteGalleryImage = async (req, res, next) => {
+  const t = await sequelize.transaction();
   try {
     const { id } = req.params;
-    const image = await PressReleaseGallery.findByPk(id);
+    const image = await PressReleaseGallery.findByPk(id, { transaction: t });
 
     if (!image) {
+      await t.rollback();
       return res
         .status(404)
         .json({ success: 0, data: null, message: "Görsel bulunamadı." });
@@ -65,9 +68,18 @@ exports.deleteGalleryImage = async (req, res, next) => {
       fs.unlinkSync(image.image_url);
     }
 
-    await image.destroy();
+    const pressReleaseId = image.press_release_id;
+    await image.destroy({ transaction: t });
+    await promoteFirstIfNoMain(
+      PressReleaseGallery,
+      "press_release_id",
+      pressReleaseId,
+      t,
+    );
+    await t.commit();
     res.json({ success: 1, data: null, message: "Görsel başarıyla silindi." });
   } catch (err) {
+    await t.rollback();
     next(err);
   }
 };

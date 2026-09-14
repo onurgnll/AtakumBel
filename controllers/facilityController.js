@@ -1,5 +1,10 @@
 ﻿const { FacilityGallery, Facility, sequelize } = require("../models");
 const { getPaginationParams, getPagingData } = require("../helpers/pagination");
+const {
+  createMainIndex,
+  parseCoverChoice,
+  setExistingAsMain,
+} = require("../helpers/galleryCover");
 const fs = require("fs");
 const { Op } = require("sequelize");
 
@@ -115,6 +120,7 @@ exports.createFacility = async (req, res, next) => {
       });
     }
 
+    const mainIdx = createMainIndex(req.body, uploadedFiles.length);
     await Promise.all(
       uploadedFiles.map((file, index) =>
         FacilityGallery.create(
@@ -122,7 +128,7 @@ exports.createFacility = async (req, res, next) => {
             facility_id: newFacility.id,
             image_url: file.path.replace(/\\/g, "/").replace(/^.*?(\/uploads\/)/, "/uploads/"),
             order: index + 1,
-            is_main: index === 0,
+            is_main: index === mainIdx,
           },
           { transaction },
         ),
@@ -168,12 +174,18 @@ exports.updateFacility = async (req, res, next) => {
     });
 
     const uploadedFiles = getUploadedFiles(req);
+    const { mainGalleryId, coverFromNew, mainImageIndex } = parseCoverChoice(
+      req.body,
+      uploadedFiles.length,
+    );
     if (uploadedFiles.length > 0) {
       transaction = await sequelize.transaction();
-      await FacilityGallery.update(
-        { is_main: false },
-        { where: { facility_id: facility.id, is_main: true }, transaction },
-      );
+      if (coverFromNew) {
+        await FacilityGallery.update(
+          { is_main: false },
+          { where: { facility_id: facility.id }, transaction },
+        );
+      }
       const maxOrder = await FacilityGallery.max("order", {
         where: { facility_id: facility.id },
       });
@@ -185,13 +197,29 @@ exports.updateFacility = async (req, res, next) => {
               facility_id: facility.id,
               image_url: file.path.replace(/\\/g, "/").replace(/^.*?(\/uploads\/)/, "/uploads/"),
               order: startOrder + index,
-              is_main: index === 0,
+              is_main: coverFromNew && index === mainImageIndex,
             },
             { transaction },
           ),
         ),
       );
+      if (!coverFromNew && mainGalleryId != null) {
+        await setExistingAsMain(
+          FacilityGallery,
+          "facility_id",
+          facility.id,
+          mainGalleryId,
+          transaction,
+        );
+      }
       await transaction.commit();
+    } else if (mainGalleryId != null) {
+      await setExistingAsMain(
+        FacilityGallery,
+        "facility_id",
+        facility.id,
+        mainGalleryId,
+      );
     }
 
     return res.json({

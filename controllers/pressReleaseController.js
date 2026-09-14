@@ -10,6 +10,11 @@ const {
   deleteStoredFilePaths,
   syncRemovedAttachmentFiles,
 } = require("../helpers/normalizeUploadFiles");
+const {
+  createMainIndex,
+  parseCoverChoice,
+  setExistingAsMain,
+} = require("../helpers/galleryCover");
 const fs = require("fs");
 const { Op } = require("sequelize");
 
@@ -142,6 +147,7 @@ exports.createPressRelease = async (req, res, next) => {
     );
 
     if (galleryUploads.length > 0) {
+      const mainIdx = createMainIndex(req.body, galleryUploads.length);
       await Promise.all(
         galleryUploads.map((file, index) =>
           PressReleaseGallery.create(
@@ -151,7 +157,7 @@ exports.createPressRelease = async (req, res, next) => {
                 .replace(/\\/g, "/")
                 .replace(/^.*?(\/uploads\/)/, "/uploads/"),
               order: index + 1,
-              is_main: index === 0,
+              is_main: index === mainIdx,
             },
             { transaction },
           ),
@@ -221,12 +227,18 @@ exports.updatePressRelease = async (req, res, next) => {
     });
 
     const galleryUploads = collectGalleryImages(req);
+    const { mainGalleryId, coverFromNew, mainImageIndex } = parseCoverChoice(
+      req.body,
+      galleryUploads.length,
+    );
     if (galleryUploads.length > 0) {
       transaction = await sequelize.transaction();
-      await PressReleaseGallery.update(
-        { is_main: false },
-        { where: { press_release_id: item.id, is_main: true }, transaction },
-      );
+      if (coverFromNew) {
+        await PressReleaseGallery.update(
+          { is_main: false },
+          { where: { press_release_id: item.id }, transaction },
+        );
+      }
       const maxOrder = await PressReleaseGallery.max("order", {
         where: { press_release_id: item.id },
       });
@@ -240,13 +252,29 @@ exports.updatePressRelease = async (req, res, next) => {
                 .replace(/\\/g, "/")
                 .replace(/^.*?(\/uploads\/)/, "/uploads/"),
               order: startOrder + index,
-              is_main: index === 0,
+              is_main: coverFromNew && index === mainImageIndex,
             },
             { transaction },
           ),
         ),
       );
+      if (!coverFromNew && mainGalleryId != null) {
+        await setExistingAsMain(
+          PressReleaseGallery,
+          "press_release_id",
+          item.id,
+          mainGalleryId,
+          transaction,
+        );
+      }
       await transaction.commit();
+    } else if (mainGalleryId != null) {
+      await setExistingAsMain(
+        PressReleaseGallery,
+        "press_release_id",
+        item.id,
+        mainGalleryId,
+      );
     }
 
     return res.json({

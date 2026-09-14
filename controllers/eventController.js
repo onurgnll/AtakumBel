@@ -8,6 +8,11 @@ const {
   deleteStoredFilePaths,
   syncRemovedAttachmentFiles,
 } = require("../helpers/normalizeUploadFiles");
+const {
+  createMainIndex,
+  parseCoverChoice,
+  setExistingAsMain,
+} = require("../helpers/galleryCover");
 const fs = require("fs");
 const { Op } = require("sequelize");
 
@@ -175,10 +180,16 @@ exports.updateEvent = async (req, res, next) => {
 
     if (galleryUploads.length > 0) {
       transaction = await sequelize.transaction();
-      await EventGallery.update(
-        { is_main: false },
-        { where: { event_id: event.id, is_main: true }, transaction },
+      const { mainGalleryId, coverFromNew, mainImageIndex } = parseCoverChoice(
+        req.body,
+        galleryUploads.length,
       );
+      if (coverFromNew) {
+        await EventGallery.update(
+          { is_main: false },
+          { where: { event_id: event.id }, transaction },
+        );
+      }
       const maxOrder = await EventGallery.max("order", { where: { event_id: event.id } });
       const startOrder = Number(maxOrder) > 0 ? Number(maxOrder) + 1 : 1;
       await Promise.all(
@@ -188,13 +199,21 @@ exports.updateEvent = async (req, res, next) => {
               event_id: event.id,
               image_url: file.path.replace(/\\/g, "/").replace(/^.*?(\/uploads\/)/, "/uploads/"),
               order: startOrder + index,
-              is_main: index === 0,
+              is_main: coverFromNew && index === mainImageIndex,
             },
             { transaction },
           ),
         ),
       );
+      if (!coverFromNew && mainGalleryId != null) {
+        await setExistingAsMain(EventGallery, "event_id", event.id, mainGalleryId, transaction);
+      }
       await transaction.commit();
+    } else {
+      const { mainGalleryId } = parseCoverChoice(req.body, 0);
+      if (mainGalleryId != null) {
+        await setExistingAsMain(EventGallery, "event_id", event.id, mainGalleryId);
+      }
     }
 
     res.json({
@@ -264,6 +283,7 @@ exports.createEvent = async (req, res, next) => {
     }, { transaction });
 
     if (galleryUploads.length > 0) {
+      const mainIdx = createMainIndex(req.body, galleryUploads.length);
       await Promise.all(
         galleryUploads.map((file, index) =>
           EventGallery.create(
@@ -271,7 +291,7 @@ exports.createEvent = async (req, res, next) => {
               event_id: newEvent.id,
               image_url: file.path.replace(/\\/g, "/").replace(/^.*?(\/uploads\/)/, "/uploads/"),
               order: index + 1,
-              is_main: index === 0,
+              is_main: index === mainIdx,
             },
             { transaction },
           ),

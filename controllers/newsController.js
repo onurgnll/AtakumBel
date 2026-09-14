@@ -10,6 +10,11 @@ const {
   deleteStoredFilePaths,
   syncRemovedAttachmentFiles,
 } = require("../helpers/normalizeUploadFiles");
+const {
+  createMainIndex,
+  parseCoverChoice,
+  setExistingAsMain,
+} = require("../helpers/galleryCover");
 const fs = require("fs");
 const { Op } = require("sequelize");
 
@@ -161,6 +166,7 @@ exports.createNews = async (req, res, next) => {
     }, { transaction });
 
     if (galleryUploads.length > 0) {
+      const mainIdx = createMainIndex(req.body, galleryUploads.length);
       await Promise.all(
         galleryUploads.map((file, index) =>
           NewsGallery.create(
@@ -168,7 +174,7 @@ exports.createNews = async (req, res, next) => {
               news_id: newNews.id,
               image_url: file.path.replace(/\\/g, "/").replace(/^.*?(\/uploads\/)/, "/uploads/"),
               order: index + 1,
-              is_main: index === 0,
+              is_main: index === mainIdx,
             },
             { transaction },
           ),
@@ -241,12 +247,18 @@ exports.updateNews = async (req, res, next) => {
     });
 
     const galleryUploads = collectGalleryImages(req);
+    const { mainGalleryId, coverFromNew, mainImageIndex } = parseCoverChoice(
+      req.body,
+      galleryUploads.length,
+    );
     if (galleryUploads.length > 0) {
       transaction = await sequelize.transaction();
-      await NewsGallery.update(
-        { is_main: false },
-        { where: { news_id: newsItem.id, is_main: true }, transaction },
-      );
+      if (coverFromNew) {
+        await NewsGallery.update(
+          { is_main: false },
+          { where: { news_id: newsItem.id }, transaction },
+        );
+      }
       const maxOrder = await NewsGallery.max("order", { where: { news_id: newsItem.id } });
       const startOrder = Number(maxOrder) > 0 ? Number(maxOrder) + 1 : 1;
       await Promise.all(
@@ -256,13 +268,18 @@ exports.updateNews = async (req, res, next) => {
               news_id: newsItem.id,
               image_url: file.path.replace(/\\/g, "/").replace(/^.*?(\/uploads\/)/, "/uploads/"),
               order: startOrder + index,
-              is_main: index === 0,
+              is_main: coverFromNew && index === mainImageIndex,
             },
             { transaction },
           ),
         ),
       );
+      if (!coverFromNew && mainGalleryId != null) {
+        await setExistingAsMain(NewsGallery, "news_id", newsItem.id, mainGalleryId, transaction);
+      }
       await transaction.commit();
+    } else if (mainGalleryId != null) {
+      await setExistingAsMain(NewsGallery, "news_id", newsItem.id, mainGalleryId);
     }
 
     return res.json({
