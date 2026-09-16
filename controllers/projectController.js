@@ -22,7 +22,6 @@ exports.getAllProjects = async (req, res, next) => {
       where: whereCondition,
       limit,
       offset,
-      attributes: { exclude: ["content"] },
       order: [["name", "ASC"]],
       distinct: true,
     });
