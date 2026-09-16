@@ -259,6 +259,39 @@ const faqUpdateValidation = [
   handleValidation,
 ];
 
+// ─── Web siteleri ───────────────────────────────────────────────────────────
+
+const atakumWebsiteCreateValidation = [
+  requiredText("label", { min: 1, max: 255 }),
+  requiredText("href", { min: 1, max: 2000 }),
+  optionalText("description", { max: 5000 }),
+  optionalText("badge", { max: 255 }),
+  body("kind")
+    .optional({ values: "falsy" })
+    .isIn(["website", "app"])
+    .withMessage(`${lbl("kind")} website veya app olmalıdır.`),
+  optionalText("section_key", { max: 64 }),
+  optionalText("section_title", { max: 255 }),
+  optionalBool("is_active"),
+  handleValidation,
+];
+
+const atakumWebsiteUpdateValidation = [
+  ...requireBody,
+  optionalText("label", { min: 1, max: 255 }),
+  optionalText("href", { min: 1, max: 2000 }),
+  optionalText("description", { max: 5000 }),
+  optionalText("badge", { max: 255 }),
+  body("kind")
+    .optional({ values: "falsy" })
+    .isIn(["website", "app"])
+    .withMessage(`${lbl("kind")} website veya app olmalıdır.`),
+  optionalText("section_key", { max: 64 }),
+  optionalText("section_title", { max: 255 }),
+  optionalBool("is_active"),
+  handleValidation,
+];
+
 // ─── Başkan yardımcıları ────────────────────────────────────────────────────
 
 const vicePresidentCreateValidation = [
@@ -565,6 +598,8 @@ module.exports = {
   directiveUpdateValidation,
   faqCreateValidation,
   faqUpdateValidation,
+  atakumWebsiteCreateValidation,
+  atakumWebsiteUpdateValidation,
   vicePresidentCreateValidation,
   vicePresidentUpdateValidation,
   councilMemberCreateValidation,

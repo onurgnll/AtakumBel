@@ -7,6 +7,7 @@ const PERMISSION_MODULES = [
   "departments",
   "services",
   "projects",
+  "atakumWebsites",
   "employees",
   "presidents",
   "vicePresidents",

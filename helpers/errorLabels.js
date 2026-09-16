@@ -77,6 +77,12 @@ const FIELD_LABELS = {
   answer: "cevap",
   category: "kategori",
   order: "sıra",
+  label: "başlık",
+  href: "bağlantı",
+  badge: "rozet",
+  kind: "tür",
+  section_key: "bölüm anahtarı",
+  section_title: "bölüm başlığı",
 };
 
 const ACTION_LABELS = {
@@ -124,6 +130,7 @@ const MODULE_LABELS = {
   institutionHistory: "kurum tarihçesi",
   workplaceLicenses: "işyeri ruhsatları",
   faqs: "sıkça sorulan sorular",
+  atakumWebsites: "web siteleri",
 };
 
 function labelModule(moduleName) {

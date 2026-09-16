@@ -37,6 +37,7 @@ const ROUTE_TO_MODEL = {
   "workplace-licenses": "WorkplaceLicense",
   services: "Service",
   projects: "Project",
+  "atakum-websites": "AtakumWebsite",
   suggestions: "Suggestion",
   "news-galleries": "NewsGallery",
   "press-release-galleries": "PressReleaseGallery",
