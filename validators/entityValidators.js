@@ -269,7 +269,7 @@ const atakumWebsiteCreateValidation = [
   body("kind")
     .optional({ values: "falsy" })
     .isIn(["website", "app"])
-    .withMessage(`${lbl("kind")} website veya app olmalıdır.`),
+    .withMessage("Tür website veya app olmalıdır."),
   optionalText("section_key", { max: 64 }),
   optionalText("section_title", { max: 255 }),
   optionalBool("is_active"),
@@ -285,7 +285,7 @@ const atakumWebsiteUpdateValidation = [
   body("kind")
     .optional({ values: "falsy" })
     .isIn(["website", "app"])
-    .withMessage(`${lbl("kind")} website veya app olmalıdır.`),
+    .withMessage("Tür website veya app olmalıdır."),
   optionalText("section_key", { max: 64 }),
   optionalText("section_title", { max: 255 }),
   optionalBool("is_active"),
